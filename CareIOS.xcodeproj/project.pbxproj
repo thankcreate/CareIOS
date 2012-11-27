@@ -226,7 +226,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0450;
-				ORGANIZATIONNAME = "谢 创";
+				ORGANIZATIONNAME = ThankCreate;
 			};
 			buildConfigurationList = 317E7EAD16646F690079A88F /* Build configuration list for PBXProject "CareIOS" */;
 			compatibilityVersion = "Xcode 3.2";

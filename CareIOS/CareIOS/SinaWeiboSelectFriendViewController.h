@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
 #import "SinaWeiboRequest.h"
-@interface SinaWeiboSelectFriendViewController : UITableViewController<SinaWeiboRequestDelegate>
+@interface SinaWeiboSelectFriendViewController : UITableViewController<SinaWeiboRequestDelegate, UISearchBarDelegate>
+
 
 @end

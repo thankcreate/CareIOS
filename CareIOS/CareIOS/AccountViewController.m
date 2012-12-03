@@ -8,7 +8,7 @@
 
 #import "AccountViewController.h"
 #import "CareAppDelegate.h"
-
+#import "PreferenceHelper.h"
 @interface AccountViewController ()
 @property (strong, nonatomic) IBOutlet UILabel *lblSinaWeiboName;
 @property (strong, nonatomic) IBOutlet UILabel *lblSinaWeiboFollowerName;
@@ -31,7 +31,7 @@
 {
     [super viewDidLoad];
   
-    [self initUISinaWeibo];
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -45,10 +45,25 @@
     sinaweibo.delegate = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString* name = [defaults objectForKey:@"SinaWeibo_NickName"];
-    if(name != nil)
+    NSString* herName = [defaults objectForKey:@"SinaWeibo_FollowerNickName"];
+    if(name == nil)
     {
-        self.lblSinaWeiboName.text = name;
+        name = @"未登陆";
     }
+    self.lblSinaWeiboName.text = name;
+    [self.lblSinaWeiboName sizeToFit];
+    
+    if(herName == nil)
+    {
+        herName = @"未指定";
+    }
+    self.lblSinaWeiboFollowerName.text = herName;
+    [self.lblSinaWeiboFollowerName sizeToFit];    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self initUISinaWeibo];
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,6 +128,14 @@
             SinaWeibo *sinaweibo = [self sinaweibo];
             [sinaweibo logIn];
         }
+        else if (row == 1)
+        {
+            [self sinaWeiboSelectFollowerClick];
+        }
+        else if (row == 2)
+        {
+            [self sinaWeiboLogoutClick];
+        }
     }
     // 人人区
     else if (sec == 1)
@@ -158,7 +181,15 @@
 
 }
 
-#pragma mark - SinaWeiboRequest Delegate 
+- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"登陆过程发生未知错误，请保持网络通畅" delegate:nil
+                                          cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+    [alert show];
+}
+
+#pragma mark - SinaWeiboRequest Delegate
 - (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
 {
     if ([request.url hasSuffix:@"users/show.json"])
@@ -196,5 +227,31 @@
                        params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
                    httpMethod:@"GET"
                      delegate:self];
+}
+
+- (void)sinaWeiboSelectFollowerClick
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* myID = [defaults objectForKey:@"SinaWeibo_ID"];
+    if(myID == nil)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"没有登陆，怎么指定关注人的说~" delegate:nil
+                                              cancelButtonTitle:@"嗯嗯，明白了" otherButtonTitles:nil];
+        [alert show];
+    }
+    else
+    {
+        [self performSegueWithIdentifier:@"Segue_SinaWeiboSelectFollower" sender:self];
+    }
+}
+
+- (void)sinaWeiboLogoutClick
+{
+    SinaWeibo *sinaweibo = [self sinaweibo];
+    [sinaweibo logOut];
+    [PreferenceHelper clearSinaWeiboPreference];
+    [self initUISinaWeibo];
+    
 }
 @end

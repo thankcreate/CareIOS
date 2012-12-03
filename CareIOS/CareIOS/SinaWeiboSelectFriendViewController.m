@@ -16,9 +16,13 @@
 @property(strong, nonatomic) NSMutableDictionary* dicAllFriends;
 @property(strong, nonatomic) NSMutableDictionary* dicFriendsInShow;
 @property(strong, nonatomic) NSMutableArray* keysInShow;
+@property BOOL shouldBeginEditing;
+@property (strong, nonatomic) IBOutlet UISearchBar *mySearchBar;
 @end
 
 @implementation SinaWeiboSelectFriendViewController
+
+@synthesize mySearchBar;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -37,10 +41,14 @@
     self.dicAllFriends = [NSMutableDictionary dictionaryWithCapacity:10];
     self.dicFriendsInShow = [NSMutableDictionary dictionaryWithCapacity:10];
     self.keysInShow = [NSMutableArray arrayWithCapacity:50];
+    self.shouldBeginEditing = YES;
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* myID = [defaults objectForKey:@"SinaWeibo_ID"];
+
     SinaWeibo* sinaweibo = [self sinaweibo];
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:sinaweibo.userID forKey:@"uid"];
+    [dic setObject:myID forKey:@"uid"];
     [dic setObject:@"0" forKey:@"cursor"];
     [dic setObject:@"200" forKey:@"count"];
     
@@ -81,7 +89,6 @@
         NSString* key = [self.keysInShow objectAtIndex:section];
         NSArray* arrayForKey = [self.dicFriendsInShow objectForKey:key];
         return [arrayForKey count];
-     //   return  [self.allFriends count];
     }
 }
 
@@ -99,17 +106,14 @@
     NSString* key = [self.keysInShow objectAtIndex:sec];
     NSArray* arrayForKey = [self.dicFriendsInShow objectForKey:key];
     id friend = [arrayForKey objectAtIndex:row];
-    //id friend = [self.allFriends objectAtIndex:row];
+
     
     lblName.text = [friend objectForKey:@"screen_name"];
     lblDescription.text = [friend objectForKey:@"description"];
 
     
     NSString* path =[NSString stringWithFormat: [friend objectForKey:@"profile_image_url"] ,[self.title UTF8String]];
-    NSURL* url = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-   // NSData* data = [NSData dataWithContentsOfURL:url];//获取网咯图片数据
-
-//    [imgAvatar setImage:[[UIImage alloc]  initWithData:data]];
+    NSURL* url = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [imgAvatar setImageWithURL:url ];
 
     return cell;
@@ -170,13 +174,121 @@ titleForHeaderInSection:(NSInteger)section
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    NSInteger sec = [indexPath section];
+    NSInteger row = [indexPath row];
+    NSString* key = [self.keysInShow objectAtIndex:sec];
+    NSArray* arrayForKey = [self.dicFriendsInShow objectForKey:key];
+    id friend = [arrayForKey objectAtIndex:row];
+    
+    NSString* followerID = [[friend objectForKey:@"id"] stringValue];   
+    NSString* followerNickName = [friend objectForKey:@"screen_name"];
+    NSString* followerAvatar = [friend objectForKey:@"profile_image_url"];
+    NSString* followerAvatar2 = [friend objectForKey:@"avatar_large"];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:followerID forKey:@"SinaWeibo_FollowerID"];
+    [defaults setValue:followerNickName forKey:@"SinaWeibo_FollowerNickName"];
+    [defaults setValue:followerAvatar forKey:@"SinaWeibo_FollowerAvatar"];
+    [defaults setValue:followerAvatar2 forKey:@"SinaWeibo_FollowerAvatar2"];
+    [defaults synchronize];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [self.mySearchBar resignFirstResponder];
+}
+
+#pragma mark -
+#pragma mark Search Bar Delegate Methods
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    NSString *searchTerm = [searchBar text];
+    [self handleSearchForTerm:searchTerm];
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
+{
+    [self recoverOrigin];
+    [searchBar resignFirstResponder];
+    return;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchTerm
+{
+    NSLog(@"searchBar:textDidChange: isFirstResponder: %i", [searchBar isFirstResponder]);
+    if(![searchBar isFirstResponder]) {
+        // 跑这儿来了的话，说明是点了那个右侧的小叉叉
+        // 之所里这里要这么纠结，是因为当点了右侧的那个小叉叉时，此时还不是firstResponder
+        // 做resign也就没有用，也就没法儿取消键盘
+        self.shouldBeginEditing = NO;
+        // do whatever I want to happen when the user clears the search...
+    }
+    if ([searchTerm length] == 0)
+    {
+        [self recoverOrigin];
+        [searchBar resignFirstResponder];
+        self.shouldBeginEditing = NO;
+        //[self performSelector:@selector(resignFirstResponder:) withObject:mySearchBar afterDelay:0];
+        return;        
+    }
+    [self handleSearchForTerm:searchTerm];
+}
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)bar {
+    // reset the shouldBeginEditing BOOL ivar to YES, but first take its value and use it to return it from the method call
+    BOOL boolToReturn = self.shouldBeginEditing;
+    self.shouldBeginEditing = YES;
+    return boolToReturn;
+}
+
+
+- (void)handleSearchForTerm:(NSString *)searchTerm
+{
+    [self.dicFriendsInShow removeAllObjects];
+    // 按首字母分类
+    for(id ob in self.allFriends)
+    {
+        NSString* name = [ob objectForKey:@"screen_name"];
+        if([name rangeOfString:searchTerm].length <= 0)
+        {
+            continue;
+        }
+        char first = pinyinFirstLetter([name characterAtIndex:0]);
+        NSString* strFirst = [[NSString stringWithFormat:@"%c" , first] uppercaseString];
+        NSMutableArray* arrayWithKey = [self.dicFriendsInShow objectForKey:strFirst];
+        if(arrayWithKey != nil)
+        {
+            [arrayWithKey addObject:ob];
+        }
+        else
+        {
+            NSMutableArray* array = [NSMutableArray arrayWithCapacity:10];
+            [array addObject:ob];
+            [self.dicFriendsInShow setObject:array forKey:strFirst];
+        }
+        
+        
+    }
+    // 将所有key排序
+    NSArray* allkeys = [self.dicFriendsInShow allKeys];
+    NSArray* sortedKeys = [allkeys sortedArrayUsingSelector:@selector(compare:)];
+    [self.keysInShow removeAllObjects];
+    [self.keysInShow addObjectsFromArray:sortedKeys];
+    [self.tableView reloadData];
+}
+
+- (void)recoverOrigin
+{
+    [self.dicFriendsInShow removeAllObjects];
+    [self.dicFriendsInShow addEntriesFromDictionary:self.dicAllFriends];
+    NSArray* allkeys = [self.dicFriendsInShow allKeys];
+    NSArray* sortedKeys = [allkeys sortedArrayUsingSelector:@selector(compare:)];
+    [self.keysInShow removeAllObjects];
+    [self.keysInShow addObjectsFromArray:sortedKeys];
+
+    [self.tableView reloadData];
 }
 
 
@@ -193,14 +305,16 @@ titleForHeaderInSection:(NSInteger)section
         // 按首字母分类
         for(id ob in array)
         {
-            [self.allFriends addObject:ob];           
+            [self.allFriends addObject:ob];
         }
         // 不为0继续请求
         if(nNextCursor != 0)
         {
             SinaWeibo* sinaweibo = [self sinaweibo];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString* myID = [defaults objectForKey:@"SinaWeibo_ID"];
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            [dic setObject:sinaweibo.userID forKey:@"uid"];
+            [dic setObject:myID forKey:@"uid"];
             [dic setObject:[numNextCursor stringValue] forKey:@"cursor"];
             [dic setObject:@"200" forKey:@"count"];
             

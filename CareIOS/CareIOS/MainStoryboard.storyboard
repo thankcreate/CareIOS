@@ -20,10 +20,10 @@
             </objects>
             <point key="canvasLocation" x="1011" y="-488"/>
         </scene>
-        <!--Table View Controller - 我只在乎你-->
+        <!--Status Time Line View Controller - 我只在乎你-->
         <scene sceneID="4hM-Dp-OTh">
             <objects>
-                <tableViewController modalTransitionStyle="crossDissolve" id="TOz-ak-Xg5" sceneMemberID="viewController">
+                <tableViewController modalTransitionStyle="crossDissolve" id="TOz-ak-Xg5" customClass="StatusTimeLineViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="uj1-cB-8Rx">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -58,6 +58,10 @@
                             </tableViewCell>
                         </prototypes>
                         <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="TOz-ak-Xg5" id="xUb-uq-gU3"/>
+                            <outlet property="delegate" destination="TOz-ak-Xg5" id="V0a-SG-4ZU"/>
+                        </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="我只在乎你" id="rCd-Cq-IBj">
                         <barButtonItem key="backBarButtonItem" title="主页" id="dfe-lG-GSD"/>
@@ -194,7 +198,7 @@
                                         </view>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="usS-GK-fXZ" detailTextLabel="WWn-dY-CfP" style="IBUITableViewCellStyleValue2" id="KDT-je-MTc">
-                                        <rect key="frame" x="0.0" y="91" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="91" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="280" height="43"/>
@@ -213,16 +217,29 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <connections>
-                                            <segue destination="qKu-ra-iSG" kind="push" id="ePr-co-rhE"/>
-                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" textLabel="jUs-ly-gjz" style="IBUITableViewCellStyleDefault" id="i5M-1T-nUQ">
+                                        <rect key="frame" x="0.0" y="135" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="退出登陆" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jUs-ly-gjz">
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="人人网" id="xYQ-bJ-xE6">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="bdU-CE-iEU" detailTextLabel="406-Vx-jve" style="IBUITableViewCellStyleValue2" id="Ciq-ox-cVl">
-                                        <rect key="frame" x="0.0" y="182" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="226" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -247,7 +264,7 @@
                                         </view>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RJt-4R-BBu" detailTextLabel="AN3-Ww-iwo" style="IBUITableViewCellStyleValue2" id="A4J-W4-q7O">
-                                        <rect key="frame" x="0.0" y="227" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="271" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -276,7 +293,7 @@
                             <tableViewSection headerTitle="豆瓣" id="r76-5f-5SM">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="NHm-LV-hcq" detailTextLabel="eP2-66-RQc" style="IBUITableViewCellStyleValue2" id="Nvq-GE-yiq">
-                                        <rect key="frame" x="0.0" y="318" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="362" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -301,7 +318,7 @@
                                         </view>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="INq-Fx-1iv" detailTextLabel="mrw-8u-m9q" style="IBUITableViewCellStyleValue2" id="RpT-Rp-VcE">
-                                        <rect key="frame" x="0.0" y="363" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="407" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -330,7 +347,7 @@
                             <tableViewSection headerTitle="RSS" id="tqz-mU-q0k">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="o8U-We-mh2" detailTextLabel="pTq-rS-u4C" style="IBUITableViewCellStyleValue2" id="K2m-nI-swi">
-                                        <rect key="frame" x="0.0" y="454" width="320" height="46"/>
+                                        <rect key="frame" x="0.0" y="498" width="320" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -363,25 +380,53 @@
                         <outlet property="lblSinaWeiboFollowerName" destination="WWn-dY-CfP" id="pEH-Fy-H1x"/>
                         <outlet property="lblSinaWeiboName" destination="RaV-O1-DG8" id="LJx-U0-yFK"/>
                         <outlet property="table" destination="AOX-uz-Rxa" id="L7E-6J-BEe"/>
+                        <segue destination="qKu-ra-iSG" kind="push" identifier="Segue_SinaWeiboSelectFollower" id="LrW-nW-e6V"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N6J-9u-4xZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1172" y="2352"/>
         </scene>
-        <!--Sina Weibo Select Friend View Controller-->
+        <!--Sina Weibo Select Friend View Controller - 指定关注-->
         <scene sceneID="sMJ-8L-ytF">
             <objects>
-                <tableViewController id="qKu-ra-iSG" customClass="SinaWeiboSelectFriendViewController" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="qKu-ra-iSG" customClass="SinaWeiboSelectFriendViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Lrg-zn-qZQ">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="ZAq-Zi-jBA">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="mG4-G2-W9f">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                        </searchBar>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="TCd-C7-QJR">
+                                    <textInputTraits key="textInputTraits"/>
+                                    <scopeButtonTitles>
+                                        <string>Title</string>
+                                        <string>Title</string>
+                                    </scopeButtonTitles>
+                                    <connections>
+                                        <outlet property="delegate" destination="qKu-ra-iSG" id="m4Y-Bc-6vx"/>
+                                    </connections>
+                                </searchBar>
+                                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MXh-lF-oXY">
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="21" id="NYL-gN-AIc"/>
+                                    </constraints>
+                                    <items>
+                                        <navigationItem id="tGq-UC-zND"/>
+                                    </items>
+                                </navigationBar>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="MXh-lF-oXY" firstAttribute="top" secondItem="mG4-G2-W9f" secondAttribute="top" type="default" id="Kz3-0c-lAF"/>
+                                <constraint firstItem="MXh-lF-oXY" firstAttribute="leading" secondItem="TCd-C7-QJR" secondAttribute="trailing" type="default" id="YdU-Hz-Eoi"/>
+                                <constraint firstItem="MXh-lF-oXY" firstAttribute="trailing" secondItem="mG4-G2-W9f" secondAttribute="trailing" type="default" id="cxk-UT-Yb5"/>
+                                <constraint firstItem="TCd-C7-QJR" firstAttribute="leading" secondItem="mG4-G2-W9f" secondAttribute="leading" type="default" id="gJ1-ht-A83"/>
+                                <constraint firstItem="TCd-C7-QJR" firstAttribute="top" secondItem="mG4-G2-W9f" secondAttribute="top" type="default" id="yWk-3K-nwl"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="friendItem" id="Aae-IU-4Gt">
                                 <rect key="frame" x="0.0" y="66" width="320" height="44"/>
@@ -417,21 +462,25 @@
                                 </view>
                                 <constraints>
                                     <constraint firstItem="Jy6-1C-SVZ" firstAttribute="leading" secondItem="KfA-Yo-Rop" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="2JG-4O-MMD"/>
-                                    <constraint firstItem="KfA-Yo-Rop" firstAttribute="top" secondItem="Aae-IU-4Gt" secondAttribute="top" constant="4" id="2S2-uh-j5u"/>
                                     <constraint firstAttribute="trailing" secondItem="td6-zK-ydi" secondAttribute="trailing" constant="20" type="default" id="6Sj-fQ-549"/>
                                     <constraint firstItem="KfA-Yo-Rop" firstAttribute="leading" secondItem="Aae-IU-4Gt" secondAttribute="leading" constant="20" type="default" id="A4j-fC-Flp"/>
                                     <constraint firstItem="td6-zK-ydi" firstAttribute="leading" secondItem="KfA-Yo-Rop" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="Ygt-V3-uUf"/>
-                                    <constraint firstItem="Jy6-1C-SVZ" firstAttribute="top" secondItem="Aae-IU-4Gt" secondAttribute="top" constant="20" type="default" id="jXk-A9-hhy"/>
                                     <constraint firstItem="td6-zK-ydi" firstAttribute="top" secondItem="Aae-IU-4Gt" secondAttribute="top" constant="2" id="lG0-Xg-Kwj"/>
+                                    <constraint firstItem="KfA-Yo-Rop" firstAttribute="top" secondItem="Aae-IU-4Gt" secondAttribute="top" constant="4" id="mzN-3m-yAI"/>
+                                    <constraint firstItem="Jy6-1C-SVZ" firstAttribute="bottom" secondItem="KfA-Yo-Rop" secondAttribute="bottom" type="default" id="wqk-Di-K6G"/>
                                 </constraints>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="qKu-ra-iSG" id="Yq6-Gx-AxE"/>
+                            <outlet property="dataSource" destination="qKu-ra-iSG" id="4pS-qU-GXl"/>
                             <outlet property="delegate" destination="qKu-ra-iSG" id="S1a-9t-wj4"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="h62-Ve-Ugz"/>
+                    <navigationItem key="navigationItem" title="指定关注" id="h62-Ve-Ugz"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="mySearchBar" destination="TCd-C7-QJR" id="661-Qf-zRb"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WS3-RC-kFE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -534,6 +583,19 @@
             </objects>
             <point key="canvasLocation" x="-48" y="1601"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="TPZ-9B-AHe">
+            <objects>
+                <viewController id="4BS-O9-UdJ" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wy6-rR-3CW">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="B90-GU-xLe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
     </scenes>
     <resources>
         <image name="Account.png" width="30" height="30"/>
@@ -556,6 +618,12 @@
         </class>
         <class className="SinaWeiboSelectFriendViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SinaWeiboSelectFriendViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mySearchBar" candidateClass="UISearchBar"/>
+            </relationships>
+        </class>
+        <class className="StatusTimeLineViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/StatusTimeLineViewController.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

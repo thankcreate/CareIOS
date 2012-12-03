@@ -161,21 +161,6 @@
             </objects>
             <point key="canvasLocation" x="646" y="1589"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="Ifl-9l-sBj">
-            <objects>
-                <viewController id="Oaz-cn-Gnm" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Y2T-Kp-rO0">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="zE2-cr-cAd"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ztx-Mp-f2t" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1672" y="2352"/>
-        </scene>
         <!--Account View Controller - 帐号-->
         <scene sceneID="4vu-TK-z1H">
             <objects>
@@ -199,8 +184,8 @@
                                                     <color key="textColor" red="0.32156862745098042" green="0.40000000000000002" blue="0.56862745098039214" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="未登陆" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RaV-O1-DG8">
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="未登陆" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RaV-O1-DG8">
+                                                    <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
@@ -229,7 +214,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <connections>
-                                            <segue destination="Oaz-cn-Gnm" kind="push" id="aeo-aa-eEB"/>
+                                            <segue destination="qKu-ra-iSG" kind="push" id="ePr-co-rhE"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -377,11 +362,80 @@
                     <connections>
                         <outlet property="lblSinaWeiboFollowerName" destination="WWn-dY-CfP" id="pEH-Fy-H1x"/>
                         <outlet property="lblSinaWeiboName" destination="RaV-O1-DG8" id="LJx-U0-yFK"/>
+                        <outlet property="table" destination="AOX-uz-Rxa" id="L7E-6J-BEe"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N6J-9u-4xZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1172" y="2352"/>
+        </scene>
+        <!--Sina Weibo Select Friend View Controller-->
+        <scene sceneID="sMJ-8L-ytF">
+            <objects>
+                <tableViewController id="qKu-ra-iSG" customClass="SinaWeiboSelectFriendViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Lrg-zn-qZQ">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="ZAq-Zi-jBA">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </searchBar>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="friendItem" id="Aae-IU-4Gt">
+                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="KfA-Yo-Rop">
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="35" id="EHs-7a-5Pl"/>
+                                                <constraint firstAttribute="width" constant="35" id="cfT-g3-93K"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="td6-zK-ydi">
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="qN9-7f-PAB"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jy6-1C-SVZ">
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="221" id="atk-aO-A9f"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.50196078430000002" green="0.50196078430000002" blue="0.50196078430000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="Jy6-1C-SVZ" firstAttribute="leading" secondItem="KfA-Yo-Rop" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="2JG-4O-MMD"/>
+                                    <constraint firstItem="KfA-Yo-Rop" firstAttribute="top" secondItem="Aae-IU-4Gt" secondAttribute="top" constant="4" id="2S2-uh-j5u"/>
+                                    <constraint firstAttribute="trailing" secondItem="td6-zK-ydi" secondAttribute="trailing" constant="20" type="default" id="6Sj-fQ-549"/>
+                                    <constraint firstItem="KfA-Yo-Rop" firstAttribute="leading" secondItem="Aae-IU-4Gt" secondAttribute="leading" constant="20" type="default" id="A4j-fC-Flp"/>
+                                    <constraint firstItem="td6-zK-ydi" firstAttribute="leading" secondItem="KfA-Yo-Rop" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="Ygt-V3-uUf"/>
+                                    <constraint firstItem="Jy6-1C-SVZ" firstAttribute="top" secondItem="Aae-IU-4Gt" secondAttribute="top" constant="20" type="default" id="jXk-A9-hhy"/>
+                                    <constraint firstItem="td6-zK-ydi" firstAttribute="top" secondItem="Aae-IU-4Gt" secondAttribute="top" constant="2" id="lG0-Xg-Kwj"/>
+                                </constraints>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="qKu-ra-iSG" id="Yq6-Gx-AxE"/>
+                            <outlet property="delegate" destination="qKu-ra-iSG" id="S1a-9t-wj4"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="h62-Ve-Ugz"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WS3-RC-kFE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1615" y="2352"/>
         </scene>
         <!--Table View Controller - 设置-->
         <scene sceneID="bjg-Hh-Bwx">
@@ -488,6 +542,22 @@
         <image name="Picture.png" width="30" height="30"/>
         <image name="Settings.png" width="30" height="30"/>
     </resources>
+    <classes>
+        <class className="AccountViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="lblSinaWeiboFollowerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblSinaWeiboName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="table" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="SinaWeiboSelectFriendViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SinaWeiboSelectFriendViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

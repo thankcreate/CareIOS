@@ -1,0 +1,21 @@
+//
+//  Constants.h
+//  CareIOS
+//
+//  Created by Tron Skywalker on 12-12-6.
+//  Copyright (c) 2012年 ThankCreate. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+typedef enum EnumEntryType {
+    EntryType_NotSet,
+    EntryType_SinaWeibo,
+    EntryType_Renren,
+    EntryType_Douban
+} EntryType;
+
+
+@interface CareConstants : NSObject
+
+@end

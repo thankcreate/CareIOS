@@ -8,14 +8,18 @@
 
 #import "SinaWeiboConverter.h"
 #import "ItemViewModel.h"
-
+#import "PictureItemViewModel.h"
+#import "MiscTool.h"
+#import "MainViewModel.h"
 @implementation SinaWeiboConverter
 
 +(ItemViewModel*) convertStatusToCommon:(id)status
 {
     ItemViewModel* model = [[ItemViewModel alloc] init];
     @try {
-        // TODO: picture filt
+        // 先做图片过滤
+        [self convertPictureToCommon:status];
+        
         id user = [status objectForKey:@"user"];
         if(user == nil)
             return nil;
@@ -28,7 +32,11 @@
         model.imageURL = [status objectForKey:@"thumbnail_pic"];
         model.midImageURL = [status objectForKey:@"bmiddle_pic"];
         model.fullImageURL = [status objectForKey:@"original_pic"];
-        model.time = [status objectForKey:@"create_at"];
+        
+        id rawTime = [status objectForKey:@"created_at"];
+        model.time = [self convertSinaWeiboDateStringToDate:rawTime];
+        
+        model.ID = [status objectForKey:@"id"];
         model.type = EntryType_SinaWeibo;
         model.sharedCount = [[status objectForKey:@"reposts_count"] stringValue];
         model.commentCount = [[status objectForKey:@"comments_count"] stringValue];
@@ -48,7 +56,8 @@
             model.forwardItem.imageURL = [forward objectForKey:@"thumbnail_pic"];
             model.forwardItem.midImageURL = [forward objectForKey:@"bmiddle_pic"];
             model.forwardItem.fullImageURL = [forward objectForKey:@"original_pic"];
-            model.forwardItem.time = [forward objectForKey:@"create_at"];
+            model.forwardItem.time = [self convertSinaWeiboDateStringToDate:[forward objectForKey:@"created_at"]];
+            model.forwardItem.ID = [forward objectForKey:@"id"];
             model.forwardItem.type = EntryType_SinaWeibo;
             model.forwardItem.sharedCount = [[forward objectForKey:@"reposts_count"] stringValue];
             model.forwardItem.commentCount = [[forward objectForKey:@"comments_count"] stringValue];
@@ -59,6 +68,72 @@
     }
     @finally {
         return model;
+    }
+}
+
++(PictureItemViewModel*) convertPictureToCommon:(id)status
+{
+    PictureItemViewModel* model = [[PictureItemViewModel alloc] init];
+    model.size = CGSizeZero;
+    if(model == nil)
+        return nil;
+    @try {
+        // 先判断是否有转发图片
+        id forward = [status objectForKey:@"retweeted_status"];
+        if(forward != nil)
+        {
+            return [self convertPictureToCommon:forward];
+        }
+        model.smallURL = [status objectForKey:@"thumbnail_pic"];
+        model.middleURL = [status objectForKey:@"bmiddle_pic"];
+        model.largeURL = [status objectForKey:@"original_pic"];
+        model.ID = [status objectForKey:@"id"];
+        model.description = [status objectForKey:@"text"];
+        id rawTime = [status objectForKey:@"created_at"];
+        model.time = [self convertSinaWeiboDateStringToDate:rawTime];
+        
+        id user = [status objectForKey:@"user"];
+        if(user != nil)
+        {
+            model.title = [user objectForKey:@"[name"];;
+        }
+        if(model.smallURL.length)
+        {
+            [[MainViewModel sharedInstance].sinaWeiboPictureItems addObject:model];
+        }
+    }
+    @catch (NSException *exception) {
+        model = nil;
+    }
+    @finally {
+        return model;
+    }
+    
+}
+
+
+// 新浪的祼格式是这样的
+// Fri Oct 05 11:38:16 +0800 2012
++ (NSDate*) convertSinaWeiboDateStringToDate:(NSString*) plainDate
+{    
+    if(plainDate == nil)
+        return [NSDate date];
+    
+    NSDate *date = nil;
+    @try
+    {
+        //plainDate = @"Mon Nov 26 00:17:07 2012";
+        NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
+        [dateFormatter setDateFormat:@"EEE MMM dd HH:mm:ss zzz yyyy"];
+        date=[dateFormatter dateFromString:plainDate];        
+    }
+    @catch (NSException *exception)
+    {
+        date = [NSDate date];
+    }
+    @finally
+    {
+        return date;
     }
 }
 

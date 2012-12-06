@@ -8,6 +8,7 @@
 
 #import "SinaWeiboSelectFriendViewController.h"
 #import "CareAppDelegate.h"
+#import "MainViewModel.h"
 #import "pinyin.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 @interface SinaWeiboSelectFriendViewController ()
@@ -192,6 +193,8 @@ titleForHeaderInSection:(NSInteger)section
     [defaults setValue:followerAvatar2 forKey:@"SinaWeibo_FollowerAvatar2"];
     [defaults synchronize];
     [self.navigationController popViewControllerAnimated:YES];
+    
+    [MainViewModel sharedInstance].isChanged = true;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView

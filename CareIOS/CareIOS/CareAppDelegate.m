@@ -8,7 +8,7 @@
 
 #import "CareAppDelegate.h"
 #import "SinaWeibo.h"
-
+#import "Three20/Three20.h"
 @implementation CareAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -20,6 +20,7 @@
 {
     // 此时delegate是nil, AccountView是最后真正的delegate
     [self initSinaWeibo];
+    [[TTURLRequestQueue mainQueue] setMaxContentLength:0];
     return YES;
 }
 

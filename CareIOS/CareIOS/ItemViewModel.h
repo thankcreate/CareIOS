@@ -8,12 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum EnumEntryType {
-    EntryType_NotSet,
-    EntryType_SinaWeibo,
-    EntryType_Renren,
-    EntryType_Douban
-} EntryType;
+#import "CareConstants.h"
 
 
 @interface ItemViewModel : NSObject
@@ -34,6 +29,7 @@ typedef enum EnumEntryType {
 @property (strong, nonatomic) NSString* originalURL;
 @property (strong, nonatomic) NSString* description;
 @property (strong, nonatomic) NSString* ownerID;
+@property (strong, nonatomic) NSString* ID;
 @property (strong, nonatomic) NSString* commentCount;
 @property (strong, nonatomic) NSString* sharedCount;
 

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LabPencentageViewController : UIViewController
+@interface LabPencentageViewController : UIViewController<UIPickerViewDelegate, UIPickerViewDataSource>
+
+@property (strong, nonatomic) NSArray *col1;
+@property (strong, nonatomic) NSArray *col2;
 
 @end

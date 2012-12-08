@@ -7,7 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseFetcher.h"
+@class PCLineChartView;
+@interface LabEnemyViewController : UIViewController<FetcherDelegate>
+{    
+    int var1;
+    int var2;
+    int var3;
+}
 
-@interface LabEnemyViewController : UIViewController
 
+@property (strong, nonatomic) BaseFetcher* fetcher;
+@property (strong, nonatomic) NSString* name1;
+@property (strong, nonatomic) NSString* name2;
+@property (strong, nonatomic) NSString* name3;
+@property (strong, nonatomic) NSString* herID;
 @end

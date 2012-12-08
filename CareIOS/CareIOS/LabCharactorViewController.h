@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class PCPieChart;
 @interface LabCharactorViewController : UIViewController
-
+{
+    int var1;
+    int var2;
+    int var3;
+    int var4;
+    int var5;
+}
+@property (strong, nonatomic) PCPieChart* pieChart;
 @end

@@ -38,6 +38,11 @@
     self.nTaskInProcess++;
 }
 
+-(void) clearTask
+{
+    self.nTaskInProcess = 0;
+}
+
 -(void) popTask
 {
     if(nTaskInProcess == 0)

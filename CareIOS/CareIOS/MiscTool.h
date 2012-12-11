@@ -12,4 +12,10 @@
 +(NSString*)convertDateToString:(NSDate*)date;
 +(NSString*)getHerIcon;
 +(NSString*)getHerName;
++(NSString*)getMyIcon;
++(NSString*)getMyName;
+
++(NSString*)getHerSinaWeiboIcon;
++(NSString*)getHerRenrenIcon;
++(NSString*)getHerDoubanIcon;
 @end

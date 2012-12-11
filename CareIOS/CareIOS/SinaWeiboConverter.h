@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @class ItemViewModel;
-
+@class CommentViewModel;
 @interface SinaWeiboConverter : NSObject
 +(ItemViewModel*) convertStatusToCommon:(id)status;
++(CommentViewModel*) convertCommentToCommon:(id)comment;
 @end

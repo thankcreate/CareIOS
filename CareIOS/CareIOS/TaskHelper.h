@@ -21,4 +21,5 @@
 -(id)initWithDelegate:(id<TaskCompleteDelegate>)del;
 -(void) pushTask;
 -(void) popTask;
+-(void) clearTask;
 @end

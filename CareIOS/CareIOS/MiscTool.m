@@ -58,6 +58,30 @@
     return nil;
 }
 
+
++(NSString*)getMyIcon
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* myIcon = [defaults objectForKey:@"SinaWeibo_Avatar"];
+    if(myIcon)
+    {
+        return myIcon;
+    }
+    myIcon = [defaults objectForKey:@"Renren_Avatar"];
+    if(myIcon)
+    {
+        return myIcon;
+    }
+    myIcon = [defaults objectForKey:@"Douban_Avatar"];
+    if(myIcon)
+    {
+        return myIcon;
+    }
+    return myIcon;
+}
+
+
+
 +(NSString*)getHerName
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -80,5 +104,87 @@
     }
     return nil;
 }
+
++(NSString*)getMyName
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* myName = [defaults objectForKey:@"SinaWeibo_NickName"];
+    if(myName)
+    {
+        return myName;
+    }
+    
+    myName = [defaults objectForKey:@"Renren_NickName"];
+    if(myName)
+    {
+        return myName;
+    }
+    
+    myName = [defaults objectForKey:@"Douban_NickName"];
+    if(myName)
+    {
+        return myName;
+    }
+    return nil;
+}
+
+
++(NSString*)getHerSinaWeiboIcon
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herIcon = [defaults objectForKey:@"SinaWeibo_FollowerAvatar2"];
+    if(herIcon)
+    {
+        return herIcon;
+    }
+    
+    
+    herIcon = [defaults objectForKey:@"SinaWeibo_FollowerAvatar"];
+    if(herIcon)
+    {
+        return herIcon;
+    }
+    return herIcon;
+}
+
+
++(NSString*)getHerRenrenIcon
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herIcon = [defaults objectForKey:@"Renren_FollowerAvatar2"];
+    if(herIcon)
+    {
+        return herIcon;
+    }
+    
+    
+    herIcon = [defaults objectForKey:@"Renren_FollowerAvatar"];
+    if(herIcon)
+    {
+        return herIcon;
+    }
+    return herIcon;
+}
+
++(NSString*)getHerDoubanIcon
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herIcon = [defaults objectForKey:@"Douban_FollowerAvatar2"];
+    if(herIcon)
+    {
+        return herIcon;
+    }
+    
+    
+    herIcon = [defaults objectForKey:@"Douban_FollowerAvatar"];
+    if(herIcon)
+    {
+        return herIcon;
+    }
+    return herIcon;
+}
+
+
+
 
 @end

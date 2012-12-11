@@ -35,4 +35,8 @@
 
 @property (strong, nonatomic) NSString* renrenFeedType;
 @property (strong, nonatomic) ItemViewModel* forwardItem;
+
+// helper
+@property (strong, nonatomic) NSString* fromText;
+@property (strong, nonatomic) NSString* timeText;
 @end

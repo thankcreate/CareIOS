@@ -167,6 +167,14 @@
         }
         
     }
+    if (sig < 0)
+    {
+        sig = -sig;
+    }
+    if(sig == 0)
+    {
+        sig = 10;
+    }
     return sig;
 }
 
@@ -174,11 +182,11 @@
 {
     NSString* hername = [MiscTool getHerName];
     int sig = [self calculateString:hername];
-    var1 = (int)(sig * 575 % 87 + 13);
-    var2 = (int)(sig * sig % 87 + 13);
-    var3 = (int)(sig * 250 % 87 + 13);
-    var4 = (int)(sig * 337 % 87 + 13);
-    var5 = (int)(sig * 702 % 87 + 13);
+    var1 = (unsigned int)(sig * 575 % 87 + 13);
+    var2 = (unsigned int)(sig * sig % 87 + 13);
+    var3 = (unsigned int)(sig * 250 % 87 + 13);
+    var4 = (unsigned int)(sig * 337 % 87 + 13);
+    var5 = (unsigned int)(sig * 702 % 87 + 13);
 }
 
 - (void)didReceiveMemoryWarning

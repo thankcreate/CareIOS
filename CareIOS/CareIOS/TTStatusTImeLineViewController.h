@@ -9,7 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "Three20/Three20.h"
 #import "RefreshViewerHelper.h"
-@interface TTStatusTImeLineViewController  : TTTableViewController<RefreshViewerDelegate,TTModelDelegate>
-
+#import "CareConstants.h"
+@interface TTStatusTImeLineViewController  : TTTableViewController
+<TTModelDelegate,UIActionSheetDelegate,TTPostControllerDelegate,
+SinaWeiboRequestDelegate>
+{
+    int lastSelectIndex;
+    EntryType lastSelectPostType;
+}
 
 @end

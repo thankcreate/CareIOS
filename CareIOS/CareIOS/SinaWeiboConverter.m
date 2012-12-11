@@ -11,9 +11,28 @@
 #import "PictureItemViewModel.h"
 #import "MiscTool.h"
 #import "MainViewModel.h"
+#import "CommentViewModel.h"
 @implementation SinaWeiboConverter
 
-+(ItemViewModel*) convertStatusToCommon:(id)status
++(CommentViewModel*) convertCommentToCommon:(id)comment
+{
+    CommentViewModel* model = [[CommentViewModel alloc] init];
+      
+    id user = [comment objectForKey:@"user"];
+    if(user == nil)
+        return nil;
+    model.title = [user objectForKey:@"name"];
+    model.iconURL = [user objectForKey:@"profile_image_url"];
+    model.uid = [[user objectForKey:@"id"] stringValue];
+    model.content = [comment objectForKey:@"text"];
+    model.ID = [[comment objectForKey:@"id"] stringValue];
+    id rawTime = [comment objectForKey:@"created_at"];
+    model.time = [self convertSinaWeiboDateStringToDate:rawTime];
+    model.type = EntryType_SinaWeibo;
+    return model;
+}
+
++(ItemViewModel*) convertStatusToCommon:(id)status 
 {
     ItemViewModel* model = [[ItemViewModel alloc] init];
     @try {
@@ -36,7 +55,7 @@
         id rawTime = [status objectForKey:@"created_at"];
         model.time = [self convertSinaWeiboDateStringToDate:rawTime];
         
-        model.ID = [status objectForKey:@"id"];
+        model.ID = [[status objectForKey:@"id"] stringValue];
         model.type = EntryType_SinaWeibo;
         model.sharedCount = [[status objectForKey:@"reposts_count"] stringValue];
         model.commentCount = [[status objectForKey:@"comments_count"] stringValue];
@@ -57,7 +76,7 @@
             model.forwardItem.midImageURL = [forward objectForKey:@"bmiddle_pic"];
             model.forwardItem.fullImageURL = [forward objectForKey:@"original_pic"];
             model.forwardItem.time = [self convertSinaWeiboDateStringToDate:[forward objectForKey:@"created_at"]];
-            model.forwardItem.ID = [forward objectForKey:@"id"];
+            model.forwardItem.ID = [[forward objectForKey:@"id"] stringValue];
             model.forwardItem.type = EntryType_SinaWeibo;
             model.forwardItem.sharedCount = [[forward objectForKey:@"reposts_count"] stringValue];
             model.forwardItem.commentCount = [[forward objectForKey:@"comments_count"] stringValue];

@@ -10,16 +10,28 @@
 #import "BaseFetcher.h"
 @class PCLineChartView;
 @interface LabEnemyViewController : UIViewController<FetcherDelegate>
-{    
-    int var1;
-    int var2;
-    int var3;
-}
 
-
-@property (strong, nonatomic) BaseFetcher* fetcher;
 @property (strong, nonatomic) NSString* name1;
 @property (strong, nonatomic) NSString* name2;
 @property (strong, nonatomic) NSString* name3;
+
+@property (strong, nonatomic) NSNumber* var1;
+@property (strong, nonatomic) NSNumber* var2;
+@property (strong, nonatomic) NSNumber* var3;
+
+@property (strong, nonatomic) NSString* id1;
+@property (strong, nonatomic) NSString* id2;
+@property (strong, nonatomic) NSString* id3;
+
+@property (strong, nonatomic) BaseFetcher* fetcher;
+
 @property (strong, nonatomic) NSString* herID;
+
+@property (strong, nonatomic) NSMutableDictionary* mapManToCount;
+@property (strong, nonatomic) NSMutableDictionary* mapManToID;
+@end
+
+@interface ManToCountPair : NSObject
+@property (strong, nonatomic) NSString* name;
+@property (strong, nonatomic) NSNumber* count;
 @end

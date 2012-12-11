@@ -35,18 +35,35 @@
 @synthesize name2;
 @synthesize name3;
 
+@synthesize var1;
+@synthesize var2;
+@synthesize var3;
+
+@synthesize id1;
+@synthesize id2;
+@synthesize id3;
+
+@synthesize mapManToCount;
+@synthesize mapManToID;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
+
     return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // 先做初始化
+    mapManToCount = [NSMutableDictionary dictionaryWithCapacity:20];
+    mapManToID = [NSMutableDictionary dictionaryWithCapacity:20];
+    
+    
 	UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     // 1 header部分
     // 1.1 头像
@@ -105,56 +122,8 @@
     [lineChart setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
     [self.view addSubview:lineChart];
-    fetcher = [[SinaWeiboFetcher alloc] initWithDelegate:self];
+    fetcher = [[SinaWeiboFetcher alloc] initWithDelegate:self];    
     [fetcher startFetchCommentMan];
-    
-//    NSMutableArray *components = [NSMutableArray array];
-//    
-//    for (ItemViewModel* item in [MainViewModel sharedInstance].items){
-//        NSCalendar *gregorian = [[NSCalendar alloc]  initWithCalendarIdentifier:NSGregorianCalendar];
-//        NSDateComponents *weekdayComponents = [gregorian components:(NSHourCalendarUnit ) fromDate:item.time];
-//        NSInteger hour = [weekdayComponents hour];
-//        if (hour >= 8 && hour < 12)
-//        {
-//            var1++;
-//        }
-//        else if (hour >= 12 && hour < 18)
-//        {
-//            var2++;
-//        }
-//        else if (hour >= 18 && hour < 24)
-//        {
-//            var3++;
-//        }        
-//    }
-//    
-//    int max1 = (var1 > var2) ? var1 : var2;
-//    int max2 = (var3 > var4) ? var3 : var4;
-//    int max = (max1 > max2) ? max1 : max2;
-//    lineChart.minValue = 0;
-//    lineChart.maxValue = (max / 10 + 1) * 10;
-//    lineChart.interval = max < 46 ? 5 : 10;
-//    
-//    NSMutableArray *ar = [NSMutableArray arrayWithObjects:[NSNumber numberWithInt:var1],
-//                          [NSNumber numberWithInt:var2],
-//                          [NSNumber numberWithInt:var3],
-//                          [NSNumber numberWithInt:var4], nil];
-//    NSMutableArray *lb = [NSMutableArray arrayWithObjects:@"上午",
-//                          @"下午",
-//                          @"晚上",
-//                          @"凌晨",nil];
-//    
-//    
-//    PCLineChartViewComponent *component = [[PCLineChartViewComponent alloc] init];
-//    [component setTitle:@""];
-//    [component setPoints:ar];
-//    [component setShouldLabelValues:NO];
-//    [component setColour:PCColorYellow];
-//    [components addObject:component];
-    
-//    lineChart.xLabels = lb;
-//    lineChart.components = components;
-
 }
 
 - (void)analysisEnemy:(EntryType)type
@@ -168,7 +137,6 @@
     var3 = 0;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    BaseFetcher* fetcher;
     switch (type) {
         case EntryType_SinaWeibo:
         {
@@ -181,8 +149,7 @@
         }            
         default:
             break;
-    }
-    
+    }    
     [fetcher startFetchCommentMan];
 }
 
@@ -196,8 +163,126 @@
 #pragma mark Fetcher delegate
 - (void)fetchComplete:(NSArray*)result
 {
-
+    [mapManToCount removeAllObjects];
+    [mapManToID removeAllObjects];
+    for(CommentMan* man in result)
+    {
+        // 1.先计数
+        NSNumber* count = [mapManToCount objectForKey:man.name];
+        if(count)
+        {
+            int nCount = [count intValue];
+            nCount ++;
+            [mapManToCount setObject:[NSNumber numberWithInt:nCount] forKey:man.name];
+        }
+        else
+        {
+            [mapManToCount setObject:[NSNumber numberWithInt:1] forKey:man.name];
+        }
+        // 2.再存Name-ID对
+        if(![mapManToID objectForKey:man.name])
+        {
+            [mapManToID setObject:man.ID forKey:man.name];
+        }
+    }
     
+    NSMutableArray* sortList = [NSMutableArray arrayWithCapacity:100];
+    NSArray* keys = [mapManToCount allKeys];
+    for(NSString* name in keys)
+    {
+        NSNumber* count = [mapManToCount objectForKey:name];
+        ManToCountPair* pair = [[ManToCountPair alloc] init];
+        pair.name = name;
+        pair.count = count;
+        [sortList addObject:pair];
+    }
+    
+    NSArray* sortResult = [sortList sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSNumber* count1 = ((ManToCountPair*)(obj1)).count;
+        NSNumber* count2 = ((ManToCountPair*)(obj2)).count;
+        NSComparisonResult res =  [count1 compare:count2];
+        return -res;
+    }];
+    
+    if(sortResult.count >= 3)
+    {
+        ManToCountPair* pair1 = [sortResult objectAtIndex:0];
+        ManToCountPair* pair2 = [sortResult objectAtIndex:1];
+        ManToCountPair* pair3 = [sortResult objectAtIndex:2];
+        
+        name1 = pair1.name;
+        name2 = pair2.name;
+        name3 = pair3.name;
+        
+        var1 = pair1.count;
+        var2 = pair2.count;
+        var3 = pair3.count;
+        
+        id1 = [mapManToID objectForKey:name1];
+        id2 = [mapManToID objectForKey:name2];
+        id3 = [mapManToID objectForKey:name3];
+    }
+    if(sortResult.count == 1)
+    {
+        ManToCountPair* pair1 = [sortResult objectAtIndex:0];
+        ManToCountPair* pair2 = [sortResult objectAtIndex:1];
+
+        name1 = pair1.name;
+        name2 = pair2.name;
+        
+        var1 = pair1.count;
+        var2 = pair2.count;
+        
+        id1 = [mapManToID objectForKey:name1];
+        id2 = [mapManToID objectForKey:name2];
+    }
+    if(sortResult.count == 2)
+    {
+        ManToCountPair* pair1 = [sortResult objectAtIndex:0];
+        
+        name1 = pair1.name;
+        
+        var1 = pair1.count;
+        
+        id1 = [mapManToID objectForKey:name1];
+    }
+    [self refreshChart];
 }
+
+-(void)refreshChart
+{
+    NSMutableArray *components = [NSMutableArray array];
+
+    int countMax = [var1 intValue];
+    
+    lineChart.minValue = 0;
+    lineChart.maxValue = (countMax / 10 + 1) * 10;
+    lineChart.interval = countMax < 46 ? 5 : 10;
+
+    NSMutableArray *ar = [NSMutableArray arrayWithObjects:var2,
+                          var1,
+                          var3, nil];
+    NSMutableArray *lb = [NSMutableArray arrayWithObjects:name2,
+                          name1,
+                          name3,nil];
+
+
+    PCLineChartViewComponent *component = [[PCLineChartViewComponent alloc] init];
+    [component setTitle:@""];
+    [component setPoints:ar];
+    [component setShouldLabelValues:NO];
+    [component setColour:PCColorOrange];
+    [components addObject:component];
+    lineChart.xLabels = lb;
+    lineChart.components = components;
+    [lineChart setNeedsDisplay];
+}
+
+@end
+
+@implementation ManToCountPair
+
+@synthesize name;
+@synthesize count;
 
 @end

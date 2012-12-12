@@ -36,7 +36,7 @@
 #import "ROGlobalStyle.h"
 #import "ROCloseButton.h"
 #import "ROImageView.h"
-#import "SBJSON.h"
+#import "RenrenSBJSON.h"
 #import "ROMacroDef.h"
 
 

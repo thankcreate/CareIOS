@@ -10,6 +10,7 @@
 #import "Renren.h"
 #import "SinaWeibo.h"
 #import "SinaWeiboRequest.h"
+#import "CareConstants.h"
 @interface AccountViewController : UITableViewController<RenrenDelegate, SinaWeiboDelegate, SinaWeiboRequestDelegate>
-
+@property (nonatomic) EntryType TypeWillGotoInSelectFriendPage;
 @end

@@ -9,6 +9,7 @@
 #import "RefreshViewerHelper.h"
 #import "CareAppDelegate.h"
 #import "SinaWeiboConverter.h"
+#import "RenrenConverter.h"
 #import "MainViewModel.h"
 #import "TaskHelper.h"
 
@@ -80,6 +81,10 @@
 {
     [m_taskHelper pushTask];
     [self refreshModelSinaWeibo];
+    
+    [m_taskHelper pushTask];
+    [self refreshModelRenren];
+    
 }
 
 
@@ -102,7 +107,10 @@
     NSString* herID = [defaults objectForKey:@"SinaWeibo_FollowerID"];
     
     if( ![sinaweibo isAuthValid] || herID == nil)
+    {
+        [m_taskHelper popTask];
         return;
+    }
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setObject:herID forKey:@"uid"];
@@ -147,6 +155,60 @@
     [self refreshViewItems];
 }
 
+#pragma mark - Renren Logic
+- (Renren *)renren
+{
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+    return appDelegate.renren;
+}
 
+- (void)refreshModelRenren
+{
+    [mainViewModel.renrenItems removeAllObjects];
+    [mainViewModel.renrenPictureItems removeAllObjects];
+    
+    Renren* renren = [self renren];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herID = [defaults objectForKey:@"Renren_FollowerID"];
+    
+    if( ![renren isSessionValid] || herID == nil)
+    {
+        [m_taskHelper popTask];
+        return;
+    }
+    
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:@"feed.get" forKey:@"method"];
+    [dic setObject:herID forKey:@"uid"];
+    [dic setObject:@"50" forKey:@"count"];
+    [dic setObject:@"10,30,32" forKey:@"type"];
+    [renren requestWithParams:dic andDelegate:self];
+}
+
+
+#pragma mark - Renren Delegate
+- (void)renren:(Renren *)renren requestDidReturnResponse:(ROResponse*)response
+{
+    NSArray *statuses = (NSArray *)(response.rootObject);
+    for(id status in statuses)
+    {
+        ItemViewModel* model = [RenrenConverter convertStatusToCommon:status];
+        if(model != nil)
+        {
+            [mainViewModel.renrenItems addObject:model];
+        }
+    }
+    [m_taskHelper popTask];    
+}
+
+- (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
+{
+    [m_taskHelper popTask];
+	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
+	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
+	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
+	[alertView show];    
+}
 
 @end

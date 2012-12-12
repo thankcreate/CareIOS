@@ -185,6 +185,29 @@
 }
 
 
++(BOOL)isAnyOneFollowed
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* renrenID = [defaults objectForKey:@"Renren_FollowerID"];
+    NSString* sinaWeiboID = [defaults objectForKey:@"SinaWeibo_FollowerID"];
+    NSString* doubanID = [defaults objectForKey:@"Douban_FollowerID"];
+    if(renrenID == nil && sinaWeiboID == nil && doubanID == nil)
+    {
+        return FALSE;
+    }
+    return TRUE;    
+}
+
++(NSString *) removeHTMLTag:(NSString*)input
+{
+    if(input == nil)
+        return nil;
+    NSRange r;
+    NSString *s = [input copy];
+    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
+        s = [s stringByReplacingCharactersInRange:r withString:@""];
+    return s;
+}
 
 
 @end

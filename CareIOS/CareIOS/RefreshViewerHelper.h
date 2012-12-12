@@ -15,7 +15,7 @@
 - (void)refreshComplete;
 @end
 
-@interface RefreshViewerHelper : NSObject<SinaWeiboRequestDelegate, TaskCompleteDelegate>
+@interface RefreshViewerHelper : NSObject<SinaWeiboRequestDelegate,RenrenDelegate, TaskCompleteDelegate>
 
 - (void)taskComplete;
 -(id)initWithDelegate:(id<RefreshViewerDelegate>)del;

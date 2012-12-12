@@ -20,7 +20,8 @@
     } else if (version == TTPhotoVersionSmall) {
         return self.smallURL;
     } else if (version == TTPhotoVersionThumbnail) {
-        return self.smallURL;
+        // 这里要用mid,不然在图片墙上就太模糊了
+        return self.middleURL;
     } else {
         return nil;
     }

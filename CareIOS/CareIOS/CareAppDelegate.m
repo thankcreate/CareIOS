@@ -16,10 +16,12 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 @synthesize sinaweibo;
+@synthesize renren;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // 此时delegate是nil, AccountView是最后真正的delegate
     [self initSinaWeibo];
+    [self initRenren];
     [[TTURLRequestQueue mainQueue] setMaxContentLength:0];
     return YES;
 }
@@ -36,6 +38,11 @@
         sinaweibo.expirationDate = [defaults objectForKey:@"SinaWeibo_ExpirationDate"];
         sinaweibo.userID = [defaults objectForKey:@"SinaWeibo_ID"];
     }
+}
+
+-(void)initRenren
+{
+    renren = [Renren sharedRenren];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

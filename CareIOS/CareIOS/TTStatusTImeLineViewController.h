@@ -12,7 +12,7 @@
 #import "CareConstants.h"
 @interface TTStatusTImeLineViewController  : TTTableViewController
 <TTModelDelegate,UIActionSheetDelegate,TTPostControllerDelegate,
-SinaWeiboRequestDelegate>
+SinaWeiboRequestDelegate,RenrenDelegate>
 {
     int lastSelectIndex;
     EntryType lastSelectPostType;

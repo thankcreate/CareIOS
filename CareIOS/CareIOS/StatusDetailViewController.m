@@ -53,7 +53,7 @@
     UIImageView *avatarImg = [[UIImageView alloc] init];
     CGRect imgPos = CGRectMake(width - 100 ,top - 50 , 80.0, 80.0);
     avatarImg.frame = imgPos;
-    NSURL* url = [NSURL URLWithString:[MiscTool getHerIcon]];
+    NSURL* url = [NSURL URLWithString:itemViewModel.largeIconURL];
     NSString *defaultpath = [[NSBundle mainBundle] pathForResource:@"DefaultAvatar" ofType:@"jpg"];
     UIImage* defaultImage = [UIImage imageWithContentsOfFile:defaultpath];
     [avatarImg setImageWithURL:url placeholderImage:defaultImage];
@@ -142,32 +142,31 @@
         [scrollView addSubview:forwardView];
 
         top+= 10;
-        // 2.4.1 转发部分标题
-        UILabel* lblForwardTitle = [[UILabel alloc] init];
-        itemViewModel.forwardItem.title = nil;
-        if (itemViewModel.forwardItem.title)
-        {            
-            lblForwardTitle.text = itemViewModel.forwardItem.title;
-            lblForwardTitle.Font = [UIFont fontWithName:@"Helvetica" size:13];
-            lblForwardTitle.textColor = [UIColor blackColor];
-            lblForwardTitle.backgroundColor = [UIColor clearColor]; 
-            CGSize maximumLabelSize = CGSizeMake(width,9999);
-            CGSize expectedLabelSize = [lblForwardTitle.text sizeWithFont:lblForwardTitle.font
-                                                   constrainedToSize:maximumLabelSize
-                                                       lineBreakMode:lblForwardTitle.lineBreakMode];
-            lblForwardTitle.contentMode = UIViewContentModeTopLeft;
-            lblForwardTitle.lineBreakMode = NSLineBreakByTruncatingTail;
-            lblForwardTitle.numberOfLines = 100;
-            
-            lblForwardTitle.frame = CGRectMake(forwardLeft, top, forwardWidth, expectedLabelSize.height);
-            [scrollView addSubview:lblForwardTitle];
-            top += lblForwardTitle.frame.size.height;
-        }
+//        // 2.4.1 转发部分不要标题了，与2.4.2合并显示
+//        UILabel* lblForwardTitle = [[UILabel alloc] init];
+//        if (itemViewModel.forwardItem.title)
+//        {            
+//            lblForwardTitle.text = itemViewModel.forwardItem.title;
+//            lblForwardTitle.Font = [UIFont fontWithName:@"Helvetica" size:13];
+//            lblForwardTitle.textColor = [UIColor blackColor];
+//            lblForwardTitle.backgroundColor = [UIColor clearColor]; 
+//            CGSize maximumLabelSize = CGSizeMake(width,9999);
+//            CGSize expectedLabelSize = [lblForwardTitle.text sizeWithFont:lblForwardTitle.font
+//                                                   constrainedToSize:maximumLabelSize
+//                                                       lineBreakMode:lblForwardTitle.lineBreakMode];
+//            lblForwardTitle.contentMode = UIViewContentModeTopLeft;
+//            lblForwardTitle.lineBreakMode = NSLineBreakByTruncatingTail;
+//            lblForwardTitle.numberOfLines = 100;
+//            
+//            lblForwardTitle.frame = CGRectMake(forwardLeft, top, forwardWidth, expectedLabelSize.height);
+//            [scrollView addSubview:lblForwardTitle];
+//            top += lblForwardTitle.frame.size.height;
+//        }
       
         // 2.4.2 转发部分正文
         UILabel* lblForwardContent = [[UILabel alloc] init];
         if (itemViewModel.forwardItem.content.length) {
-            lblForwardContent.text = itemViewModel.forwardItem.content;
+            lblForwardContent.text = itemViewModel.forwardItem.contentWithTitle;
             lblForwardContent.Font = [UIFont fontWithName:@"Helvetica" size:13];
             lblForwardContent.textColor = [UIColor blackColor];
             lblForwardContent.backgroundColor = [UIColor clearColor]; 
@@ -193,7 +192,7 @@
             [forwardThumbImage setImageWithURL:url];         
             
             forwardThumbImage.frame = CGRectMake(forwardLeft, top + 5, 75, 75);
-            forwardThumbImage.contentMode = UIViewContentModeScaleAspectFill;
+            forwardThumbImage.contentMode = UIViewContentModeScaleAspectFit;
             // 没有下面一行的话，会不受frame的约束限制
             forwardThumbImage.layer.masksToBounds = YES;
             
@@ -205,8 +204,7 @@
 
 
         CGRect rec = forwardView.frame;
-        CGFloat newHeight = lblForwardTitle.frame.size.height
-        + lblForwardContent.frame.size.height
+        CGFloat newHeight = lblForwardContent.frame.size.height
         + forwardThumbImage.frame.size.height
         + 20;
         forwardView.frame = CGRectMake(rec.origin.x, rec.origin.y, rec.size.width, newHeight);

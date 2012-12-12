@@ -22,6 +22,7 @@
 @synthesize contentLabel;
 @synthesize timeLabel;
 @synthesize commentImage;
+@synthesize itemViewModel;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -249,7 +250,21 @@
    
     if ([touch view] == _commentImage)
     {
-        NSString* preText = [[NSString alloc]initWithFormat:@"回复@%@: ", self.commentViewModel.title];
+        NSString* preText;
+        if(itemViewModel.type == EntryType_SinaWeibo)
+        {
+            preText = [[NSString alloc]initWithFormat:@"回复@%@: ", self.commentViewModel.title];
+        }
+        else if(itemViewModel.type == EntryType_Renren)
+        {
+            preText = [[NSString alloc]initWithFormat:@"回复%@: ", self.commentViewModel.title];
+        }
+        else if(itemViewModel.type == EntryType_Douban)
+        {
+            // 豆瓣很非主流，搞了个doubanUID，实际上就是以昵称的方式起作用的主键
+            preText = [[NSString alloc]initWithFormat:@"@%@: ", self.commentViewModel.doubanUID];
+        }
+
         TTPostController* controller = [[TTPostController alloc] initWithNavigatorURL:nil
                                                                                  query:[NSDictionary dictionaryWithObjectsAndKeys:preText, @"text", nil]];
         controller.originView = _commentImage;
@@ -258,6 +273,7 @@
     }
 }
 
+#pragma mark - TTPostControllerDelegate
 - (BOOL)postController:(TTPostController*)postController willPostText:(NSString*)text
 {
     int length = text.length;
@@ -272,20 +288,53 @@
         [alert show];
         return FALSE;
     }
-    CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
-    SinaWeibo* sinaweibo = appDelegate.sinaweibo;
     
-    if( ![sinaweibo isAuthValid])
-        return FALSE;
-    
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:text forKey:@"comment"];
-    [dic setObject:self.itemViewModel.ID forKey:@"id"];
-    
-    [sinaweibo requestWithURL:@"comments/create.json"
-                       params:dic
-                   httpMethod:@"POST"
-                     delegate:self];
+    if(itemViewModel.type == EntryType_SinaWeibo)
+    {
+        CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+        SinaWeibo* sinaweibo = appDelegate.sinaweibo;
+        
+        if( ![sinaweibo isAuthValid])
+            return FALSE;
+        
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setObject:text forKey:@"comment"];
+        [dic setObject:self.itemViewModel.ID forKey:@"id"];
+        
+        [sinaweibo requestWithURL:@"comments/create.json"
+                           params:dic
+                       httpMethod:@"POST"
+                         delegate:self];
+    }    
+    else if(itemViewModel.type == EntryType_Renren)
+    {
+        CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+        Renren* renren = appDelegate.renren;
+        
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        if(itemViewModel.renrenFeedType == RenrenNews_TextStatus)
+        {
+            [dic setObject:@"status.addComment" forKey:@"method"];
+            [dic setObject:itemViewModel.ID forKey:@"status_id"];
+            [dic setObject:itemViewModel.ownerID forKey:@"owner_id"];
+            [dic setObject:text forKey:@"content"];
+        }
+        else if(itemViewModel.renrenFeedType == RenrenNews_UploadPhoto)
+        {
+            [dic setObject:@"photos.addComment" forKey:@"method"];
+            [dic setObject:itemViewModel.ID forKey:@"pid"];
+            [dic setObject:itemViewModel.ownerID forKey:@"uid"];
+            [dic setObject:text forKey:@"content"];
+        }
+        else if(itemViewModel.renrenFeedType == RenrenNews_SharePhoto)
+        {
+            [dic setObject:@"share.addComment" forKey:@"method"];
+            [dic setObject:itemViewModel.ID forKey:@"share_id"];
+            [dic setObject:itemViewModel.ownerID forKey:@"user_id"];
+            [dic setObject:text forKey:@"content"];
+        }
+        [renren requestWithParams:dic andDelegate:self];
+    }
     return TRUE;
 }
 
@@ -311,6 +360,25 @@
                                               cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
         [alert show];
     }
+}
+
+
+
+#pragma mark  Renren Delegate
+- (void)renren:(Renren *)renren requestDidReturnResponse:(ROResponse*)response
+{    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
+                                                    message:@"发送成功" delegate:nil
+                                          cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
+{
+	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
+	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
+	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
+	[alertView show];
 }
 
 

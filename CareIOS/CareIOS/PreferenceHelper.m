@@ -24,4 +24,19 @@
     [defaults removeObjectForKey:@"SinaWeibo_FollowerAvatar2"];
 
 }
+
++(void) clearRenrenPreference
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"Renren_Token"];
+    [defaults removeObjectForKey:@"Renren_ExpirationDate"];
+    [defaults removeObjectForKey:@"Renren_ID"];
+    [defaults removeObjectForKey:@"Renren_NickName"];
+    [defaults removeObjectForKey:@"Renren_Avatar"];
+    
+    [defaults removeObjectForKey:@"Renren_FollowerID"];
+    [defaults removeObjectForKey:@"Renren_FollowerNickName"];
+    [defaults removeObjectForKey:@"Renren_FollowerAvatar"];
+    [defaults removeObjectForKey:@"Renren_FollowerAvatar2"];   
+}
 @end

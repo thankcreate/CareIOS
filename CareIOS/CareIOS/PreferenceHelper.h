@@ -10,4 +10,5 @@
 
 @interface PreferenceHelper : NSObject
 +(void) clearSinaWeiboPreference;
++(void) clearRenrenPreference;
 @end

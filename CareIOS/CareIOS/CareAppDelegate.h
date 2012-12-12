@@ -18,6 +18,7 @@
 #define kAppRedirectURI     @"http://api.weibo.com/oauth2/default.html"
 
 @class SinaWeibo;
+@class Renren;
 
 @interface CareAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -28,6 +29,7 @@
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
+@property (strong, nonatomic) Renren *renren;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

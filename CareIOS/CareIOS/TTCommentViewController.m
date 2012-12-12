@@ -11,6 +11,7 @@
 #import "CommentViewModel.h"
 #import "CareAppDelegate.h"
 #import "SinaWeiboConverter.h"
+#import "RenrenConverter.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "TTTableCommentItem.h"
 #import "TTTableCommentItemCell.h"
@@ -37,6 +38,8 @@
 
 @implementation TTCommentViewController
 @synthesize itemViewModel;
+@synthesize commentList;
+@synthesize lastRenrenMethod;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -49,6 +52,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    commentList = [[NSMutableArray alloc] init];
     self.variableHeightRows = YES;
     
     // 清除额外的分隔线
@@ -77,7 +81,69 @@
     {
         [self fetchCommentsSinaWeibo];
     }
+    else if (itemViewModel.type == EntryType_Renren)
+    {
+        [self fetchCommentsRenren];
+    }
 }
+
+-(void)fetchComplete
+{
+    NSMutableArray* sections = [[NSMutableArray alloc] init];
+    NSMutableArray* items = [[NSMutableArray alloc] init];
+    [sections addObject:@""];
+    NSMutableArray* itemsRow = [[NSMutableArray alloc] init];
+    
+    NSArray* sortedCommentList = [commentList sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSDate* time1 = ((CommentViewModel*)(obj1)).time;
+        NSDate* time2 = ((CommentViewModel*)(obj2)).time;
+        NSComparisonResult res =  [time1 compare:time2];
+        return -res;
+    }];
+
+    for(CommentViewModel* comment in sortedCommentList)
+    {
+        if(comment != nil)
+        {
+            TTTableCommentItem* item = [TTTableCommentItem itemWithTitle:comment.title
+                                                                 content:comment.content
+                                                                imageURL:comment.iconURL
+                                                                    time:comment.time
+                                                        commentViewModel:comment
+                                                           itemViewModel:itemViewModel];
+            [itemsRow addObject:item];
+        }
+    }
+    if(commentList.count == 0)
+    {
+        TTTableCommentItem* item = [TTTableCommentItem itemWithTitle:@">_< 尚无评论"
+                                                             content:@"少年，不来抢个沙发么？"
+                                                            imageURL:@""
+                                                                time:nil
+                                                    commentViewModel:nil
+                                                       itemViewModel:nil];
+        [itemsRow addObject:item];
+    }
+
+    
+    [items addObject:itemsRow];
+    self.dataSource = [TTSectionedDataSource dataSourceWithItems:items sections:sections];
+    [self.tableView reloadData];
+    [self.tableView reloadInputViews];
+}
+
+
+- (IBAction)writeCommentClick:(id)sender
+{
+    
+    TTPostController* controller = [[TTPostController alloc] initWithNavigatorURL:nil
+                                                                            query:[NSDictionary dictionaryWithObjectsAndKeys:@"", @"text", nil]];
+    controller.originView = self.view;
+    controller.delegate = self;
+    [controller showInView:self.view animated:YES];
+    
+}
+
 
 #pragma mark - SinaWeibo Logic
 - (SinaWeibo *)sinaweibo
@@ -103,7 +169,7 @@
                      delegate:self];
 }
 
-#pragma mark - SinaWeiboRequest Delegate
+#pragma mark  SinaWeiboRequest Delegate
 - (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
 {
     if ([request.url hasSuffix:@"comments/create.json"])
@@ -117,39 +183,19 @@
 
 - (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
 {
-    NSMutableArray* sections = [[NSMutableArray alloc] init];
-    NSMutableArray* items = [[NSMutableArray alloc] init];
-    [sections addObject:@""];
-    NSMutableArray* itemsRow = [[NSMutableArray alloc] init];
-    
     if ([request.url hasSuffix:@"comments/show.json"])
     {
+        [commentList removeAllObjects];
         NSArray* comments = [result objectForKey:@"comments"];
         for(id comment in comments)
         {
             CommentViewModel* model = [SinaWeiboConverter convertCommentToCommon:comment];
-            if(model != nil)
+            if(model)
             {
-                TTTableCommentItem* item = [TTTableCommentItem itemWithTitle:model.title
-                                                                     content:model.content
-                                                                    imageURL:model.iconURL
-                                                                        time:model.time
-                                                            commentViewModel:model
-                                                               itemViewModel:itemViewModel];
-                [itemsRow addObject:item];
+                [commentList addObject:model];
             }
-        }        
-        if(comments.count == 0)
-        {
-            TTTableCommentItem* item = [TTTableCommentItem itemWithTitle:@">_< 尚无评论"
-                                                                 content:@"少年，不来抢个沙发么？"
-                                                                imageURL:@""
-                                                                    time:nil
-                                                        commentViewModel:nil
-                                                           itemViewModel:nil];
-            [itemsRow addObject:item];
         }
-
+        [self fetchComplete];
     }
     else if([request.url hasSuffix:@"comments/create.json"])
     {
@@ -162,23 +208,103 @@
                                               cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
         [alert show];
     }
-    [items addObject:itemsRow];
-    self.dataSource = [TTSectionedDataSource dataSourceWithItems:items sections:sections];
-    [self.tableView reloadData];
-    [self.tableView reloadInputViews];
 }
 
-- (IBAction)writeCommentClick:(id)sender
+
+
+#pragma mark - Renren Logic
+- (Renren *)renren
 {
-  
-    TTPostController* controller = [[TTPostController alloc] initWithNavigatorURL:nil
-                                                                            query:[NSDictionary dictionaryWithObjectsAndKeys:@"", @"text", nil]];
-    controller.originView = self.view;
-    controller.delegate = self;
-    [controller showInView:self.view animated:YES];
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+    return appDelegate.renren;
+}
+
+-(void)fetchCommentsRenren
+{
+    Renren* renren = [self renren];
+   
+    if( ![renren isSessionValid] )
+        return;
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    if(itemViewModel.renrenFeedType == RenrenNews_TextStatus)
+    {
+        [dic setObject:@"status.getComment" forKey:@"method"];
+        [dic setObject:itemViewModel.ID forKey:@"status_id"];
+        [dic setObject:itemViewModel.ownerID forKey:@"owner_id"];
+        [dic setObject:@"50" forKey:@"count"];
+    }
+    else if(itemViewModel.renrenFeedType == RenrenNews_UploadPhoto)
+    {
+        [dic setObject:@"photos.getComments" forKey:@"method"];
+        [dic setObject:itemViewModel.ID forKey:@"pid"];
+        [dic setObject:itemViewModel.ownerID forKey:@"uid"];
+        [dic setObject:@"50" forKey:@"count"];
+    }
+    else if(itemViewModel.renrenFeedType == RenrenNews_SharePhoto)
+    {
+        [dic setObject:@"share.getComments" forKey:@"method"];
+        [dic setObject:itemViewModel.ID forKey:@"share_id"];
+        [dic setObject:itemViewModel.ownerID forKey:@"user_id"];
+        [dic setObject:@"50" forKey:@"count"];
+    }
+    lastRenrenMethod = @"getComment";
+    [renren requestWithParams:dic andDelegate:self];
+}
+
+
+
+#pragma mark  Renren Delegate
+- (void)renren:(Renren *)renren requestDidReturnResponse:(ROResponse*)response
+{
+    if([lastRenrenMethod compare:@"getComment"] == NSOrderedSame)
+    {
+        [commentList removeAllObjects];
+        NSArray* comments;
+        // 这里很恶心，对于分享的评论是存在comments结点下的，其它的直接存在root结点下
+        if(itemViewModel.renrenFeedType == RenrenNews_SharePhoto)
+        {
+            comments = [response.rootObject objectForKey:@"comments"];
+        }
+        else
+        {
+            comments = response.rootObject;
+        }
+        
+        for(id comment in comments)
+        {
+            CommentViewModel* model = [RenrenConverter convertCommentToCommon:comment renrenType:itemViewModel.renrenFeedType];
+            if(model)
+            {
+                [commentList addObject:model];
+            }
+        }
+        [self fetchComplete];
+    }
+    else if ([lastRenrenMethod compare:@"addComment"] == NSOrderedSame)
+    {
+        // 因为刚刚自己发表了一个评论，这里需要重新加载评论列表
+        // 延迟是因为人人的服务器需要一定时间来更新数据，如果立即请求，可能得不到最新的
+        [self performSelector:@selector(fetchCommentsRenren) withObject:nil afterDelay:0.5];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
+                                                        message:@"发送成功" delegate:nil
+                                              cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
+        [alert show];
+    }
 
 }
 
+- (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
+{
+	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
+	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
+	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
+	[alertView show];
+}
+
+#pragma  mark -  TTPostControllerDelegate
+// 对于评论而言都是140字上限，对于发表新状态，人人是280,其它还是140
 - (BOOL)postController:(TTPostController*)postController willPostText:(NSString*)text
 {
     int length = text.length;
@@ -192,22 +318,59 @@
                                               cancelButtonTitle:@"嗯嗯" otherButtonTitles:nil];
         [alert show];
         return FALSE;
-    }   
+    }
     
-    SinaWeibo* sinaweibo = [self sinaweibo];
+    if(itemViewModel.type == EntryType_SinaWeibo)
+    {
+        SinaWeibo* sinaweibo = [self sinaweibo];
+        
+        if( ![sinaweibo isAuthValid])
+            return FALSE;
+        
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setObject:text forKey:@"comment"];
+        [dic setObject:itemViewModel.ID forKey:@"id"];
+        
+        [sinaweibo requestWithURL:@"comments/create.json"
+                           params:dic
+                       httpMethod:@"POST"
+                         delegate:self];     
+
+    }
+    else if(itemViewModel.type == EntryType_Renren)
+    {
+        Renren* renren = [self renren];
+        
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        if(itemViewModel.renrenFeedType == RenrenNews_TextStatus)
+        {
+            [dic setObject:@"status.addComment" forKey:@"method"];
+            [dic setObject:itemViewModel.ID forKey:@"status_id"];
+            [dic setObject:itemViewModel.ownerID forKey:@"owner_id"];
+            [dic setObject:text forKey:@"content"];
+        }
+        else if(itemViewModel.renrenFeedType == RenrenNews_UploadPhoto)
+        {
+            [dic setObject:@"photos.addComment" forKey:@"method"];
+            [dic setObject:itemViewModel.ID forKey:@"pid"];
+            [dic setObject:itemViewModel.ownerID forKey:@"uid"];
+            [dic setObject:text forKey:@"content"];
+        }
+        else if(itemViewModel.renrenFeedType == RenrenNews_SharePhoto)
+        {
+            [dic setObject:@"share.addComment" forKey:@"method"];
+            [dic setObject:itemViewModel.ID forKey:@"share_id"];
+            [dic setObject:itemViewModel.ownerID forKey:@"user_id"];
+            [dic setObject:text forKey:@"content"];
+        }
+        lastRenrenMethod = @"addComment";
+        [renren requestWithParams:dic andDelegate:self];
+    }
     
-    if( ![sinaweibo isAuthValid])
-        return FALSE;
+   return TRUE;
     
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:text forKey:@"comment"];
-    [dic setObject:itemViewModel.ID forKey:@"id"];
-    
-    [sinaweibo requestWithURL:@"comments/create.json"
-                       params:dic
-                   httpMethod:@"POST"
-                     delegate:self];
-    return TRUE;
-}
+ }
+
+
 
 @end

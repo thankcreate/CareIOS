@@ -13,6 +13,8 @@
 #import "MiscTool.h"
 #import "CareConstants.h"
 #import "SinaWeiboFetcher.h"
+#import "RenrenFetcher.h"
+#import "CareAppDelegate.h"
 
 
 @interface LabEnemyViewController ()
@@ -45,6 +47,7 @@
 
 @synthesize mapManToCount;
 @synthesize mapManToID;
+@synthesize type;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -122,11 +125,51 @@
     [lineChart setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
     [self.view addSubview:lineChart];
-    fetcher = [[SinaWeiboFetcher alloc] initWithDelegate:self];    
+    
+    
+    // 开始抓数据
+    fetcher = [self defaultFetcher];
     [fetcher startFetchCommentMan];
 }
 
-- (void)analysisEnemy:(EntryType)type
+-(BaseFetcher*)defaultFetcher
+{
+    BaseFetcher* resFetcher;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    CareAppDelegate *delegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+    SinaWeibo* sinaweibo = delegate.sinaweibo;
+    Renren* renren = delegate.renren;
+    
+    if(sinaweibo.isAuthValid && [defaults objectForKey:@"SinaWeibo_FollowerID"])
+    {
+        resFetcher = [[SinaWeiboFetcher alloc] initWithDelegate:self];
+        NSURL* url = [NSURL URLWithString:[MiscTool getHerSinaWeiboIcon]];
+        [avatarImage setImageWithURL:url];
+        lblName.text = [defaults objectForKey:@"SinaWeibo_FollowerNickName"];
+        [lblName sizeToFit];        
+        herID = [defaults objectForKey:@"SinaWeibo_FollowerID"];
+        type = EntryType_SinaWeibo;
+    }
+    else if(renren.isSessionValid && [defaults objectForKey:@"Renren_FollowerID"])
+    {
+        resFetcher = [[RenrenFetcher alloc] initWithDelegate:self];
+        NSURL* url = [NSURL URLWithString:[MiscTool getHerRenrenIcon]];
+        [avatarImage setImageWithURL:url];
+        lblName.text = [defaults objectForKey:@"Renren_FollowerNickName"];
+        [lblName sizeToFit];        
+        herID = [defaults objectForKey:@"Renren_FollowerID"];
+        type = EntryType_Renren;
+    }
+    else if(TRUE)
+    {
+        // TODO
+    }
+    return resFetcher;
+
+}
+
+- (void)analysisEnemy:(EntryType)tp
 {
     name1 = @"";
     name2 = @"";
@@ -137,16 +180,27 @@
     var3 = 0;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    switch (type) {
+    switch (tp) {
         case EntryType_SinaWeibo:
         {
             fetcher = [[SinaWeiboFetcher alloc] initWithDelegate:self];
             NSURL* url = [NSURL URLWithString:[MiscTool getHerSinaWeiboIcon]];
             [avatarImage setImageWithURL:url];
             lblName.text = [defaults objectForKey:@"SinaWeibo_FollowerNickName"];
+            [lblName sizeToFit];
             herID = [defaults objectForKey:@"SinaWeibo_FollowerID"];
             break;
-        }            
+        }
+        case EntryType_Renren:
+        {
+            fetcher = [[RenrenFetcher alloc] initWithDelegate:self];
+            NSURL* url = [NSURL URLWithString:[MiscTool getHerRenrenIcon]];
+            [avatarImage setImageWithURL:url];
+            lblName.text = [defaults objectForKey:@"Renren_FollowerNickName"];
+            [lblName sizeToFit];
+            herID = [defaults objectForKey:@"Renren_FollowerID"];
+            break;
+        }
         default:
             break;
     }    
@@ -258,6 +312,13 @@
     lineChart.minValue = 0;
     lineChart.maxValue = (countMax / 10 + 1) * 10;
     lineChart.interval = countMax < 46 ? 5 : 10;
+    
+    if(countMax <= 5)
+    {
+        lineChart.maxValue = 5;
+        lineChart.interval = 1;
+    }
+    
 
     NSMutableArray *ar = [NSMutableArray arrayWithObjects:var2,
                           var1,
@@ -278,6 +339,41 @@
     [lineChart setNeedsDisplay];
 }
 
+#pragma mark - Event
+- (IBAction)btnChoosePlatformClicked:(id)sender
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"选择数据来源"
+                                                             delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil
+                                                    otherButtonTitles:@"新浪微博", @"人人网", @"豆瓣社区", nil];
+  	actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+	[actionSheet showFromTabBar:self.tabBarController.tabBar];
+
+}
+
+
+
+#pragma mark - TTPostControllerDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    // Sina
+    if(buttonIndex == 0)
+    {
+        //lastSelectPostType = EntryType_SinaWeibo;
+        [self analysisEnemy:EntryType_SinaWeibo];
+    }
+    // Renren
+    else if(buttonIndex == 1)
+    {
+        //lastSelectPostType = EntryType_Renren;
+        [self analysisEnemy:EntryType_Renren];
+    }
+    // Douban
+    else if(buttonIndex == 2)
+    {
+        //lastSelectPostType = EntryType_Douban;
+        [self analysisEnemy:EntryType_Douban];
+    }
+}
 @end
 
 @implementation ManToCountPair

@@ -16,6 +16,12 @@ typedef enum EnumEntryType {
 } EntryType;
 
 
+typedef enum EnumRenrenNewsType{
+    RenrenNews_TextStatus = 10,
+    RenrenNews_UploadPhoto = 30,
+    RenrenNews_SharePhoto = 32,
+} RenrenNewsType;
+
 @interface CareConstants : NSObject
 
 @end

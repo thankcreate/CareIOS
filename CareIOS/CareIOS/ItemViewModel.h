@@ -22,6 +22,7 @@
 @property (strong, nonatomic) NSDate* time;
 
 @property (nonatomic) EntryType type;
+@property (nonatomic) RenrenNewsType renrenFeedType;
 
 @property (strong, nonatomic) NSString* content;
 @property (strong, nonatomic) NSString* rssSummary;
@@ -33,10 +34,11 @@
 @property (strong, nonatomic) NSString* commentCount;
 @property (strong, nonatomic) NSString* sharedCount;
 
-@property (strong, nonatomic) NSString* renrenFeedType;
+
 @property (strong, nonatomic) ItemViewModel* forwardItem;
 
 // helper
 @property (strong, nonatomic) NSString* fromText;
 @property (strong, nonatomic) NSString* timeText;
+@property (strong, nonatomic) NSString* contentWithTitle;
 @end

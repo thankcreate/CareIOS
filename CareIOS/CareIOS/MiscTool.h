@@ -18,4 +18,7 @@
 +(NSString*)getHerSinaWeiboIcon;
 +(NSString*)getHerRenrenIcon;
 +(NSString*)getHerDoubanIcon;
+
++(BOOL)isAnyOneFollowed;
++(NSString *)removeHTMLTag:(NSString*)input;
 @end

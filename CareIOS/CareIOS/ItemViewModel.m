@@ -12,7 +12,7 @@
 
 @synthesize fromText;
 @synthesize timeText;
-
+@synthesize contentWithTitle;
 -(NSString*)fromText
 {
     if(self.type == EntryType_SinaWeibo)
@@ -38,4 +38,16 @@
     NSString* strTime = [formatter stringFromDate:self.time];
     return strTime;
 }
+
+-(NSString*)contentWithTitle
+{
+    NSString* firstPart = self.title;
+    if(firstPart == nil)
+        firstPart = @"";
+    NSString* secondPart = self.content;
+    if(secondPart == nil)
+        secondPart = @"";
+    return [NSString stringWithFormat:@"%@: %@",firstPart, secondPart];
+}
+
 @end

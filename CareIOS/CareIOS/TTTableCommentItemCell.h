@@ -10,7 +10,7 @@
 #import "SinaWeibo.h"
 @class CommentViewModel;
 @class ItemViewModel;
-@interface TTTableCommentItemCell : TTTableLinkedItemCell<SinaWeiboRequestDelegate, TTPostControllerDelegate>
+@interface TTTableCommentItemCell : TTTableLinkedItemCell<SinaWeiboRequestDelegate,RenrenDelegate, TTPostControllerDelegate>
 {
     TTImageView*  _iconImage;
     TTImageView*  _commentImage;

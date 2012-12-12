@@ -12,24 +12,49 @@
 #import "MiscTool.h"
 #import "MainViewModel.h"
 #import "CommentViewModel.h"
+#import "FriendViewModel.h"
 @implementation SinaWeiboConverter
+
++(FriendViewModel*) convertFrendToCommon:(id)friend
+{
+    FriendViewModel* model = [[FriendViewModel alloc] init];
+    @try {
+        model.name =[friend objectForKey:@"screen_name"];
+        model.description =[friend objectForKey:@"description"];
+        model.avatar =[friend objectForKey:@"profile_image_url"];
+        model.avatar2 =[friend objectForKey:@"avatar_large"];
+        model.ID =[[friend objectForKey:@"id"] stringValue];
+    }
+    @catch (NSException *exception) {
+        model = nil;
+    }
+    @finally {
+        return model;
+    }
+}
 
 +(CommentViewModel*) convertCommentToCommon:(id)comment
 {
     CommentViewModel* model = [[CommentViewModel alloc] init];
-      
-    id user = [comment objectForKey:@"user"];
-    if(user == nil)
-        return nil;
-    model.title = [user objectForKey:@"name"];
-    model.iconURL = [user objectForKey:@"profile_image_url"];
-    model.uid = [[user objectForKey:@"id"] stringValue];
-    model.content = [comment objectForKey:@"text"];
-    model.ID = [[comment objectForKey:@"id"] stringValue];
-    id rawTime = [comment objectForKey:@"created_at"];
-    model.time = [self convertSinaWeiboDateStringToDate:rawTime];
-    model.type = EntryType_SinaWeibo;
-    return model;
+    @try {
+        id user = [comment objectForKey:@"user"];
+        if(user == nil)
+            return nil;
+        model.title = [user objectForKey:@"name"];
+        model.iconURL = [user objectForKey:@"profile_image_url"];
+        model.uid = [[user objectForKey:@"id"] stringValue];
+        model.content = [comment objectForKey:@"text"];
+        model.ID = [[comment objectForKey:@"id"] stringValue];
+        id rawTime = [comment objectForKey:@"created_at"];
+        model.time = [self convertSinaWeiboDateStringToDate:rawTime];
+        model.type = EntryType_SinaWeibo;
+    }
+    @catch (NSException *exception) {
+        model = nil;
+    }
+    @finally {
+        return model;
+    }
 }
 
 +(ItemViewModel*) convertStatusToCommon:(id)status 

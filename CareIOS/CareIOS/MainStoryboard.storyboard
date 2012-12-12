@@ -323,7 +323,13 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="潜在情敌" id="m66-Ut-UH2"/>
+                    <navigationItem key="navigationItem" title="潜在情敌" id="m66-Ut-UH2">
+                        <barButtonItem key="rightBarButtonItem" title="源" id="0gb-tp-DvP">
+                            <connections>
+                                <action selector="btnChoosePlatformClicked:" destination="Yip-3j-A30" id="89c-3Y-mlw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z1x-5k-3It" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -458,7 +464,7 @@
                                         </view>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RJt-4R-BBu" detailTextLabel="AN3-Ww-iwo" style="IBUITableViewCellStyleValue2" id="A4J-W4-q7O">
-                                        <rect key="frame" x="0.0" y="271" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="271" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -482,12 +488,28 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" textLabel="wSJ-Jv-xu7" style="IBUITableViewCellStyleDefault" id="tyL-TD-eLj">
+                                        <rect key="frame" x="0.0" y="315" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="退出登陆" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wSJ-Jv-xu7">
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="豆瓣" id="r76-5f-5SM">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="NHm-LV-hcq" detailTextLabel="eP2-66-RQc" style="IBUITableViewCellStyleValue2" id="Nvq-GE-yiq">
-                                        <rect key="frame" x="0.0" y="362" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="406" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -512,7 +534,7 @@
                                         </view>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="INq-Fx-1iv" detailTextLabel="mrw-8u-m9q" style="IBUITableViewCellStyleValue2" id="RpT-Rp-VcE">
-                                        <rect key="frame" x="0.0" y="407" width="320" height="45"/>
+                                        <rect key="frame" x="0.0" y="451" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="0.0" width="300" height="43"/>
@@ -541,7 +563,7 @@
                             <tableViewSection headerTitle="RSS" id="tqz-mU-q0k">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="o8U-We-mh2" detailTextLabel="pTq-rS-u4C" style="IBUITableViewCellStyleValue2" id="K2m-nI-swi">
-                                        <rect key="frame" x="0.0" y="498" width="320" height="46"/>
+                                        <rect key="frame" x="0.0" y="542" width="320" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -571,20 +593,22 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="帐号" id="pg4-g1-dij"/>
                     <connections>
+                        <outlet property="lblRenrenFollowerName" destination="AN3-Ww-iwo" id="fac-87-Sb6"/>
+                        <outlet property="lblRenrenName" destination="406-Vx-jve" id="y4A-yD-CF7"/>
                         <outlet property="lblSinaWeiboFollowerName" destination="WWn-dY-CfP" id="pEH-Fy-H1x"/>
                         <outlet property="lblSinaWeiboName" destination="RaV-O1-DG8" id="LJx-U0-yFK"/>
                         <outlet property="table" destination="AOX-uz-Rxa" id="L7E-6J-BEe"/>
-                        <segue destination="qKu-ra-iSG" kind="push" identifier="Segue_SinaWeiboSelectFollower" id="LrW-nW-e6V"/>
+                        <segue destination="qKu-ra-iSG" kind="push" identifier="Segue_SelectFollower" id="LrW-nW-e6V"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N6J-9u-4xZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1172" y="2352"/>
         </scene>
-        <!--Sina Weibo Select Friend View Controller - 指定关注-->
+        <!--Select Friend View Controller - 指定关注-->
         <scene sceneID="sMJ-8L-ytF">
             <objects>
-                <tableViewController hidesBottomBarWhenPushed="YES" id="qKu-ra-iSG" customClass="SinaWeiboSelectFriendViewController" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="qKu-ra-iSG" customClass="SelectFriendViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Lrg-zn-qZQ">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

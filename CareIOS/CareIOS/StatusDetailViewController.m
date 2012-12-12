@@ -53,6 +53,7 @@
     UIImageView *avatarImg = [[UIImageView alloc] init];
     CGRect imgPos = CGRectMake(width - 100 ,top - 50 , 80.0, 80.0);
     avatarImg.frame = imgPos;
+    avatarImg.contentMode = UIViewContentModeScaleAspectFill;
     NSURL* url = [NSURL URLWithString:itemViewModel.largeIconURL];
     NSString *defaultpath = [[NSBundle mainBundle] pathForResource:@"DefaultAvatar" ofType:@"jpg"];
     UIImage* defaultImage = [UIImage imageWithContentsOfFile:defaultpath];

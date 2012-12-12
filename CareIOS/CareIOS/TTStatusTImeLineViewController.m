@@ -11,6 +11,8 @@
 #import "CareAppDelegate.h"
 #import "TTStatusTImeDragRefreshDelegate.h"
 #import "MiscTool.h"
+#import "DOUAPIEngine.h"
+#import "NSString+RenrenSBJSON.h"
 @interface TTStatusTImeLineViewController ()
 @property (strong, nonatomic) MainViewModel* mainViewModel;
 @property (strong, nonatomic) RefreshViewerHelper* refreshViewerHelper;
@@ -167,6 +169,14 @@
 - (BOOL)postController:(TTPostController*)postController willPostText:(NSString*)text
 {
     int length = text.length;
+    if(length == 0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"呃～是智商要超过250才能看到您写的字么？" delegate:nil
+                                              cancelButtonTitle:@"寡人知之矣" otherButtonTitles:nil];
+        [alert show];
+        return FALSE;
+    }
     int maxLenth = 140;
     // 人人是个例外，新鲜事最长为280
     if(lastSelectPostType == EntryType_Renren)
@@ -176,8 +186,7 @@
     int nLeft = length - maxLenth;
     if(nLeft >= 0)
     {
-        NSString* preText = [[NSString alloc]initWithFormat:@"内容超长了%d个 ", nLeft];
-        
+        NSString* preText = [[NSString alloc]initWithFormat:@"内容超长了%d个 ", nLeft];        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
                                                         message:preText         delegate:nil
                                               cancelButtonTitle:@"嗯嗯" otherButtonTitles:nil];
@@ -214,7 +223,39 @@
     }
     else if(lastSelectPostType == EntryType_Douban)
     {
-        // TODO
+        DOUService *service = [DOUService sharedInstance];
+        if(![service isValid])
+            return FALSE;
+        
+        NSString* subPath = @"/shuo/v2/statuses/";
+        DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                                 parameters:[NSDictionary dictionaryWithObjectsAndKeys:text,@"text",
+                                                             [CareConstants doubanAppKey], @"source",nil]];
+        
+        DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+            NSError *error = [req error];
+            NSLog(@"str:%@", [req responseString]);
+            
+            if (!error) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
+                                                                message:@"发送成功" delegate:nil
+                                                      cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
+                [alert show];
+                
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                                message:@"由于未知原因，获取评论失败" delegate:nil
+                                                      cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+                [alert show];
+            }
+        };
+        
+        service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+        
+        // TODO: urlencode
+        [service post:query postBody:nil callback:completionBlock];
     }
 
     return TRUE;
@@ -302,6 +343,15 @@
 #pragma mark - Douban Logic
 - (void)DoubanPostStatus
 {
-    
+    DOUService *service = [DOUService sharedInstance];
+    if(![service isValid])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"豆瓣帐号尚未登陆或已过期" delegate:nil
+                                              cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    [self showPostStatusPostController];
 }
 @end

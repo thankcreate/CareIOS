@@ -235,7 +235,7 @@
                             </pickerView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=">_&lt;" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wEx-Qu-Z1w">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="116" id="h89-hX-3yO"/>
+                                    <constraint firstAttribute="width" constant="154" id="WWB-A2-7E8"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -285,11 +285,11 @@
                             <constraint firstItem="G3Y-aZ-UX4" firstAttribute="top" secondItem="roK-pm-Zv1" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="FIB-J4-mZt"/>
                             <constraint firstItem="6fI-pL-Mhn" firstAttribute="top" secondItem="roK-pm-Zv1" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="G6b-o7-bSJ"/>
                             <constraint firstItem="U1U-qO-mmZ" firstAttribute="leading" secondItem="YiU-fW-V6Q" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="G7h-eo-1Hk"/>
+                            <constraint firstItem="G3Y-aZ-UX4" firstAttribute="leading" secondItem="zYH-DV-yj6" secondAttribute="leading" constant="11" id="Mw2-Dd-i8C"/>
                             <constraint firstItem="iTe-4j-8Hg" firstAttribute="bottom" secondItem="6fI-pL-Mhn" secondAttribute="bottom" type="default" id="RMr-VD-76L"/>
                             <constraint firstItem="YiU-fW-V6Q" firstAttribute="baseline" secondItem="U1U-qO-mmZ" secondAttribute="baseline" type="default" id="S5u-0S-OWb"/>
                             <constraint firstItem="iTe-4j-8Hg" firstAttribute="bottom" secondItem="G3Y-aZ-UX4" secondAttribute="bottom" type="default" id="V3Q-Af-jVf"/>
                             <constraint firstAttribute="bottom" secondItem="U1U-qO-mmZ" secondAttribute="bottom" priority="1" type="user" id="WjV-dJ-6k5"/>
-                            <constraint firstItem="YiU-fW-V6Q" firstAttribute="centerX" secondItem="wEx-Qu-Z1w" secondAttribute="centerX" type="default" id="aVU-iX-MMO"/>
                             <constraint firstItem="roK-pm-Zv1" firstAttribute="top" secondItem="zYH-DV-yj6" secondAttribute="top" type="default" id="chD-sR-V47"/>
                             <constraint firstItem="iTe-4j-8Hg" firstAttribute="leading" secondItem="zYH-DV-yj6" secondAttribute="leading" constant="94" id="exp-c7-6QX"/>
                             <constraint firstItem="YiU-fW-V6Q" firstAttribute="top" secondItem="iTe-4j-8Hg" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="gb3-uP-uWG"/>
@@ -438,11 +438,11 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="人人网" id="xYQ-bJ-xE6">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="bdU-CE-iEU" detailTextLabel="406-Vx-jve" style="IBUITableViewCellStyleValue2" id="Ciq-ox-cVl">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="bdU-CE-iEU" detailTextLabel="406-Vx-jve" style="IBUITableViewCellStyleValue2" id="Ciq-ox-cVl">
                                         <rect key="frame" x="0.0" y="226" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="登陆帐号" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bdU-CE-iEU">
@@ -463,11 +463,11 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RJt-4R-BBu" detailTextLabel="AN3-Ww-iwo" style="IBUITableViewCellStyleValue2" id="A4J-W4-q7O">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="RJt-4R-BBu" detailTextLabel="AN3-Ww-iwo" style="IBUITableViewCellStyleValue2" id="A4J-W4-q7O">
                                         <rect key="frame" x="0.0" y="271" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="关注帐号" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="RJt-4R-BBu">
@@ -508,11 +508,11 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="豆瓣" id="r76-5f-5SM">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="NHm-LV-hcq" detailTextLabel="eP2-66-RQc" style="IBUITableViewCellStyleValue2" id="Nvq-GE-yiq">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="NHm-LV-hcq" detailTextLabel="eP2-66-RQc" style="IBUITableViewCellStyleValue2" id="Nvq-GE-yiq">
                                         <rect key="frame" x="0.0" y="406" width="320" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="登陆帐号" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NHm-LV-hcq">
@@ -533,11 +533,11 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="INq-Fx-1iv" detailTextLabel="mrw-8u-m9q" style="IBUITableViewCellStyleValue2" id="RpT-Rp-VcE">
-                                        <rect key="frame" x="0.0" y="451" width="320" height="45"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="INq-Fx-1iv" detailTextLabel="mrw-8u-m9q" style="IBUITableViewCellStyleValue2" id="RpT-Rp-VcE">
+                                        <rect key="frame" x="0.0" y="451" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="0.0" width="280" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="关注帐号" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="INq-Fx-1iv">
@@ -558,12 +558,29 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" textLabel="i0B-cG-FpD" style="IBUITableViewCellStyleDefault" id="IqL-aM-Ndc">
+                                        <rect key="frame" x="0.0" y="495" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="退出登陆" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="i0B-cG-FpD">
+                                                    <rect key="frame" x="10" y="0.0" width="280" height="43"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="RSS" id="tqz-mU-q0k">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="o8U-We-mh2" detailTextLabel="pTq-rS-u4C" style="IBUITableViewCellStyleValue2" id="K2m-nI-swi">
-                                        <rect key="frame" x="0.0" y="542" width="320" height="46"/>
+                                        <rect key="frame" x="0.0" y="586" width="320" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="10" y="1" width="300" height="43"/>
@@ -593,6 +610,8 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="帐号" id="pg4-g1-dij"/>
                     <connections>
+                        <outlet property="lblDoubanFollowerName" destination="mrw-8u-m9q" id="ee0-7W-cb0"/>
+                        <outlet property="lblDoubanName" destination="eP2-66-RQc" id="QFD-OX-exS"/>
                         <outlet property="lblRenrenFollowerName" destination="AN3-Ww-iwo" id="fac-87-Sb6"/>
                         <outlet property="lblRenrenName" destination="406-Vx-jve" id="y4A-yD-CF7"/>
                         <outlet property="lblSinaWeiboFollowerName" destination="WWn-dY-CfP" id="pEH-Fy-H1x"/>
@@ -900,6 +919,92 @@
         <image name="Settings.png" width="30" height="30"/>
         <image name="Spy.png" width="160" height="160"/>
     </resources>
+    <classes>
+        <class className="AccountViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="lblDoubanFollowerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblDoubanName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblRenrenFollowerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblRenrenName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblSinaWeiboFollowerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblSinaWeiboName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="table" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="LabCharactorViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabCharactorViewController.h"/>
+        </class>
+        <class className="LabEnemyViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabEnemyViewController.h"/>
+        </class>
+        <class className="LabPencentageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabPencentageViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="herImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="lblHerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblMyName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblScore" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblScorePrefix" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="myImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="picker" candidateClass="UIPickerView"/>
+            </relationships>
+        </class>
+        <class className="LabTimeSpanViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabTimeSpanViewController.h"/>
+        </class>
+        <class className="LabViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="SelectFriendViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectFriendViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mySearchBar" candidateClass="UISearchBar"/>
+            </relationships>
+        </class>
+        <class className="StatusDetailViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/StatusDetailViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="TTBaseViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTBaseViewController.h"/>
+        </class>
+        <class className="TTCommentViewController" superclassName="TTTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTCommentViewController.h"/>
+        </class>
+        <class className="TTModelViewController" superclassName="TTViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTModelViewController.h"/>
+        </class>
+        <class className="TTNavigatorViewController" superclassName="TTBaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTNavigatorViewController.h"/>
+        </class>
+        <class className="TTPictureWallViewController" superclassName="TTThumbsViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTPictureWallViewController.h"/>
+        </class>
+        <class className="TTStatusTImeLineViewController" superclassName="TTTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTStatusTImeLineViewController.h"/>
+        </class>
+        <class className="TTTableViewController" superclassName="TTModelViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTTableViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="TTThumbsViewController" superclassName="TTTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTThumbsViewController.h"/>
+        </class>
+        <class className="TTViewController" superclassName="TTNavigatorViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

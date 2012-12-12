@@ -61,10 +61,15 @@
 {
     if ([request.url hasSuffix:@"statuses/user_timeline.json"])
     {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"由于未知原因，获取数据失败" delegate:nil
+                                              cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+        [alert show];
+
         if(delegate)
         {
             [taskHelper clearTask];
-            [delegate fetchComplete:resultMenList];
+            [delegate fetchComplete:nil];
         }
     }
     else if ([request.url hasSuffix:@"comments/show.json"])
@@ -115,7 +120,8 @@
                 {
                     NSString* ID = [[user objectForKey:@"id"] stringValue];
                     NSString* name = [user objectForKey:@"screen_name"];
-                    if(!( [ID compare:herID] == NSOrderedSame )  || ( [ID compare:myID] == NSOrderedSame ))
+                    NSComparisonResult res = [ID compare:myID];
+                    if( ([ID compare:herID] != NSOrderedSame )  && ( [ID compare:myID] != NSOrderedSame ))
                     {
                         CommentMan * man = [[CommentMan alloc] init];
                         man.ID = ID;

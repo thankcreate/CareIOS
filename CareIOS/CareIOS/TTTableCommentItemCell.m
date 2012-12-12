@@ -14,7 +14,10 @@
 
 #import "ItemViewModel.h"
 #import "CommentViewModel.h"
+#import "DOUAPIEngine.h"
+#import "NSString+RenrenSBJSON.h"
 
+#import "UIView+FindUIViewController.h"
 
 @implementation TTTableCommentItemCell
 @synthesize iconImage;
@@ -39,6 +42,18 @@
     if (self) {
     }
     return self;
+}
+
+-(void)updateCommentListOfTable
+{
+    id table = [self superview];
+    UIView* test2 = [table superview];
+    UIViewController* viewController = [test2 firstAvailableUIViewController];
+    // viewController is TTCommentViewController in fact
+    if([viewController respondsToSelector:@selector(fetchComments)])
+    {
+        [viewController performSelector:@selector(fetchComments) withObject:nil afterDelay:0.5];
+    }
 }
 
 #pragma mark UIView
@@ -277,6 +292,14 @@
 - (BOOL)postController:(TTPostController*)postController willPostText:(NSString*)text
 {
     int length = text.length;
+    if(length == 0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"呃～是智商要超过250才能看到您写的字么？" delegate:nil
+                                              cancelButtonTitle:@"寡人知之矣" otherButtonTitles:nil];
+        [alert show];
+        return FALSE;
+    }
     int nLeft = length - 140;
     if(length > 140)
     {
@@ -335,6 +358,43 @@
         }
         [renren requestWithParams:dic andDelegate:self];
     }
+    else if(itemViewModel.type == EntryType_Douban)
+    {
+        DOUService *service = [DOUService sharedInstance];
+        if(![service isValid])
+            return FALSE;
+        
+        NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", itemViewModel.ID];
+        DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                                 parameters:[NSDictionary dictionaryWithObjectsAndKeys:text,@"text",
+                                                             [CareConstants doubanAppKey], @"source",nil]];
+        
+        DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+            NSError *error = [req error];
+            NSLog(@"str:%@", [req responseString]);
+            
+            if (!error) {
+                [self updateCommentListOfTable];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
+                                                                message:@"发送成功" delegate:nil
+                                                      cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
+                [alert show];
+
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                                message:@"由于未知原因，获取评论失败" delegate:nil
+                                                      cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+                [alert show];
+            }
+        };
+        
+        service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+        
+        // TODO: urlencode
+        [service post:query postBody:nil callback:completionBlock];
+    }
     return TRUE;
 }
 
@@ -355,6 +415,7 @@
     
     if ([request.url hasSuffix:@"comments/create.json"])
     {
+        [self updateCommentListOfTable];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
                                                         message:@"发送成功" delegate:nil
                                               cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
@@ -366,7 +427,8 @@
 
 #pragma mark  Renren Delegate
 - (void)renren:(Renren *)renren requestDidReturnResponse:(ROResponse*)response
-{    
+{
+    [self updateCommentListOfTable];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
                                                     message:@"发送成功" delegate:nil
                                           cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];

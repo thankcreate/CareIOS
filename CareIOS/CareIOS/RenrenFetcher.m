@@ -70,7 +70,7 @@
             {
                 NSString* ID = [[comment objectForKey:@"uid"] stringValue];
                 NSString* name = [comment objectForKey:@"name"];
-                if(!( [ID compare:herID] == NSOrderedSame )  || ( [ID compare:myID] == NSOrderedSame ))
+                if( ([ID compare:herID] != NSOrderedSame )  && ( [ID compare:myID] != NSOrderedSame ))
                 {
                     CommentMan * man = [[CommentMan alloc] init];
                     man.ID = ID;
@@ -91,6 +91,10 @@
 
 - (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
 {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，获取数据失败" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
     if(delegate)
     {
         [delegate fetchComplete:nil];

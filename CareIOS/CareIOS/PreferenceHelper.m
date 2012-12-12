@@ -39,4 +39,19 @@
     [defaults removeObjectForKey:@"Renren_FollowerAvatar"];
     [defaults removeObjectForKey:@"Renren_FollowerAvatar2"];   
 }
+
++(void) clearDoubanPreference
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"Douban_Token"];
+    [defaults removeObjectForKey:@"Douban_ExpirationDate"];
+    [defaults removeObjectForKey:@"Douban_ID"];
+    [defaults removeObjectForKey:@"Douban_NickName"];
+    [defaults removeObjectForKey:@"Douban_Avatar"];
+    
+    [defaults removeObjectForKey:@"Douban_FollowerID"];
+    [defaults removeObjectForKey:@"Douban_FollowerNickName"];
+    [defaults removeObjectForKey:@"Douban_FollowerAvatar"];
+    [defaults removeObjectForKey:@"Douban_FollowerAvatar2"];
+}
 @end

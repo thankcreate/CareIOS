@@ -22,6 +22,9 @@ typedef enum EnumRenrenNewsType{
     RenrenNews_SharePhoto = 32,
 } RenrenNewsType;
 
-@interface CareConstants : NSObject
 
+
+@interface CareConstants : NSObject
++(NSString*)doubanAppKey;
++(NSString*)doubanBaseAPI;
 @end

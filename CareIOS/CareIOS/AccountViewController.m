@@ -11,12 +11,15 @@
 #import "PreferenceHelper.h"
 #import "SelectFriendViewController.h"
 #import "MainViewModel.h"
+#import "DOUAPIEngine.h"
+#import "NSString+RenrenSBJSON.h"
 @interface AccountViewController ()
 @property (strong, nonatomic) IBOutlet UILabel *lblSinaWeiboName;
 @property (strong, nonatomic) IBOutlet UILabel *lblSinaWeiboFollowerName;
 @property (strong, nonatomic) IBOutlet UILabel *lblRenrenName;
 @property (strong, nonatomic) IBOutlet UILabel *lblRenrenFollowerName;
-
+@property (strong, nonatomic) IBOutlet UILabel *lblDoubanName;
+@property (strong, nonatomic) IBOutlet UILabel *lblDoubanFollowerName;
 @property (strong, nonatomic) IBOutlet UITableView *table;
 @end
 
@@ -45,8 +48,6 @@
 
 - (void)initUISinaWeibo
 {
-    SinaWeibo* sinaweibo = [self sinaweibo];
-    sinaweibo.delegate = self;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString* name = [defaults objectForKey:@"SinaWeibo_NickName"];
     NSString* herName = [defaults objectForKey:@"SinaWeibo_FollowerNickName"];
@@ -85,10 +86,31 @@
     [self.lblRenrenFollowerName sizeToFit];
 }
 
+- (void)initUIDouban
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* name = [defaults objectForKey:@"Douban_NickName"];
+    NSString* herName = [defaults objectForKey:@"Douban_FollowerNickName"];
+    if(name == nil)
+    {
+        name = @"未登陆";
+    }
+    self.lblDoubanName.text = name;
+    [self.lblDoubanName sizeToFit];
+    
+    if(herName == nil)
+    {
+        herName = @"未关注";
+    }
+    self.lblDoubanFollowerName.text = herName;
+    [self.lblDoubanFollowerName sizeToFit];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [self initUISinaWeibo];
     [self initUIRenren];
+    [self initUIDouban];
 }
 
 - (void)didReceiveMemoryWarning
@@ -106,50 +128,7 @@
     } 
 }
 
-
-#pragma mark - Table view data source -
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 #pragma mark - Table view delegate 
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger sec = [indexPath section];
@@ -161,6 +140,7 @@
         if(row == 0)
         {
             SinaWeibo *sinaweibo = [self sinaweibo];
+            sinaweibo.delegate = self;
             [sinaweibo logIn];
         }
         else if (row == 1)
@@ -206,7 +186,21 @@
     // 豆瓣区
     else if (sec == 2)
     {
-        
+        // 登陆
+        if(row == 0)
+        {
+            DoubanLoginWebViewController *webViewController = [[DoubanLoginWebViewController alloc] initWithDelegate:self];
+            webViewController.hidesBottomBarWhenPushed = TRUE;
+            [self.navigationController pushViewController:webViewController animated:YES];
+        }
+        else if (row == 1)
+        {
+            [self doubanSelectFollowerClick];
+        }
+        else if (row == 2)
+        {
+            [self doubanLogoutClick];
+        }
     }
     
     
@@ -272,7 +266,7 @@
 
 
 
-#pragma mark - SinaWeibo Delegate
+#pragma mark SinaWeibo Delegate
 
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
 {
@@ -291,7 +285,7 @@
     [alert show];
 }
 
-#pragma mark - SinaWeiboRequest Delegate
+#pragma mark SinaWeiboRequest Delegate
 - (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
 {
     if ([request.url hasSuffix:@"users/show.json"])
@@ -308,7 +302,19 @@
         
         // 设置标签
         self.lblSinaWeiboName.text = name;
-        [self.lblSinaWeiboName sizeToFit];        
+        [self.lblSinaWeiboName sizeToFit];
+        [self initUISinaWeibo];
+    }
+}
+
+- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
+{
+    if ([request.url hasSuffix:@"comments/create.json"])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"由于未知原因，获取帐号信息失败，请尝试重新登陆" delegate:nil
+                                              cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+        [alert show];
     }
 }
 
@@ -347,7 +353,7 @@
     }
 }
 
-#pragma mark - Renren Delegate
+#pragma mark Renren Delegate
 - (void)renrenDidLogin:(Renren *)renren
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -387,5 +393,92 @@
 	[alertView show];
 }
 
+#pragma mark - Douban Logic
+-(void)doubanRefreshUseInfo:(NSString*)userID
+{
+    NSString *subPath = @"/v2/user/~me";
+    DOUQuery *query = [[DOUQuery alloc] initWithSubPath:subPath parameters:nil];
+    
+    DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+        NSError *error = [req error];        
+        
+        if (!error) {
+            id user = [[req responseString] JSONValue];
+            // 因为ID已经在登陆时就拿到了，所以此处不保存ID
+            NSString* name = [user objectForKey:@"name"];
+            NSString* avatar = [user objectForKey:@"avatar"];
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setValue:name forKey:@"Douban_NickName"];
+            [defaults setValue:avatar forKey:@"Douban_Avatar"];
+            [self initUIDouban];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"由于未知原因，获取帐号信息失败，请尝试重新登陆" delegate:nil
+                                                  cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+            [alert show];            
+        }
+    };
+    DOUService *service = [DOUService sharedInstance];
+    service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+    [service get:query callback:completionBlock ];
+}
 
+
+- (void)doubanSelectFollowerClick
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* myID = [defaults objectForKey:@"Douban_ID"];
+    if(myID == nil)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"没有登陆，怎么指定关注人的说~" delegate:nil
+                                              cancelButtonTitle:@"嗯嗯，朕知道了" otherButtonTitles:nil];
+        [alert show];
+    }
+    else
+    {
+        TypeWillGotoInSelectFriendPage = EntryType_Douban;
+        [self performSegueWithIdentifier:@"Segue_SelectFollower" sender:self];
+    }
+}
+
+#pragma mark Douban Login Delegate
+- (void)doubanDidLogin:(DOUOAuthService *)client didAcquireSuccessDictionary:(NSDictionary *)dic
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *access_token = [dic objectForKey:@"access_token"];
+    NSString *douban_user_id = [dic objectForKey:@"douban_user_id"];
+    NSNumber *expires_in = [dic objectForKey:@"expires_in"];
+    NSString *refresh_token = [dic objectForKey:@"refresh_token"];    
+    
+    NSTimeInterval seconds = [expires_in doubleValue];
+    NSDate* expDate = [[NSDate date] dateByAddingTimeInterval:seconds];
+    [defaults setValue:access_token forKey:@"Douban_Token"];
+    [defaults setValue:douban_user_id forKey:@"Douban_ID"];
+    [defaults setValue:expDate forKey:@"Douban_ExpirationDate"];
+    [defaults setValue:refresh_token forKey:@"Douban_RefreshToken"];
+    [defaults synchronize];
+    
+    [self doubanRefreshUseInfo:douban_user_id];
+}
+
+- (void)doubanloginDidFail:(DOUOAuthService *)client didFailWithError:(NSError *)error
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"登陆过程发生未知错误，请保持网络通畅" delegate:nil
+                                          cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)doubanLogoutClick
+{
+//    DOUService *service = [DOUService sharedInstance];
+    [MainViewModel sharedInstance].isChanged = true;
+    [PreferenceHelper clearDoubanPreference];
+    [self initUIDouban];
+    
+}
 @end

@@ -14,7 +14,9 @@
 #import "CareConstants.h"
 #import "SinaWeiboFetcher.h"
 #import "RenrenFetcher.h"
+#import "DoubanFetcher.h"
 #import "CareAppDelegate.h"
+#import "DOUAPIEngine.h"
 
 
 @interface LabEnemyViewController ()
@@ -163,7 +165,13 @@
     }
     else if(TRUE)
     {
-        // TODO
+        resFetcher = [[DoubanFetcher alloc] initWithDelegate:self];
+        NSURL* url = [NSURL URLWithString:[MiscTool getHerDoubanIcon]];
+        [avatarImage setImageWithURL:url];
+        lblName.text = [defaults objectForKey:@"Douban_FollowerNickName"];
+        [lblName sizeToFit];
+        herID = [defaults objectForKey:@"Douban_FollowerID"];
+        type = EntryType_Douban;
     }
     return resFetcher;
 
@@ -171,13 +179,13 @@
 
 - (void)analysisEnemy:(EntryType)tp
 {
-    name1 = @"";
-    name2 = @"";
-    name3 = @"";
+    name1 = @" ";
+    name2 = @" ";
+    name3 = @" ";
     
-    var1 = 0;
-    var2 = 0;
-    var3 = 0;
+    var1 = [NSNumber numberWithInt:0];
+    var2 = [NSNumber numberWithInt:0];
+    var3 = [NSNumber numberWithInt:0];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     switch (tp) {
@@ -199,6 +207,16 @@
             lblName.text = [defaults objectForKey:@"Renren_FollowerNickName"];
             [lblName sizeToFit];
             herID = [defaults objectForKey:@"Renren_FollowerID"];
+            break;
+        }
+        case EntryType_Douban:
+        {
+            fetcher = [[DoubanFetcher alloc] initWithDelegate:self];
+            NSURL* url = [NSURL URLWithString:[MiscTool getHerDoubanIcon]];
+            [avatarImage setImageWithURL:url];
+            lblName.text = [defaults objectForKey:@"Douban_FollowerNickName"];
+            [lblName sizeToFit];
+            herID = [defaults objectForKey:@"Douban_FollowerID"];
             break;
         }
         default:
@@ -276,13 +294,14 @@
         id2 = [mapManToID objectForKey:name2];
         id3 = [mapManToID objectForKey:name3];
     }
-    if(sortResult.count == 1)
+    if(sortResult.count == 2)
     {
         ManToCountPair* pair1 = [sortResult objectAtIndex:0];
         ManToCountPair* pair2 = [sortResult objectAtIndex:1];
 
         name1 = pair1.name;
         name2 = pair2.name;
+
         
         var1 = pair1.count;
         var2 = pair2.count;
@@ -290,7 +309,7 @@
         id1 = [mapManToID objectForKey:name1];
         id2 = [mapManToID objectForKey:name2];
     }
-    if(sortResult.count == 2)
+    if(sortResult.count == 1)
     {
         ManToCountPair* pair1 = [sortResult objectAtIndex:0];
         
@@ -328,6 +347,7 @@
                           name3,nil];
 
 
+
     PCLineChartViewComponent *component = [[PCLineChartViewComponent alloc] init];
     [component setTitle:@""];
     [component setPoints:ar];
@@ -358,20 +378,50 @@
     // Sina
     if(buttonIndex == 0)
     {
-        //lastSelectPostType = EntryType_SinaWeibo;
+        CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+        SinaWeibo* sinaweibo = appDelegate.sinaweibo;
+        
+        if( ![sinaweibo isAuthValid])
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"新浪帐号尚未登陆或已过期" delegate:nil
+                                                  cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+            [alert show];
+            return;
+        }
         [self analysisEnemy:EntryType_SinaWeibo];
     }
     // Renren
     else if(buttonIndex == 1)
     {
-        //lastSelectPostType = EntryType_Renren;
+        CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+        Renren* renren = appDelegate.renren;
+        
+        if( ![renren isSessionValid])
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"人人帐号尚未登陆或已过期" delegate:nil
+                                                  cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+            [alert show];
+            return;
+        }
+
         [self analysisEnemy:EntryType_Renren];
     }
     // Douban
     else if(buttonIndex == 2)
     {
-        //lastSelectPostType = EntryType_Douban;
-        [self analysisEnemy:EntryType_Douban];
+        DOUService *service = [DOUService sharedInstance];
+        if(![service isValid])
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"豆瓣帐号尚未登陆或已过期" delegate:nil
+                                                  cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
+            [alert show];
+            return;
+        }
+
+        [self analysisEnemy:EntryType_Douban];        
     }
 }
 @end

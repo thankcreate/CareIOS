@@ -209,5 +209,18 @@
     return s;
 }
 
++(NSString *) removeDoubanScoreTag:(NSString*)input
+{
+    if(input == nil)
+        return nil;
+    NSRange r;
+    
+    NSString *s = [input copy];
+    r = [s rangeOfString:@"^.*?(?=\\[)" options:NSRegularExpressionSearch];
+    if(r.location != NSNotFound)
+        return [s substringWithRange:r];
+    return s;
+}
+
 
 @end

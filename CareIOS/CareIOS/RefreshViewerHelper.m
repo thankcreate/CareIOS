@@ -10,8 +10,12 @@
 #import "CareAppDelegate.h"
 #import "SinaWeiboConverter.h"
 #import "RenrenConverter.h"
+#import "DoubanConverter.h"
 #import "MainViewModel.h"
 #import "TaskHelper.h"
+#import "DOUAPIEngine.h"
+#import "NSString+RenrenSBJSON.h"
+
 
 @interface RefreshViewerHelper ()
 @property (strong, nonatomic) MainViewModel* mainViewModel;
@@ -85,6 +89,8 @@
     [m_taskHelper pushTask];
     [self refreshModelRenren];
     
+    [m_taskHelper pushTask];
+    [self refreshModelDouban];
 }
 
 
@@ -211,4 +217,53 @@
 	[alertView show];    
 }
 
+
+#pragma mark - Douban Logic
+- (void)refreshModelDouban
+{
+    [mainViewModel.doubanItems removeAllObjects];
+    [mainViewModel.doubanPictureItems removeAllObjects];
+    
+    DOUService *service = [DOUService sharedInstance];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herID = [defaults objectForKey:@"Douban_FollowerID"];
+    
+    if( ![service isValid] || herID == nil)
+    {
+        [m_taskHelper popTask];
+        return;
+    }
+        
+    NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/user_timeline/%@", herID];
+    DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:@"30",@"count",nil]];
+    
+    DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+        NSError *error = [req error];
+        
+        if (!error) {
+            id statues = [[req responseString] JSONValue];
+            for(id status in statues)
+            {
+                ItemViewModel* model = [DoubanConverter convertStatusToCommon:status];
+                if(model != nil)
+                {
+                    [mainViewModel.doubanItems addObject:model];
+                }
+            }
+            [m_taskHelper popTask];  
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"由于未知原因，获取朋友列表失败" delegate:nil
+                                                  cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+            [alert show];
+            [m_taskHelper popTask];
+        }
+    };
+    
+    service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+    [service get:query callback:completionBlock];
+}
 @end

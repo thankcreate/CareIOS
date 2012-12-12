@@ -12,7 +12,10 @@
 #import "pinyin.h"
 #import "SinaWeiboConverter.h"
 #import "RenrenConverter.h"
+#import "DoubanConverter.h"
 #import "FriendViewModel.h"
+#import "DOUAPIEngine.h"
+#import "NSString+RenrenSBJSON.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 @interface SelectFriendViewController ()
@@ -61,7 +64,7 @@
     }
     else if(tp == EntryType_Douban)
     {
-        //TODO
+        [self initLoadDouban];
     }
     
       // Uncomment the following line to preserve selection between presentations.
@@ -248,6 +251,13 @@ titleForHeaderInSection:(NSInteger)section
         [defaults setValue:followerAvatar2 forKey:@"Renren_FollowerAvatar2"];
         
     }
+    else if(tp == EntryType_Douban)
+    {
+        [defaults setValue:followerID forKey:@"Douban_FollowerID"];
+        [defaults setValue:followerNickName forKey:@"Douban_FollowerNickName"];
+        [defaults setValue:followerAvatar forKey:@"Douban_FollowerAvatar"];
+        [defaults setValue:followerAvatar2 forKey:@"Douban_FollowerAvatar2"];        
+    }
     [defaults synchronize];
     [self.navigationController popViewControllerAnimated:YES];
     
@@ -394,7 +404,8 @@ titleForHeaderInSection:(NSInteger)section
         for(id ob in array)
         {
             FriendViewModel* model = [SinaWeiboConverter convertFrendToCommon:ob];
-            [self.allFriends addObject:model];
+            if(model != nil)
+                [self.allFriends addObject:model];
         }
         // 不为0继续请求
         if(nNextCursor != 0)
@@ -444,7 +455,8 @@ titleForHeaderInSection:(NSInteger)section
         for (ROFriendResponseItem *item in friendsInfo)
         {
             FriendViewModel* model = [RenrenConverter convertFrendToCommon:item];
-            [self.allFriends addObject:model];
+            if(model != nil)
+                [self.allFriends addObject:model];
         }
         
         id strLastPage = [response.param.requestParamToDictionary objectForKey:@"page"];
@@ -473,4 +485,43 @@ titleForHeaderInSection:(NSInteger)section
 	[alertView show];
 }
 
+
+
+#pragma mark - Douban Logic
+-(void)initLoadDouban
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* myID = [defaults objectForKey:@"Douban_ID"];
+    if(myID == nil)
+        return;
+    NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/users/%@/following", myID];
+    DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath parameters:nil];
+    
+    DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+        NSError *error = [req error];
+        
+        if (!error) {
+            id users = [[req responseString] JSONValue];
+            // 这个朋友列表的api没有count功能，貌似是一次拿齐所有friend，嗯嗯，一定是这样
+            for(id user in users)
+            {
+                FriendViewModel* model = [DoubanConverter convertFrendToCommon:user];
+                if(model != nil)
+                    [self.allFriends addObject:model];
+            }
+            [self fetchComplete];  
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"由于未知原因，获取朋友列表失败" delegate:nil
+                                                  cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+            [alert show];
+        }
+    };
+    DOUService *service = [DOUService sharedInstance];
+    service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+    // 本API不能在head里加上auth参数，应该是个豆瓣的BUG
+    [service get:query callback:completionBlock  needAuthHeader:FALSE];
+}
 @end

@@ -21,4 +21,5 @@
 
 +(BOOL)isAnyOneFollowed;
 +(NSString *)removeHTMLTag:(NSString*)input;
++(NSString *)removeDoubanScoreTag:(NSString*)input;
 @end

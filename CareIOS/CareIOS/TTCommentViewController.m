@@ -12,10 +12,14 @@
 #import "CareAppDelegate.h"
 #import "SinaWeiboConverter.h"
 #import "RenrenConverter.h"
+#import "DoubanConverter.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "TTTableCommentItem.h"
 #import "TTTableCommentItemCell.h"
 #import "MiscTool.h"
+
+#import "DOUAPIEngine.h"
+#import "NSString+RenrenSBJSON.h"
 
 @interface TTCommentViewController ()
 
@@ -84,6 +88,10 @@
     else if (itemViewModel.type == EntryType_Renren)
     {
         [self fetchCommentsRenren];
+    }
+    else if (itemViewModel.type == EntryType_Douban)
+    {
+        [self fetchCommentsDouban];
     }
 }
 
@@ -303,11 +311,59 @@
 	[alertView show];
 }
 
+#pragma mark - Douban Logic
+-(void)fetchCommentsDouban
+{
+    DOUService *service = [DOUService sharedInstance];
+    if(itemViewModel.ID == nil)
+        return;
+    NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", itemViewModel.ID];
+    DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:@"50",@"count",nil]];
+    
+    DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+        NSError *error = [req error];
+        
+        if (!error) {
+            [commentList removeAllObjects];
+            NSArray* comments = [[req responseString] JSONValue];
+            for(id comment in comments)
+            {
+                CommentViewModel* model = [DoubanConverter convertCommentToCommon:comment];
+                if(model)
+                {
+                    [commentList addObject:model];
+                }
+            }
+            [self fetchComplete];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"由于未知原因，获取评论失败" delegate:nil
+                                                  cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+            [alert show];
+        }
+    };
+    
+    service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+    [service get:query callback:completionBlock];
+    
+}
+
 #pragma  mark -  TTPostControllerDelegate
 // 对于评论而言都是140字上限，对于发表新状态，人人是280,其它还是140
 - (BOOL)postController:(TTPostController*)postController willPostText:(NSString*)text
 {
     int length = text.length;
+    if(length == 0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"呃～是智商要超过250才能看到您写的字么？" delegate:nil
+                                              cancelButtonTitle:@"寡人知之矣" otherButtonTitles:nil];
+        [alert show];
+        return FALSE;
+    }
     int nLeft = length - 140;
     if(length > 140)
     {
@@ -366,11 +422,41 @@
         lastRenrenMethod = @"addComment";
         [renren requestWithParams:dic andDelegate:self];
     }
-    
-   return TRUE;
-    
+    else if(itemViewModel.type == EntryType_Douban)
+    {
+        DOUService *service = [DOUService sharedInstance];
+        if(![service isValid])
+            return FALSE;
+        
+        NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", itemViewModel.ID];
+        DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                                 parameters:[NSDictionary dictionaryWithObjectsAndKeys:text,@"text",
+                                                             [CareConstants doubanAppKey], @"source",nil]];
+        
+        DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+            NSError *error = [req error];
+            
+            if (!error) {
+                [self performSelector:@selector(fetchCommentsDouban) withObject:nil afterDelay:0.5];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
+                                                                message:@"发送成功" delegate:nil
+                                                      cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
+                [alert show];
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                                message:@"由于未知原因，获取评论失败" delegate:nil
+                                                      cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+                [alert show];
+            }
+        };
+        
+        service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+        
+        // TODO: urlencode
+        [service post:query postBody:nil callback:completionBlock];
+    }
+    return TRUE;
  }
-
-
-
 @end

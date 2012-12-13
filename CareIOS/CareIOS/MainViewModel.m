@@ -89,6 +89,8 @@ static MainViewModel * sharedInstance = nil;
 - (void)load:(TTURLRequestCachePolicy)cachePolicy more:(BOOL)more
 {
     NSLog(@"MainViewModel load");
+    if(_isLoading)
+        return;
     _isLoading = true;
     self.isChanged = false;
     // 加载开始

@@ -14,6 +14,8 @@
 #import "DOUAPIEngine.h"
 #import "NSString+RenrenSBJSON.h"
 @interface TTStatusTImeLineViewController ()
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *btnPostStatus;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *btnRefresh;
 @property (strong, nonatomic) MainViewModel* mainViewModel;
 @property (strong, nonatomic) RefreshViewerHelper* refreshViewerHelper;
 @end
@@ -42,6 +44,13 @@
     self.variableHeightRows = YES;
     
     self.tableViewStyle = UITableViewStylePlain;
+    // 清除额外的分隔线
+    UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 1)];
+    v.backgroundColor = [UIColor clearColor];
+    [self.tableView setTableFooterView:v];
+
+    self.btnPostStatus.width = 10.0f;
+    self.btnRefresh.width = 10.0f;
  
     
 }
@@ -49,9 +58,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = RGBCOLOR(200, 12, 40);
-    BOOL isAnyOneFollowed = [MiscTool isAnyOneFollowed];
-    if(mainViewModel.isChanged && isAnyOneFollowed)
+    //self.statusBarStyle = UIStatusBarStyleBlackOpaque;
+    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    //BOOL isAnyOneFollowed = [MiscTool isAnyOneFollowed];
+    if(mainViewModel.isChanged )
     {
         [mainViewModel load:TTURLRequestCachePolicyNetwork more:NO];
     }
@@ -113,6 +123,17 @@
         }
         [itemsRow addObject: item];
     }
+    if(mainViewModel.items.count == 0)
+    {
+        TTTableMessageItem* item = [TTTableMessageItem itemWithTitle:@">_<"
+                                                             caption:nil
+                                                                text:@"尚无任何信息，请至少登陆一个帐户并保持网络畅通."
+                                                           timestamp:[NSDate date]
+                                                            imageURL:nil
+                                                                 URL:nil];
+        item.from = @"来自可怜的UP主";
+        [itemsRow addObject: item];
+    }
     [items addObject:itemsRow];
     self.dataSource = [TTSectionedDataSource dataSourceWithItems:items sections:sections];
 }
@@ -121,6 +142,9 @@
 
 - (void)didSelectObject:(id)object atIndexPath:(NSIndexPath*)indexPath
 {
+    // 有可能选中的是当mainViewModel中item为空时放上去的那个提示项，所以要判断一下
+    if(mainViewModel.items.count == 0)
+        return;
     lastSelectIndex = indexPath.row;
     [self performSegueWithIdentifier:@"Segue_GotoDetailPage" sender:self];
 }

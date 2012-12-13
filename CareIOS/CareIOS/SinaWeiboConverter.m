@@ -123,10 +123,15 @@
         return nil;
     @try {
         // 先判断是否有转发图片
-        id forward = [status objectForKey:@"retweeted_status"];
-        if(forward != nil)
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* useFowardPicture = [defaults objectForKey:@"Global_NeedFetchImageInRetweet"];
+        if(useFowardPicture == nil || [useFowardPicture compare:@"YES"] == NSOrderedSame)
         {
-            return [self convertPictureToCommon:forward];
+            id forward = [status objectForKey:@"retweeted_status"];
+            if(forward != nil)
+            {
+                return [self convertPictureToCommon:forward];
+            }
         }
         model.smallURL = [status objectForKey:@"thumbnail_pic"];
         model.middleURL = [status objectForKey:@"bmiddle_pic"];

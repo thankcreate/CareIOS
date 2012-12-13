@@ -30,6 +30,12 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+}
+
 
 -(void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];

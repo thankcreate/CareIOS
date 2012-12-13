@@ -46,6 +46,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+
 - (void)initUISinaWeibo
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -108,6 +109,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
     [self initUISinaWeibo];
     [self initUIRenren];
     [self initUIDouban];

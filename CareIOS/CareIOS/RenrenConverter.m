@@ -219,16 +219,21 @@
                 model.forwardItem.midImageURL = [attach objectForKey:@"src"];
                 model.forwardItem.fullImageURL = [attach objectForKey:@"raw_src"];
                 
-                PictureItemViewModel* pic = [[PictureItemViewModel alloc] init];
-                pic.smallURL = model.forwardItem.imageURL;
-                pic.middleURL = model.forwardItem.midImageURL;
-                pic.largeURL = model.forwardItem.fullImageURL;
-                pic.ID = model.ID;
-                pic.title = model.title;
-                pic.description = model.content;
-                pic.time = model.time;
-                
-                [[MainViewModel sharedInstance].renrenPictureItems addObject:pic];
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                NSString* useFowardPicture = [defaults objectForKey:@"Global_NeedFetchImageInRetweet"];
+                if(useFowardPicture == nil || [useFowardPicture compare:@"YES"] == NSOrderedSame)
+                {
+                    PictureItemViewModel* pic = [[PictureItemViewModel alloc] init];
+                    pic.smallURL = model.forwardItem.imageURL;
+                    pic.middleURL = model.forwardItem.midImageURL;
+                    pic.largeURL = model.forwardItem.fullImageURL;
+                    pic.ID = model.ID;
+                    pic.title = model.title;
+                    pic.description = model.content;
+                    pic.time = model.time;
+                    
+                    [[MainViewModel sharedInstance].renrenPictureItems addObject:pic];
+                }
             }
         }
     }

@@ -32,7 +32,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
     MainViewModel* mainViewModel = [MainViewModel sharedInstance];
     if(mainViewModel.isChanged)
     {
@@ -45,5 +45,12 @@
     // 这里有个奇怪的bug，如果不写下面两句的话，会出现一个空白header
     self.tableView.contentInset = UIEdgeInsetsMake(4, 0, 0, 0);
     self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+}
+
+#pragma mark - Event
+
+- (IBAction)refreshClick:(id)sender
+{
+    [[MainViewModel sharedInstance] load:TTURLRequestCachePolicyNetwork more:NO];
 }
 @end

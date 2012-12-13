@@ -84,12 +84,11 @@
 -(void)refreshMainViewModel
 {
     [m_taskHelper pushTask];
+    [m_taskHelper pushTask];
+    [m_taskHelper pushTask];
+
     [self refreshModelSinaWeibo];
-    
-    [m_taskHelper pushTask];
     [self refreshModelRenren];
-    
-    [m_taskHelper pushTask];
     [self refreshModelDouban];
 }
 

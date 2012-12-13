@@ -27,4 +27,5 @@ typedef enum EnumRenrenNewsType{
 @interface CareConstants : NSObject
 +(NSString*)doubanAppKey;
 +(NSString*)doubanBaseAPI;
++(UIColor*)headerColor;
 @end

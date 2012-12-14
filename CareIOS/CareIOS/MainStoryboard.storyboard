@@ -585,14 +585,14 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="RSS" id="tqz-mU-q0k">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="o8U-We-mh2" detailTextLabel="pTq-rS-u4C" style="IBUITableViewCellStyleValue2" id="K2m-nI-swi">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="o8U-We-mh2" detailTextLabel="pTq-rS-u4C" style="IBUITableViewCellStyleValue2" id="K2m-nI-swi">
                                         <rect key="frame" x="0.0" y="586" width="320" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <rect key="frame" x="10" y="1" width="280" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="关注地址" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="o8U-We-mh2">
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="关注站点" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="o8U-We-mh2">
                                                     <rect key="frame" x="10" y="15" width="67" height="15"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
@@ -618,12 +618,14 @@
                     <connections>
                         <outlet property="lblDoubanFollowerName" destination="mrw-8u-m9q" id="ee0-7W-cb0"/>
                         <outlet property="lblDoubanName" destination="eP2-66-RQc" id="QFD-OX-exS"/>
+                        <outlet property="lblRSSFollowerSiteTitle" destination="pTq-rS-u4C" id="dC3-YS-iPb"/>
                         <outlet property="lblRenrenFollowerName" destination="AN3-Ww-iwo" id="fac-87-Sb6"/>
                         <outlet property="lblRenrenName" destination="406-Vx-jve" id="y4A-yD-CF7"/>
                         <outlet property="lblSinaWeiboFollowerName" destination="WWn-dY-CfP" id="pEH-Fy-H1x"/>
                         <outlet property="lblSinaWeiboName" destination="RaV-O1-DG8" id="LJx-U0-yFK"/>
                         <outlet property="table" destination="AOX-uz-Rxa" id="L7E-6J-BEe"/>
                         <segue destination="qKu-ra-iSG" kind="push" identifier="Segue_SelectFollower" id="LrW-nW-e6V"/>
+                        <segue destination="Mg7-67-oT1" kind="push" identifier="Segue_SetRss" id="jcz-P4-VBH"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N6J-9u-4xZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -728,6 +730,201 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WS3-RC-kFE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1615" y="2352"/>
+        </scene>
+        <!--SetRSS Feed View Controller - 描述-->
+        <scene sceneID="a9c-aR-dbr">
+            <objects>
+                <tableViewController id="Mg7-67-oT1" customClass="SetRSSFeedViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="8Vh-py-6J6">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="指定RSS关注" footerTitle="注意：此处地址需要填RSS地址，而不是站点原始地址。例如，应填入www.xxx.com/rss或www.xxx.com/feed之类，而不是直接填上www.xxx.com" id="cDY-M1-HQB">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ywd-wh-uSv">
+                                        <rect key="frame" x="0.0" y="46" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JoC-6w-iiP">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="238" id="Hfa-tC-xUb"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="地址" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D0N-l1-gbW">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="ZJ7-zD-26X"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="D0N-l1-gbW" firstAttribute="leading" secondItem="ywd-wh-uSv" secondAttribute="leading" constant="23" id="ZBO-A7-JlJ"/>
+                                            <constraint firstItem="JoC-6w-iiP" firstAttribute="top" secondItem="ywd-wh-uSv" secondAttribute="top" constant="8" id="ktj-LO-MwS"/>
+                                            <constraint firstItem="D0N-l1-gbW" firstAttribute="centerY" secondItem="ywd-wh-uSv" secondAttribute="centerY" type="default" id="o2Q-ih-Emg"/>
+                                            <constraint firstItem="JoC-6w-iiP" firstAttribute="leading" secondItem="ywd-wh-uSv" secondAttribute="leading" constant="65" id="qCm-MZ-taq"/>
+                                        </constraints>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Dcv-ZQ-OiT">
+                                        <rect key="frame" x="0.0" y="91" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wRJ-qk-1sj">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="201" id="xfI-oP-oGP"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WBx-yH-vKt">
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="32" id="Nzz-yh-3WS"/>
+                                                        <constraint firstAttribute="width" constant="78" id="ojd-7u-chN"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <state key="normal" title="关注">
+                                                        <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="highlighted">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="confirmClick:" destination="Mg7-67-oT1" eventType="touchUpInside" id="ZMe-M6-THT"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8ML-Bl-2B7">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="78" id="91W-aq-oZH"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <state key="normal" title="取消关注">
+                                                        <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="highlighted">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="cancelFollowClick:" destination="Mg7-67-oT1" eventType="touchUpInside" id="Ihy-fj-jBB"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="8ML-Bl-2B7" firstAttribute="centerY" secondItem="wRJ-qk-1sj" secondAttribute="centerY" type="default" id="1cI-be-DUd"/>
+                                            <constraint firstItem="WBx-yH-vKt" firstAttribute="centerY" secondItem="Dcv-ZQ-OiT" secondAttribute="centerY" type="default" id="79u-1F-UoJ"/>
+                                            <constraint firstItem="8ML-Bl-2B7" firstAttribute="bottom" secondItem="WBx-yH-vKt" secondAttribute="bottom" type="default" id="Ieb-7O-nhx"/>
+                                            <constraint firstItem="8ML-Bl-2B7" firstAttribute="top" secondItem="WBx-yH-vKt" secondAttribute="top" type="default" id="Iz2-2V-Ws2"/>
+                                            <constraint firstItem="8ML-Bl-2B7" firstAttribute="baseline" secondItem="wRJ-qk-1sj" secondAttribute="baseline" type="default" id="Le3-n3-ODK"/>
+                                            <constraint firstItem="wRJ-qk-1sj" firstAttribute="leading" secondItem="Dcv-ZQ-OiT" secondAttribute="leading" constant="89" id="U4K-WJ-9vt"/>
+                                            <constraint firstItem="WBx-yH-vKt" firstAttribute="leading" secondItem="Dcv-ZQ-OiT" secondAttribute="leading" constant="61" id="V2s-Vj-Eyq"/>
+                                            <constraint firstAttribute="trailing" secondItem="8ML-Bl-2B7" secondAttribute="trailing" constant="66" id="igr-Ie-n10"/>
+                                            <constraint firstItem="8ML-Bl-2B7" firstAttribute="baseline" secondItem="WBx-yH-vKt" secondAttribute="baseline" type="default" id="toy-IV-uN9"/>
+                                        </constraints>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="当前关注站点信息" id="SFr-M7-ZuN">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Ooe-ld-G6p">
+                                        <rect key="frame" x="0.0" y="270" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="站点名" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="31d-KM-uHV">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="59" id="gCU-f8-SSj"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Wf-s3-yON">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="201" id="7bs-gM-lLn"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="9Wf-s3-yON" firstAttribute="leading" secondItem="Ooe-ld-G6p" secondAttribute="leading" constant="89" id="Lch-zh-GOG"/>
+                                            <constraint firstItem="31d-KM-uHV" firstAttribute="centerY" secondItem="Ooe-ld-G6p" secondAttribute="centerY" type="default" id="cs7-Jn-hDj"/>
+                                            <constraint firstItem="31d-KM-uHV" firstAttribute="leading" secondItem="Ooe-ld-G6p" secondAttribute="leading" constant="23" id="gLj-dT-uAR"/>
+                                            <constraint firstItem="9Wf-s3-yON" firstAttribute="baseline" secondItem="31d-KM-uHV" secondAttribute="baseline" type="default" id="i22-fa-sgN"/>
+                                        </constraints>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="7nO-fG-xP7">
+                                        <rect key="frame" x="0.0" y="315" width="320" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="描述" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OyZ-n3-hgA">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="59" id="5bu-7O-Yfb"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WhW-G8-p3D">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="201" id="s7f-RR-geJ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="WhW-G8-p3D" firstAttribute="baseline" secondItem="OyZ-n3-hgA" secondAttribute="baseline" type="default" id="Apl-1e-Vmq"/>
+                                            <constraint firstItem="OyZ-n3-hgA" firstAttribute="leading" secondItem="7nO-fG-xP7" secondAttribute="leading" constant="23" id="IVC-Co-2wF"/>
+                                            <constraint firstItem="OyZ-n3-hgA" firstAttribute="top" secondItem="7nO-fG-xP7" secondAttribute="top" constant="11" id="Mqy-ES-YnK"/>
+                                            <constraint firstItem="WhW-G8-p3D" firstAttribute="leading" secondItem="7nO-fG-xP7" secondAttribute="leading" constant="89" id="R1v-nm-6x6"/>
+                                        </constraints>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Mg7-67-oT1" id="kW1-Ci-8Ef"/>
+                            <outlet property="delegate" destination="Mg7-67-oT1" id="4Rs-O8-OLw"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="描述" id="qJH-81-Faf"/>
+                    <connections>
+                        <outlet property="lblSiteDescription" destination="WhW-G8-p3D" id="al6-YC-NOd"/>
+                        <outlet property="lblSiteTitle" destination="9Wf-s3-yON" id="wWP-GU-xJX"/>
+                        <outlet property="txtRSSPath" destination="JoC-6w-iiP" id="7KW-Z5-x6x"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jbb-Re-Fhp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1615" y="2977"/>
         </scene>
         <!--Preference View Controller - 设置-->
         <scene sceneID="bjg-Hh-Bwx">
@@ -941,7 +1138,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hal-6Z-5St" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1162" y="3064"/>
+            <point key="canvasLocation" x="354" y="3208"/>
         </scene>
         <!--View Controller - 关于-->
         <scene sceneID="q4c-df-cCX">
@@ -1012,7 +1209,7 @@ CFYxLjAuMC4wA
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sD6-iG-gE4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1728" y="3077"/>
+            <point key="canvasLocation" x="920" y="3221"/>
         </scene>
         <!--Set Password View Controller - 密码设置-->
         <scene sceneID="wSS-n0-ais">
@@ -1105,7 +1302,7 @@ CFYxLjAuMC4wA
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="izO-P8-fYA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1187" y="3702"/>
+            <point key="canvasLocation" x="379" y="3846"/>
         </scene>
         <!--Password View Controller-->
         <scene sceneID="Irk-Ru-RMR">
@@ -1425,7 +1622,7 @@ CFYxLjAuMC4wA
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXU-hL-dWk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="626" y="3064"/>
+            <point key="canvasLocation" x="-182" y="3208"/>
         </scene>
         <!--Navigation Controller - 帐号-->
         <scene sceneID="VV4-Qb-JNm">
@@ -1482,7 +1679,28 @@ CFYxLjAuMC4wA
             </objects>
             <point key="canvasLocation" x="-48" y="1601"/>
         </scene>
-        <!--StatusT Ime Line View Controller - 动态-->
+        <!--Detail View Controller - RSS订阅-->
+        <scene sceneID="a0l-rx-26o">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" id="Y1I-Qu-YVM" customClass="RSSDetailViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="flv-jq-I4V">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="RSS订阅" id="8Cj-lS-NEp">
+                        <barButtonItem key="rightBarButtonItem" title="原始页面" id="Joc-wh-zgN">
+                            <connections>
+                                <action selector="goToOriginalPageClick:" destination="Y1I-Qu-YVM" id="tXc-7X-NBN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BOg-Bj-yvl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1230" y="-413"/>
+        </scene>
+        <!--StatusT Ime Line View Controller - 我只在乎你-->
         <scene sceneID="cLh-eH-J9H">
             <objects>
                 <viewController id="tPC-A8-smu" customClass="TTStatusTImeLineViewController" sceneMemberID="viewController">
@@ -1491,7 +1709,8 @@ CFYxLjAuMC4wA
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="动态" id="dXb-mH-O5x">
+                    <navigationItem key="navigationItem" title="我只在乎你" id="dXb-mH-O5x">
+                        <barButtonItem key="backBarButtonItem" title="主页" id="REG-hb-IUl"/>
                         <barButtonItem key="leftBarButtonItem" image="PostStatus.png" id="BJc-Xz-OYe">
                             <connections>
                                 <action selector="ButtonPostStatus_Clicked:" destination="tPC-A8-smu" id="ZZ2-aY-Nl2"/>
@@ -1506,7 +1725,8 @@ CFYxLjAuMC4wA
                     <connections>
                         <outlet property="btnPostStatus" destination="BJc-Xz-OYe" id="gMp-1u-zUs"/>
                         <outlet property="btnRefresh" destination="O2k-ED-che" id="z09-3w-6Ia"/>
-                        <segue destination="dF8-NA-SAc" kind="push" identifier="Segue_GotoDetailPage" id="zjE-Ba-S42"/>
+                        <segue destination="dF8-NA-SAc" kind="push" identifier="Segue_GotoStatusDetailPage" id="zjE-Ba-S42"/>
+                        <segue destination="Y1I-Qu-YVM" kind="push" identifier="Segue_GotoRSSDetailPage" id="4Bw-4E-tXW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9hK-jG-S9Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1587,6 +1807,139 @@ CFYxLjAuMC4wA
         <image name="Settings.png" width="30" height="30"/>
         <image name="Spy.png" width="160" height="160"/>
     </resources>
+    <classes>
+        <class className="AccountViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AccountViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="lblDoubanFollowerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblDoubanName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblRSSFollowerSiteTitle" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblRenrenFollowerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblRenrenName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblSinaWeiboFollowerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblSinaWeiboName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="table" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="LabCharactorViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabCharactorViewController.h"/>
+        </class>
+        <class className="LabEnemyViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabEnemyViewController.h"/>
+        </class>
+        <class className="LabPencentageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabPencentageViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="herImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="lblHerName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblMyName" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblScore" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblScorePrefix" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="myImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="picker" candidateClass="UIPickerView"/>
+            </relationships>
+        </class>
+        <class className="LabTimeSpanViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabTimeSpanViewController.h"/>
+        </class>
+        <class className="LabViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="PasswordViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PasswordViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="navigateBar1" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="txtPassword" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="PreferenceViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PreferenceViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="switchPassword" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="switchShowFowardPicture" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="switchSound" candidateClass="UISwitch"/>
+            </relationships>
+        </class>
+        <class className="RSSDetailViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RSSDetailViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="goToOriginalPageClick:"/>
+            </relationships>
+        </class>
+        <class className="SelectFriendViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SelectFriendViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mySearchBar" candidateClass="UISearchBar"/>
+            </relationships>
+        </class>
+        <class className="SetPasswordViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SetPasswordViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="txt1" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="txt2" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="SetRSSFeedViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SetRSSFeedViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="lblSiteDescription" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="lblSiteTitle" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="txtRSSPath" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="StartPageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/StartPageViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="navigateBar1" candidateClass="UINavigationBar"/>
+            </relationships>
+        </class>
+        <class className="StatusDetailViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/StatusDetailViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="TTBaseViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTBaseViewController.h"/>
+        </class>
+        <class className="TTCommentViewController" superclassName="TTTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTCommentViewController.h"/>
+        </class>
+        <class className="TTModelViewController" superclassName="TTViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTModelViewController.h"/>
+        </class>
+        <class className="TTNavigatorViewController" superclassName="TTBaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTNavigatorViewController.h"/>
+        </class>
+        <class className="TTPictureWallViewController" superclassName="TTThumbsViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTPictureWallViewController.h"/>
+        </class>
+        <class className="TTStatusTImeLineViewController" superclassName="TTTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTStatusTImeLineViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="btnPostStatus" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="btnRefresh" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="TTTableViewController" superclassName="TTModelViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTTableViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="TTThumbsViewController" superclassName="TTTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTThumbsViewController.h"/>
+        </class>
+        <class className="TTViewController" superclassName="TTNavigatorViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TTViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

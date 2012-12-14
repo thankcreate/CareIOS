@@ -12,7 +12,8 @@ typedef enum EnumEntryType {
     EntryType_NotSet,
     EntryType_SinaWeibo,
     EntryType_Renren,
-    EntryType_Douban
+    EntryType_Douban,
+    EntryType_RSS
 } EntryType;
 
 

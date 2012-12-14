@@ -23,6 +23,7 @@
     [self initSinaWeibo];
     [self initRenren];
     [[TTURLRequestQueue mainQueue] setMaxContentLength:0];
+
     return YES;
 }
 

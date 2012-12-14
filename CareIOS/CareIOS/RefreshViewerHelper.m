@@ -11,10 +11,12 @@
 #import "SinaWeiboConverter.h"
 #import "RenrenConverter.h"
 #import "DoubanConverter.h"
+#import "RSSFeedConverter.h"
 #import "MainViewModel.h"
 #import "TaskHelper.h"
 #import "DOUAPIEngine.h"
 #import "NSString+RenrenSBJSON.h"
+
 
 
 @interface RefreshViewerHelper ()
@@ -26,7 +28,7 @@
 @synthesize mainViewModel;
 @synthesize m_taskHelper;
 @synthesize delegate;
-
+@synthesize feedParser;
 -(id)initWithDelegate:(id<RefreshViewerDelegate>) del
 {
     if(!(self = [super init]))
@@ -50,6 +52,7 @@
     [mainViewModel.listItems addObjectsFromArray:mainViewModel.sinaWeiboItems];
     [mainViewModel.listItems addObjectsFromArray:mainViewModel.renrenItems];
     [mainViewModel.listItems addObjectsFromArray:mainViewModel.doubanItems];
+    [mainViewModel.listItems addObjectsFromArray:mainViewModel.rssItems];
     
     NSArray* temp = [mainViewModel.listItems sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSDate* time1 = ((ItemViewModel*)(obj1)).time;
@@ -86,10 +89,12 @@
     [m_taskHelper pushTask];
     [m_taskHelper pushTask];
     [m_taskHelper pushTask];
+    [m_taskHelper pushTask];
 
     [self refreshModelSinaWeibo];
     [self refreshModelRenren];
     [self refreshModelDouban];
+    [self refreshModelRSS];
 }
 
 
@@ -255,7 +260,7 @@
         else
         {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
-                                                            message:@"由于未知原因，获取朋友列表失败" delegate:nil
+                                                            message:@"由于未知原因，获取豆瓣广播失败" delegate:nil
                                                   cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
             [alert show];
             [m_taskHelper popTask];
@@ -264,5 +269,59 @@
     
     service.apiBaseUrlString = [CareConstants doubanBaseAPI];
     [service get:query callback:completionBlock];
+}
+
+
+#pragma mark - RSS logic
+-(void)refreshModelRSS
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* rssPath = [defaults objectForKey:@"RSS_FollowerPath"];
+    if(rssPath == nil || rssPath.length == 0)
+    {
+        [m_taskHelper popTask];
+        return;
+    }
+    NSURL *feedURL = [NSURL URLWithString:rssPath];
+	feedParser = [[MWFeedParser alloc] initWithFeedURL:feedURL];
+	feedParser.delegate = self;
+	feedParser.feedParseType = ParseTypeFull; // Parse feed info and all items
+	feedParser.connectionType = ConnectionTypeAsynchronously;
+	[feedParser parse];
+}
+
+#pragma mark MWFeedParserDelegate
+
+- (void)feedParserDidStart:(MWFeedParser *)parser {
+    [mainViewModel.rssItems removeAllObjects];
+}
+
+- (void)feedParser:(MWFeedParser *)parser didParseFeedInfo:(MWFeedInfo *)info {
+    // 因为有时候在RSS设置页用户并没有等到title smmary信息回来，就已经退到另一页面了，所以每次这里都要设一下
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:parser.url.absoluteString forKey:@"RSS_FollowerPath"];
+    [defaults setObject:info.title forKey:@"RSS_FollowerSiteTitle"];
+    [defaults setObject:info.summary forKey:@"RSS_FollowerDescription"];
+}
+
+- (void)feedParser:(MWFeedParser *)parser didParseFeedItem:(MWFeedItem *)item {
+    ItemViewModel* model = [RSSFeedConverter convertFeedToCommon:item];
+    if(model != nil)
+    {
+        [mainViewModel.rssItems addObject:model];
+    }
+}
+
+- (void)feedParserDidFinish:(MWFeedParser *)parser {
+    [m_taskHelper popTask];
+}
+
+- (void)feedParser:(MWFeedParser *)parser didFailWithError:(NSError *)error {    
+    [m_taskHelper popTask];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，获取RSS订阅失败，请确保RSS地址正确，网络畅通" delegate:nil
+                                          cancelButtonTitle:@"嗯，朕知道了～" otherButtonTitles:nil];
+    [alert show];
+    return;
 }
 @end

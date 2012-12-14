@@ -259,6 +259,7 @@
     return _timeLabel;
 }
 
+#pragma mark - event
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
     UITouch *touch = [touches anyObject];    

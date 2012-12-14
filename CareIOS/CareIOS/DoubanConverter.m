@@ -116,6 +116,7 @@
         model.commentCount = [[status objectForKey:@"comments_count"] stringValue];
         model.sharedCount = [[status objectForKey:@"reshared_count"] stringValue];
         model.type = EntryType_Douban;
+        [self filtPictureWithStatus:status itemViewModel:model];
     }
     @catch (NSException *exception) {
         model = nil;
@@ -168,6 +169,8 @@
         model.commentCount = [[status objectForKey:@"comments_count"] stringValue];
         model.sharedCount = [[status objectForKey:@"reshared_count"] stringValue];
         model.type = EntryType_Douban;
+        [self filtPictureWithStatus:status itemViewModel:model];
+        
     }
     @catch (NSException *exception) {
         model = nil;
@@ -203,6 +206,7 @@
             if([attachType compare:@"movie"] == NSOrderedSame)
             {
                 movieTitle = [attach objectForKey:@"title"];
+                break;
             }
         }
         
@@ -218,7 +222,8 @@
         model.ID = [[status objectForKey:@"id"] stringValue];
         model.commentCount = [[status objectForKey:@"comments_count"] stringValue];
         model.sharedCount = [[status objectForKey:@"reshared_count"] stringValue];
-        model.type = EntryType_Douban;        
+        model.type = EntryType_Douban;
+        [self filtPictureWithStatus:status itemViewModel:model];
     }
     @catch (NSException *exception) {
         model = nil;
@@ -252,6 +257,7 @@
         model.commentCount = [[status objectForKey:@"comments_count"] stringValue];
         model.sharedCount = [[status objectForKey:@"reshared_count"] stringValue];
         model.type = EntryType_Douban;
+        [self filtPictureWithStatus:status itemViewModel:model];
         
         id resharedStatus = [status objectForKey:@"reshared_status"];
         if(resharedStatus != nil)
@@ -263,6 +269,7 @@
             model.content = @"转播";/*你妹*/;
             model.forwardItem = sharedModel;
         }
+        
     }
     @catch (NSException *exception) {
         model = nil;
@@ -298,6 +305,71 @@
     }
 }
 
+
+
+// 这一步需要在解析status的最后一步来做
+// 因为其description依赖于itemViewModel的content
+// 目前豆瓣只有小图
++(void)filtPictureWithStatus:(id)status itemViewModel:(ItemViewModel*)itemViewModel
+{
+    NSArray* listAttach = [status objectForKey:@"attachments"];
+    for(id attach in listAttach)
+    {
+        NSString* attachType = [attach objectForKey:@"type"];
+        if([attachType compare:@"movie"] == NSOrderedSame
+           || [attachType compare:@"music"] == NSOrderedSame
+           || [attachType compare:@"book"] == NSOrderedSame
+           || [attachType compare:@"image"] == NSOrderedSame)
+        {
+            // 抓图
+            NSArray* listMedia =[attach objectForKey:@"media"];
+            for(id media in listMedia)
+            {
+                NSString* mediaType =  [media objectForKey:@"type"];
+                if([mediaType compare:@"image"] == NSOrderedSame)
+                {
+                    PictureItemViewModel* model = [[PictureItemViewModel alloc] init];
+                    // 豆瓣虽然只给了一个src,但是它的中图和大图是直接把链接中的small替换成median或raw就行了
+                    model.smallURL = [media objectForKey:@"src"];
+                    model.middleURL = [self convertURLFrom:model.smallURL to:@"median"];
+                    model.largeURL = [self convertURLFrom:model.smallURL to:@"raw"];
+                    model.ID = itemViewModel.ID;
+                    model.description = itemViewModel.content;
+                    model.time = itemViewModel.time;                    
+                    model.title = itemViewModel.title;
+                    model.type = EntryType_Douban;
+                    if(model.smallURL.length)
+                    {
+                        [[MainViewModel sharedInstance].doubanPictureItems addObject:model];
+                    }
+                    
+                    // 反过来设置ItemViewModel的图片参数
+                    itemViewModel.imageURL = model.smallURL;
+                    itemViewModel.midImageURL = model.middleURL;
+                    itemViewModel.fullImageURL = model.largeURL;
+                    break;
+                }                
+            }
+            break;
+        }
+    }
+}
+
++(NSString*)convertURLFrom:(NSString*) smallURL to:(NSString*)to
+{
+    NSString *s = [smallURL copy];
+    NSRange r;
+    r = [s rangeOfString:@"small" options:NSRegularExpressionSearch];
+    if(r.location != NSNotFound)
+    {
+        s = [s stringByReplacingCharactersInRange:r withString:to];
+        return s;
+    }
+    else
+    {
+        return smallURL;
+    };
+}
 
 // 豆瓣的祼格式是这样的
 // 2012-10-03 11:25:26

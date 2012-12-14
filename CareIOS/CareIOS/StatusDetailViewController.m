@@ -8,14 +8,16 @@
 
 #import "StatusDetailViewController.h"
 #import "Three20/Three20.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+#import "UIImageView+WebCache.h"
 #import "MiscTool.h"
+#import "TTCommentViewController.h"
 @interface StatusDetailViewController ()
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @end
 
 @implementation StatusDetailViewController
+@synthesize photos;
 @synthesize scrollView;
 @synthesize itemViewModel;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -26,6 +28,8 @@
     }
     return self;
 }
+
+
 
 - (void)viewDidLoad
 {
@@ -86,23 +90,39 @@
 
     // 2.1 正文
     if (itemViewModel.content.length) {
-        UILabel* lblContent = [[UILabel alloc] init];
-        lblContent.text = itemViewModel.content;
+//        UILabel* lblContent = [[UILabel alloc] init];
+//        lblContent.text = itemViewModel.content;
+//        lblContent.Font = [UIFont fontWithName:@"Helvetica" size:15];
+//        lblContent.textColor = [UIColor blackColor];
+//      //  lblContent.lineBreakMode = NSLineBreakByWordWrapping;
+//
+//        CGSize maximumLabelSize = CGSizeMake(width,9999);
+//        CGSize expectedLabelSize = [lblContent.text sizeWithFont:lblContent.font
+//                                               constrainedToSize:maximumLabelSize
+//                                                   lineBreakMode:lblContent.lineBreakMode];
+//        lblContent.contentMode = UIViewContentModeTopLeft;
+//        lblContent.lineBreakMode = NSLineBreakByTruncatingTail;
+//        lblContent.numberOfLines = 100;
+//        
+//        lblContent.frame = CGRectMake(left, top, width, expectedLabelSize.height);
+//        [scrollView addSubview:lblContent];
+        
+        TTNavigator* navigator = [TTNavigator navigator];
+        navigator.delegate = self;
+        navigator.window = [UIApplication sharedApplication].delegate.window;
+        
+        TTStyledTextLabel* lblContent = [[TTStyledTextLabel alloc] init];
+        lblContent.text = [TTStyledText textWithURLs:itemViewModel.content lineBreaks:YES];     
         lblContent.Font = [UIFont fontWithName:@"Helvetica" size:15];
         lblContent.textColor = [UIColor blackColor];
-      //  lblContent.lineBreakMode = NSLineBreakByWordWrapping;
-
-        CGSize maximumLabelSize = CGSizeMake(width,9999);
-        CGSize expectedLabelSize = [lblContent.text sizeWithFont:lblContent.font
-                                               constrainedToSize:maximumLabelSize
-                                                   lineBreakMode:lblContent.lineBreakMode];
         lblContent.contentMode = UIViewContentModeTopLeft;
-        lblContent.lineBreakMode = NSLineBreakByTruncatingTail;
-        lblContent.numberOfLines = 100;
         
-        lblContent.frame = CGRectMake(left, top, width, expectedLabelSize.height);
+        lblContent.frame = CGRectMake(left, top, width, 20.0f);
+        [lblContent sizeToFit];
         [scrollView addSubview:lblContent];
-        top += expectedLabelSize.height;
+        
+        top += lblContent.frame.size.height;
+
     }
     
     // 2.3 正文附图
@@ -110,6 +130,12 @@
     if(itemViewModel.imageURL != nil)
     {
         UIImageView* thumbImage = [[UIImageView alloc] init];
+        
+        thumbImage.userInteractionEnabled = YES;        
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(thumbImageClicked)];        
+        [thumbImage addGestureRecognizer:singleTap];       
+
+        
         thumbImage.frame = CGRectMake(left, top + 5, 75, 75);
         thumbImage.contentMode = UIViewContentModeScaleAspectFit;
 
@@ -165,32 +191,56 @@
 //        }
       
         // 2.4.2 转发部分正文
-        UILabel* lblForwardContent = [[UILabel alloc] init];
+//        UILabel* lblForwardContent = [[UILabel alloc] init];
+//        if (itemViewModel.forwardItem.content.length) {
+//            lblForwardContent.text = itemViewModel.forwardItem.contentWithTitle;
+//            lblForwardContent.Font = [UIFont fontWithName:@"Helvetica" size:13];
+//            lblForwardContent.textColor = [UIColor blackColor];
+//            lblForwardContent.backgroundColor = [UIColor clearColor]; 
+//            
+//            CGSize maximumLabelSize = CGSizeMake(width,9999);
+//            CGSize expectedLabelSize = [lblForwardContent.text sizeWithFont:lblForwardContent.font
+//                                                        constrainedToSize:maximumLabelSize
+//                                                            lineBreakMode:lblForwardContent.lineBreakMode];
+//            lblForwardContent.contentMode = UIViewContentModeTopLeft;
+//            lblForwardContent.lineBreakMode = NSLineBreakByTruncatingTail;
+//            lblForwardContent.numberOfLines = 100;
+//            
+//            lblForwardContent.frame = CGRectMake(forwardLeft, top, forwardWidth, expectedLabelSize.height);
+//            [scrollView addSubview:lblForwardContent];
+//            top += lblForwardContent.frame.size.height;
+//        }
+       
+        TTStyledTextLabel* lblForwardContent = [[TTStyledTextLabel alloc] init];
         if (itemViewModel.forwardItem.content.length) {
-            lblForwardContent.text = itemViewModel.forwardItem.contentWithTitle;
+            TTNavigator* navigator = [TTNavigator navigator];
+            navigator.delegate = self;
+            navigator.window = [UIApplication sharedApplication].delegate.window;
+            
+            lblForwardContent.text = [TTStyledText textWithURLs:itemViewModel.forwardItem.contentWithTitle lineBreaks:YES ];
             lblForwardContent.Font = [UIFont fontWithName:@"Helvetica" size:13];
             lblForwardContent.textColor = [UIColor blackColor];
+            lblForwardContent.contentMode = UIViewContentModeTopLeft;
             lblForwardContent.backgroundColor = [UIColor clearColor]; 
             
-            CGSize maximumLabelSize = CGSizeMake(width,9999);
-            CGSize expectedLabelSize = [lblForwardContent.text sizeWithFont:lblForwardContent.font
-                                                        constrainedToSize:maximumLabelSize
-                                                            lineBreakMode:lblForwardContent.lineBreakMode];
-            lblForwardContent.contentMode = UIViewContentModeTopLeft;
-            lblForwardContent.lineBreakMode = NSLineBreakByTruncatingTail;
-            lblForwardContent.numberOfLines = 100;
-            
-            lblForwardContent.frame = CGRectMake(forwardLeft, top, forwardWidth, expectedLabelSize.height);
+            lblForwardContent.frame = CGRectMake(forwardLeft, top, forwardWidth, 20.0f);
+            [lblForwardContent sizeToFit];
             [scrollView addSubview:lblForwardContent];
+            
             top += lblForwardContent.frame.size.height;
         }
+
 
         // 2.4.3 转发部分图片
         UIImageView* forwardThumbImage = [[UIImageView alloc] init];
         if(itemViewModel.forwardItem.midImageURL)
         {
             NSURL* url = [NSURL URLWithString:itemViewModel.forwardItem.imageURL];
-            [forwardThumbImage setImageWithURL:url];         
+            [forwardThumbImage setImageWithURL:url];
+            
+            forwardThumbImage.userInteractionEnabled = YES;
+            UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(forwardThumbImageClicked)];
+            [forwardThumbImage addGestureRecognizer:singleTap];
             
             forwardThumbImage.frame = CGRectMake(forwardLeft, top + 5, 75, 75);
             forwardThumbImage.contentMode = UIViewContentModeScaleAspectFit;
@@ -207,7 +257,11 @@
         CGRect rec = forwardView.frame;
         CGFloat newHeight = lblForwardContent.frame.size.height
         + forwardThumbImage.frame.size.height
-        + 20;
+        + 17;
+        
+        // 如果有转发图的话，要额外再给它加点下边距会好看点 ^_^
+        if(itemViewModel.forwardItem.midImageURL)
+            newHeight += 4;
         forwardView.frame = CGRectMake(rec.origin.x, rec.origin.y, rec.size.width, newHeight);
     }
     
@@ -295,11 +349,64 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    
+{    
     id detailPage = segue.destinationViewController;
-    ItemViewModel* item = itemViewModel;
-    [detailPage setValue:item forKey:@"itemViewModel"];
+    if ([detailPage isKindOfClass:[TTCommentViewController class]])
+    {
+        ItemViewModel* item = itemViewModel;
+        [detailPage setValue:item forKey:@"itemViewModel"];
+
+    }
 }
+
+# pragma mark - Event handler
+-(void)thumbImageClicked
+{
+    photos = [[NSMutableArray alloc] init];
+    [photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:itemViewModel.fullImageURL]]];
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    browser.displayActionButton = YES;
+    [self.navigationController pushViewController:browser animated:YES];
+}
+
+-(void)forwardThumbImageClicked
+{
+    photos = [[NSMutableArray alloc] init];
+    [photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:itemViewModel.forwardItem.fullImageURL]]];
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    browser.displayActionButton = YES;
+    [self.navigationController pushViewController:browser animated:YES];
+}
+
+#pragma mark - TTNavigatorDelegate
+- (BOOL)navigator: (TTBaseNavigator *)navigator shouldOpenURL:(NSURL *) URL {
+    // setup a webcontroller with the URL and push it
+    TTWebController *webController = [[TTWebController alloc] init];
+    [webController openURL:URL];
+    [self.navigationController pushViewController:webController animated:YES];
+    webController.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    // 返回NO以取消TTNavigate的那个跳转
+    // 这是因为如果这里从TTNavigate跳转的话，webController页面会被认为是TTNavigate框架下的root页面
+    // 也就没有返回按钮，这里实际上是截获url信息，然后用原生的navigationController框架下跳转
+    return NO;
+}
+
+
+
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    if(photos == nil)
+        return 0;
+    return photos.count;
+}
+
+- (MWPhoto *)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if(photos == nil)
+        return nil;
+    if (index < photos.count)
+        return [photos objectAtIndex:index];
+    return nil;
+}
+
 
 @end

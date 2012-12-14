@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblRenrenFollowerName;
 @property (strong, nonatomic) IBOutlet UILabel *lblDoubanName;
 @property (strong, nonatomic) IBOutlet UILabel *lblDoubanFollowerName;
+@property (strong, nonatomic) IBOutlet UILabel *lblRSSFollowerSiteTitle;
 @property (strong, nonatomic) IBOutlet UITableView *table;
 @end
 
@@ -107,6 +108,18 @@
     [self.lblDoubanFollowerName sizeToFit];
 }
 
+- (void)initUIRSS
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* followerSiteTitle = [defaults objectForKey:@"RSS_FollowerSiteTitle"];
+    
+    if(followerSiteTitle == nil)
+    {
+        followerSiteTitle = @"未关注";
+    }
+    self.lblRSSFollowerSiteTitle.text = followerSiteTitle;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -114,6 +127,7 @@
     [self initUISinaWeibo];
     [self initUIRenren];
     [self initUIDouban];
+    [self initUIRSS];
 }
 
 - (void)didReceiveMemoryWarning
@@ -204,6 +218,10 @@
         {
             [self doubanLogoutClick];
         }
+    }
+    else if ( sec == 3)
+    {
+        [self performSegueWithIdentifier:@"Segue_SetRss" sender:self];
     }
     
     

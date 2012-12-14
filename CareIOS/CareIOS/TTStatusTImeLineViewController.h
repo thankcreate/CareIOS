@@ -10,12 +10,16 @@
 #import "Three20/Three20.h"
 #import "RefreshViewerHelper.h"
 #import "CareConstants.h"
+#import "MWPhotoBrowser.h"
 @interface TTStatusTImeLineViewController  : TTTableViewController
 <TTModelDelegate,UIActionSheetDelegate,TTPostControllerDelegate,
-SinaWeiboRequestDelegate,RenrenDelegate>
+SinaWeiboRequestDelegate,RenrenDelegate, MWPhotoBrowserDelegate>
 {
     int lastSelectIndex;
     EntryType lastSelectPostType;
 }
+
+// for MWPhotoBrowserDelegate use
+@property (strong, nonatomic) NSMutableArray* photos;
 
 @end

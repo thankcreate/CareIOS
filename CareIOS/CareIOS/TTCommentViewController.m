@@ -17,28 +17,27 @@
 #import "TTTableCommentItem.h"
 #import "TTTableCommentItemCell.h"
 #import "MiscTool.h"
-
 #import "DOUAPIEngine.h"
 #import "NSString+RenrenSBJSON.h"
+#import "TTSectionedDataSource+CareCell.h"
 
 @interface TTCommentViewController ()
 
 @end
 
-@implementation  TTSectionedDataSource(CommentSource)
-- (Class)tableView:(UITableView*)tableView cellClassForObject:(id)object
-{
-    if ([object isKindOfClass:[TTTableCommentItem class]]) {
-        return [TTTableCommentItemCell class];
-    }
-    
-    else
-    {
-     return [super tableView:tableView cellClassForObject:object];   
-    }
-}
-
-@end
+//@implementation  TTSectionedDataSource(CommentSource)
+//- (Class)tableView:(UITableView*)tableView cellClassForObject:(id)object
+//{
+//    if ([object isKindOfClass:[TTTableCommentItem class]]) {
+//        return [TTTableCommentItemCell class];
+//    }    
+//    else
+//    {
+//     return [super tableView:tableView cellClassForObject:object];   
+//    }
+//}
+//
+//@end
 
 @implementation TTCommentViewController
 @synthesize itemViewModel;

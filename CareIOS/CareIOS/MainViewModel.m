@@ -9,6 +9,7 @@
 #import "MainViewModel.h"
 #import "ItemViewModel.h"
 #import "Three20Core/NSArrayAdditions.h"
+#import "SoundTool.h"
 
 static MainViewModel * sharedInstance = nil;
 
@@ -44,6 +45,7 @@ static MainViewModel * sharedInstance = nil;
     self.sinaWeiboItems = [NSMutableArray arrayWithCapacity:50];
     self.renrenItems = [NSMutableArray arrayWithCapacity:50];
     self.doubanItems = [NSMutableArray arrayWithCapacity:50];
+    self.rssItems = [NSMutableArray arrayWithCapacity:20];
     
     self.pictureItems = [NSMutableArray arrayWithCapacity:100];
     self.listPictureItems = [NSMutableArray arrayWithCapacity:100];
@@ -133,6 +135,7 @@ static MainViewModel * sharedInstance = nil;
 - (void)refreshComplete
 {
     _isLoading = false;
+    [SoundTool playSoundLoadComplete];
     // 加载完毕
     [_delegates perform:@selector(modelDidFinishLoad:) withObject:self];
 }

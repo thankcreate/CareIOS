@@ -28,6 +28,7 @@
 @property (strong, atomic) NSMutableArray* sinaWeiboItems;
 @property (strong, atomic) NSMutableArray* renrenItems;
 @property (strong, atomic) NSMutableArray* doubanItems;
+@property (strong, atomic) NSMutableArray* rssItems;
 
 // Pic items
 @property (strong, atomic) NSMutableArray* pictureItems;

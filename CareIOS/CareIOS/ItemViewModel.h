@@ -12,6 +12,10 @@
 
 
 @interface ItemViewModel : NSObject
+{
+    NSString* _commentCount;
+}
+
 @property (strong, nonatomic) NSString* iconURL;
 @property (strong, nonatomic) NSString* largeIconURL;
 

@@ -13,6 +13,9 @@
 #import "MiscTool.h"
 #import "DOUAPIEngine.h"
 #import "NSString+RenrenSBJSON.h"
+#import "TTTableStatusItem.h"
+#import "TTSectionedDataSource+CareCell.h"
+
 @interface TTStatusTImeLineViewController ()
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *btnPostStatus;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *btnRefresh;
@@ -24,7 +27,7 @@
 
 @synthesize refreshViewerHelper;
 @synthesize mainViewModel;
-
+@synthesize photos;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil
                bundle:(NSBundle *)nibBundleOrNil
@@ -100,7 +103,7 @@
     NSMutableArray* itemsRow = [[NSMutableArray alloc] init];
     for (ItemViewModel* model in mainViewModel.items)
     {
-        TTTableMessageItem* item = [TTTableMessageItem itemWithTitle:model.title
+        TTTableStatusItem* item = [TTTableStatusItem itemWithTitle:model.title
                                                              caption:nil
                                                                 text:model.content
                                                            timestamp:model.time
@@ -108,11 +111,12 @@
                                                                  URL:nil];
         item.thumbImageURL = model.imageURL;
         item.from = model.fromText;
+        item.itemViewModel = model;
         
         // 转发
         if(model.forwardItem)
         {
-            TTTableMessageItem* forwardItem = [TTTableMessageItem itemWithTitle:nil
+            TTTableStatusItem* forwardItem = [TTTableStatusItem itemWithTitle:nil
                                                                         caption:nil
                                                                            text:model.forwardItem.contentWithTitle
                                                                       timestamp:model.time
@@ -146,12 +150,25 @@
     if(mainViewModel.items.count == 0)
         return;
     lastSelectIndex = indexPath.row;
-    [self performSegueWithIdentifier:@"Segue_GotoDetailPage" sender:self];
+    ItemViewModel* item = [mainViewModel.items objectAtIndex:lastSelectIndex];
+    if(item.type == EntryType_RSS)
+    {
+        [self performSegueWithIdentifier:@"Segue_GotoRSSDetailPage" sender:self];
+    }
+    else if(item.type == EntryType_SinaWeibo
+            || item.type == EntryType_Renren
+            || item.type == EntryType_Douban)
+    {
+        [self performSegueWithIdentifier:@"Segue_GotoStatusDetailPage" sender:self];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    
+    // 这里实际上有两个待跳转页
+    // 1. StatusDetailViewController
+    // 2. RSSDetailViewController
+    // 他们都必须实现一个叫itemViewModel的property
     id detailPage = segue.destinationViewController;
     ItemViewModel* item = [mainViewModel.items objectAtIndex:lastSelectIndex];
     [detailPage setValue:item forKey:@"itemViewModel"];
@@ -197,7 +214,7 @@
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
                                                         message:@"呃～是智商要超过250才能看到您写的字么？" delegate:nil
-                                              cancelButtonTitle:@"寡人知之矣" otherButtonTitles:nil];
+                                              cancelButtonTitle:@"寡人喻之矣" otherButtonTitles:nil];
         [alert show];
         return FALSE;
     }
@@ -377,5 +394,36 @@
         return;
     }
     [self showPostStatusPostController];
+}
+
+
+
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    if(photos == nil)
+        return 0;
+    return photos.count;
+}
+
+- (MWPhoto *)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    if(photos == nil)
+        return nil;
+    if (index < photos.count)
+        return [photos objectAtIndex:index];
+    return nil;
+}
+
+
+// 因为在在TTTableStatusItemCell里不方便拿到navigationController,所以跑到这里去做页面跳转
+-(void)gotoPhotoViewerWithURL:(NSString*)url
+{
+    if(url == nil || url.length == 0)
+        return;
+    photos = [[NSMutableArray alloc] init];
+    [photos addObject:[MWPhoto photoWithURL:[NSURL URLWithString:url]]];
+    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    browser.displayActionButton = YES;
+    [self.navigationController pushViewController:browser animated:YES];
+
 }
 @end

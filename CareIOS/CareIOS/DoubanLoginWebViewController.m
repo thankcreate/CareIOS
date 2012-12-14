@@ -136,8 +136,7 @@ static NSString * const kRedirectUrl = @"http://thankcreate.github.com/Care/call
     [service validateAuthorizationCode];
     
     return NO;
-  }
-  
+  }  
   return YES;
 }
 

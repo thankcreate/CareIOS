@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "YouMiView.h"
 @interface LabViewController : UIViewController<UIScrollViewDelegate>
+
+@property (strong, nonatomic)UIButton* btn1;
+@property (strong, nonatomic)UIButton* btn2;
+@property (strong, nonatomic)UIButton* btn3;
+@property (strong, nonatomic)UIButton* btn4;
+@property (strong, nonatomic)UIButton* btn5;
+
+@property (strong, nonatomic)YouMiView *adView1;
 
 @end

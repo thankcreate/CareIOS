@@ -123,7 +123,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
         {
             height += 85;
         }
-        height += 22;
+        height += 14;
     }
     if (item.from)
     {
@@ -237,7 +237,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
                                                                                      pointSize:CGSizeMake(10,5)] next:
                               [TTSolidFillStyle styleWithColor:[UIColor whiteColor] next:
                                [TTSolidBorderStyle styleWithColor:black width:1 next:nil]]];
-            _forwardView.backgroundColor = [UIColor whiteColor];
+            _forwardView.backgroundColor = [UIColor clearColor];
             _forwardView.style = style;
             
             top+= 10;
@@ -474,6 +474,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
 - (TTImageView*)thumbImage {
     if (!_thumbImage) {
         _thumbImage = [[TTImageView alloc] init];
+        _thumbImage.defaultImage = [UIImage imageNamed:@"DefaultPicture.png"];
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_thumbImage.style = TTSTYLE(rounded);
         [self.contentView addSubview:_thumbImage];
@@ -485,6 +486,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
 - (TTImageView*)forwardThumbImage {
     if (!_forwardThumbImage) {
         _forwardThumbImage = [[TTImageView alloc] init];
+        _forwardThumbImage.defaultImage = [UIImage imageNamed:@"DefaultPicture.png"];
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_thumbImage.style = TTSTYLE(rounded);
         [self.contentView addSubview:_forwardThumbImage];

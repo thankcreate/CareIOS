@@ -136,8 +136,7 @@
         // 评分
         else if(row == 2)
         {
-            // TODO
-            [[UIApplication sharedApplication] openURL: [NSURL URLWithString:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=477935039"]];
+            [MiscTool gotoReviewPage];
         }
         // 关于
         else if(row == 3)

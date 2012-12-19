@@ -58,7 +58,11 @@
 
 @property(nonatomic, copy) NSString *appId;
 
-@property(nonatomic, assign) id<RenrenDelegate> renrenDelegate;
+
+// 此处更改delegate生命周期为retain，否则delegate在view销毁时会崩溃
+// 注意，不要在view里retain这个request,否则就循环retain了
+// THANKCRATE CHANGE
+@property(nonatomic, retain) id<RenrenDelegate> renrenDelegate;
 
 @property(nonatomic, retain) NSArray *permissions;
 
@@ -91,6 +95,10 @@
  * 取得登录用户的userID
  */
 - (void)getLoggedInUserId;
+
+
+// ThankCreate add here
+-(void)delUserSessionInfo;
 
 /*
  * 获得支付功能对象

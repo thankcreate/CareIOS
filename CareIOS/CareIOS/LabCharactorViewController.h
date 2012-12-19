@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LabShareBaseViewController.h"
+
 @class PCPieChart;
-@interface LabCharactorViewController : UIViewController
+@interface LabCharactorViewController : LabShareBaseViewController
 {
     int var1;
     int var2;

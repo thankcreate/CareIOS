@@ -15,6 +15,9 @@
 #import "NSString+RenrenSBJSON.h"
 #import "TTTableStatusItem.h"
 #import "TTSectionedDataSource+CareCell.h"
+#import "LocalStorageHelper.h"
+#import "PreferenceHelper.h"
+#import "MobClick.h"
 
 @interface TTStatusTImeLineViewController ()
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *btnPostStatus;
@@ -42,6 +45,12 @@
 {
     [super viewDidLoad];
     [super updateTableDelegate];
+    
+    // 检查是否需要弹出提示：是否好评
+    [self showReviewDialogSmart];
+
+    [MobClick event:@"TTStatusTImeLineViewController"];
+
     mainViewModel = [MainViewModel sharedInstance];
     [mainViewModel.delegates addObject:self];
     self.variableHeightRows = YES;
@@ -54,16 +63,65 @@
 
     self.btnPostStatus.width = 10.0f;
     self.btnRefresh.width = 10.0f;
- 
     
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    self.tableView.backgroundColor = [UIColor clearColor];
+    
+    // 加载缓存
+    [LocalStorageHelper loadFromLocalStorage];
+    [self modelDidFinishLoad:nil];
+    
+    // 检查是否过期
+    [self checkOutOfDate];
+}
+
+-(void)showReviewDialogSmart
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber* count = [defaults objectForKey:@"Global_LaunchCount"];
+    if(count == nil)
+    {
+        [defaults setObject:[NSNumber numberWithInt:1] forKey:@"Global_LaunchCount"];
+        [defaults synchronize];
+    }
+    else
+    {
+        int nCount = [count intValue];
+        ++nCount;
+        [defaults setObject:[NSNumber numberWithInt:nCount] forKey:@"Global_LaunchCount"];
+        if(nCount == 3)
+        {
+            [defaults synchronize];
+            UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@">_<" message:@"主人使用我已经有一段时间了，喜欢的话能否给个好评呢？" delegate:self cancelButtonTitle:@"好评" otherButtonTitles:@"评你妹",nil];
+            alert.tag = 250;
+            alert.alertViewStyle=UIAlertViewStyleDefault;
+            [alert show];
+        }
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    //该方法由UIAlertViewDelegate协议定义，在点击AlertView按钮时自动执行，所以如果这里再用alertView来弹出提//示，就会死循环，不停的弹AlertView
+    if(alertView.tag != 250)
+        return;
+    if(buttonIndex == 0)
+    {
+        [MobClick event:@"GoReview"];
+        [MiscTool gotoReviewPage];
+    }
+    else
+    {
+        [MobClick event:@"NotGoReview"];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //self.statusBarStyle = UIStatusBarStyleBlackOpaque;
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
-    //BOOL isAnyOneFollowed = [MiscTool isAnyOneFollowed];
+
+    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];    
+    
     if(mainViewModel.isChanged )
     {
         [mainViewModel load:TTURLRequestCachePolicyNetwork more:NO];
@@ -71,7 +129,47 @@
 }
 
 - (id<UITableViewDelegate>)createDelegate {
-    return [[TTStatusTImeDragRefreshDelegate alloc] initWithController:self] ;
+    self.myTTStatusTImeDragRefreshDelegate = [[TTStatusTImeDragRefreshDelegate alloc] initWithController:self] ;
+    return self.myTTStatusTImeDragRefreshDelegate ;
+}
+
+
+-(void)checkOutOfDate
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSString* sinaWeiboToken = [defaults objectForKey:@"SinaWeibo_Token"];
+    NSDate* sinaWeiboExpDate = [defaults objectForKey:@"SinaWeibo_ExpirationDate"];    
+    if(sinaWeiboToken != nil && [sinaWeiboExpDate compare:[NSDate date]] == NSOrderedAscending)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"新浪微博授权已过期，请重新登陆的喵～" delegate:nil
+                                              cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+        [alert show];
+        [PreferenceHelper clearSinaWeiboPreference];
+    }
+
+    NSString* renrenToken = [defaults objectForKey:@"Renren_Token"];
+    NSDate* renrenExpDate = [defaults objectForKey:@"Renren_ExpirationDate"];    
+    if(renrenToken != nil && [renrenExpDate compare:[NSDate date]] == NSOrderedAscending)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"人人授权已过期，请重新登陆的喵～" delegate:nil
+                                              cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+        [alert show];
+        [PreferenceHelper clearRenrenPreference];
+    }
+    
+    NSString* doubanToken = [defaults objectForKey:@"Douban_Token"];
+    NSDate* doubanExpDate = [defaults objectForKey:@"Douban_ExpirationDate"];    
+    if(doubanToken != nil && [doubanExpDate compare:[NSDate date]] == NSOrderedAscending)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"豆瓣授权已过期，请重新登陆的喵～" delegate:nil
+                                              cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+        [alert show];
+        [PreferenceHelper clearDoubanPreference];
+    }
 }
 
 #pragma mark - Event
@@ -94,7 +192,7 @@
 #pragma mark -
 #pragma mark TTModelDelegate
 - (void)modelDidFinishLoad:(id<TTModel>)model
-{  
+{
     NSMutableArray* sections = [[NSMutableArray alloc] init];
     NSMutableArray* items = [[NSMutableArray alloc] init];
     
@@ -131,7 +229,7 @@
     {
         TTTableMessageItem* item = [TTTableMessageItem itemWithTitle:@">_<"
                                                              caption:nil
-                                                                text:@"尚无任何信息，请至少登陆一个帐户并保持网络畅通."
+                                                                text:@"尚无任何信息，请至少登陆一个帐户并保持网络畅通。点我开始进行SNS帐号绑定。"
                                                            timestamp:[NSDate date]
                                                             imageURL:nil
                                                                  URL:nil];
@@ -146,9 +244,13 @@
 
 - (void)didSelectObject:(id)object atIndexPath:(NSIndexPath*)indexPath
 {
-    // 有可能选中的是当mainViewModel中item为空时放上去的那个提示项，所以要判断一下
+    // 有可能选中的是当mainViewModel中item为空时放上去的那个提示项，所以要判断一下，如果是提示项的话，转到帐户页
     if(mainViewModel.items.count == 0)
+    {
+        self.tabBarController.selectedViewController
+        = [self.tabBarController.viewControllers objectAtIndex:3];
         return;
+    }
     lastSelectIndex = indexPath.row;
     ItemViewModel* item = [mainViewModel.items objectAtIndex:lastSelectIndex];
     if(item.type == EntryType_RSS)
@@ -181,19 +283,19 @@
     if(buttonIndex == 0)
     {
         lastSelectPostType = EntryType_SinaWeibo;
-        [self SinaWeiboPostStatus];
+        [self SinaWeiboAlertPostStatusSheet];
     }
     // Renren
     else if(buttonIndex == 1)
     {
         lastSelectPostType = EntryType_Renren;
-        [self RenrenPostStatus];        
+        [self RenrenAlertPostStatusSheet];
     }
     // Douban
     else if(buttonIndex == 2)
     {
         lastSelectPostType = EntryType_Douban;
-        [self DoubanPostStatus];        
+        [self DoubanAlertPostStatusSheet];        
     }
 }
 
@@ -237,73 +339,21 @@
     
     if(lastSelectPostType == EntryType_SinaWeibo)
     {
-        CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
-        SinaWeibo* sinaweibo = appDelegate.sinaweibo;
-        
-        if( ![sinaweibo isAuthValid])
-            return FALSE;
-        
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        [dic setObject:text forKey:@"status"];
-        
-        [sinaweibo requestWithURL:@"statuses/update.json"
-                           params:dic
-                       httpMethod:@"POST"
-                         delegate:self];
+        [self SinaWeiboPostStatus:text];
     }
     else if(lastSelectPostType == EntryType_Renren)
     {
-        CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
-        Renren* renren = appDelegate.renren;
-        
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-
-        [dic setObject:@"status.set" forKey:@"method"];
-        [dic setObject:text forKey:@"status"];
-        [renren requestWithParams:dic andDelegate:self];
+        [self RenrenPostStatus:text];
     }
     else if(lastSelectPostType == EntryType_Douban)
     {
-        DOUService *service = [DOUService sharedInstance];
-        if(![service isValid])
-            return FALSE;
-        
-        NSString* subPath = @"/shuo/v2/statuses/";
-        DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
-                                                 parameters:[NSDictionary dictionaryWithObjectsAndKeys:text,@"text",
-                                                             [CareConstants doubanAppKey], @"source",nil]];
-        
-        DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
-            NSError *error = [req error];
-            NSLog(@"str:%@", [req responseString]);
-            
-            if (!error) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
-                                                                message:@"发送成功" delegate:nil
-                                                      cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
-                [alert show];
-                
-            }
-            else
-            {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
-                                                                message:@"由于未知原因，获取评论失败" delegate:nil
-                                                      cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
-                [alert show];
-            }
-        };
-        
-        service.apiBaseUrlString = [CareConstants doubanBaseAPI];
-        
-        // TODO: urlencode
-        [service post:query postBody:nil callback:completionBlock];
+        [self DoubanPostStatus:text];
     }
-
     return TRUE;
 }
 
 #pragma mark - Sina Logic
-- (void)SinaWeiboPostStatus
+- (void)SinaWeiboAlertPostStatusSheet
 {
     CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
     SinaWeibo* sinaweibo = appDelegate.sinaweibo;
@@ -319,6 +369,24 @@
     [self showPostStatusPostController];
 }
 
+
+-(void)SinaWeiboPostStatus:(NSString*) text
+{
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+    SinaWeibo* sinaweibo = appDelegate.sinaweibo;
+    
+    if( ![sinaweibo isAuthValid])
+        return;
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setObject:text forKey:@"status"];
+    
+    [sinaweibo requestWithURL:@"statuses/update.json"
+                       params:dic
+                   httpMethod:@"POST"
+                     delegate:self];
+    
+}
 
 #pragma mark SinaWeiboRequest Delegate
 - (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
@@ -346,7 +414,7 @@
 
 
 #pragma mark - Renren Logic
-- (void)RenrenPostStatus
+- (void)RenrenAlertPostStatusSheet
 {
     CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
     Renren* renren = appDelegate.renren;
@@ -362,6 +430,18 @@
     [self showPostStatusPostController];
 }
 
+-(void)RenrenPostStatus:(NSString*) text
+{
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+    Renren* renren = appDelegate.renren;
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    
+    [dic setObject:@"status.set" forKey:@"method"];
+    [dic setObject:text forKey:@"status"];
+    [renren requestWithParams:dic andDelegate:self];
+}
+
 
 #pragma mark  Renren Delegate
 - (void)renren:(Renren *)renren requestDidReturnResponse:(ROResponse*)response
@@ -374,15 +454,15 @@
 
 - (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
 {
-	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
-	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
-	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
-	[alertView show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，发送失败，请确保网络畅通" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
 }
 
 
 #pragma mark - Douban Logic
-- (void)DoubanPostStatus
+- (void)DoubanAlertPostStatusSheet
 {
     DOUService *service = [DOUService sharedInstance];
     if(![service isValid])
@@ -396,7 +476,42 @@
     [self showPostStatusPostController];
 }
 
+-(void)DoubanPostStatus:(NSString*) text
+{
+    DOUService *service = [DOUService sharedInstance];
+    if(![service isValid])
+        return ;
+    
+    NSString* subPath = @"/shuo/v2/statuses/";
+    DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:text,@"text",
+                                                         [CareConstants doubanAppKey], @"source",nil]];
+    
+    DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+        NSError *error = [req error];
+        NSLog(@"str:%@", [req responseString]);
+        
+        if (!error) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"^_^"
+                                                            message:@"发送成功" delegate:nil
+                                                  cancelButtonTitle:@"嗯嗯，朕知道了～" otherButtonTitles:nil];
+            [alert show];
+            
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"由于未知原因，发送失败" delegate:nil
+                                                  cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+            [alert show];
+        }
+    };
+    
+    service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+    
 
+    [service post:query postBody:nil callback:completionBlock];
+}
 
 #pragma mark - MWPhotoBrowserDelegate
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {

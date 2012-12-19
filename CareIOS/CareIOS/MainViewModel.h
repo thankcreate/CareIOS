@@ -23,7 +23,7 @@
 +(MainViewModel *)sharedInstance;
 
 // Main items
-@property (strong, atomic) NSMutableArray* items;
+@property (strong, atomic) NSMutableArray* items;               // 需要本地缓存
 @property (strong, atomic) NSMutableArray* listItems;
 @property (strong, atomic) NSMutableArray* sinaWeiboItems;
 @property (strong, atomic) NSMutableArray* renrenItems;
@@ -31,7 +31,7 @@
 @property (strong, atomic) NSMutableArray* rssItems;
 
 // Pic items
-@property (strong, atomic) NSMutableArray* pictureItems;
+@property (strong, atomic) NSMutableArray* pictureItems;         // 需要本地缓存
 @property (strong, atomic) NSMutableArray* listPictureItems;
 @property (strong, atomic) NSMutableArray* sinaWeiboPictureItems;
 @property (strong, atomic) NSMutableArray* renrenPictureItems;

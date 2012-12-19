@@ -9,6 +9,7 @@
 #import "RSSDetailViewController.h"
 #import "ItemViewModel.h"
 #import <Three20UI/Three20UI.h>
+#import "MobClick.h"
 @interface RSSDetailViewController ()
 
 @end
@@ -27,6 +28,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [MobClick event:@"RSSDetailViewController"];
     
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     UIColor* myPink = [UIColor colorWithRed:240 / 255.0f green:190 / 255.0f blue:173 / 255.0f alpha:1.0f ];

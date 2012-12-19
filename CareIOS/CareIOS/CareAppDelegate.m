@@ -9,6 +9,7 @@
 #import "CareAppDelegate.h"
 #import "SinaWeibo.h"
 #import "Three20/Three20.h"
+#import "MobClick.h"
 @implementation CareAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -22,6 +23,7 @@
     // 此时delegate是nil, AccountView是最后真正的delegate
     [self initSinaWeibo];
     [self initRenren];
+    [self initUmeng];
     [[TTURLRequestQueue mainQueue] setMaxContentLength:0];
 
     return YES;
@@ -44,6 +46,14 @@
 -(void)initRenren
 {
     renren = [Renren sharedRenren];
+}
+
+-(void)initUmeng
+{
+    [MobClick startWithAppkey:@"50cebeb75270152a690000ce"];
+    [MobClick updateOnlineConfig];   
+    //[MobClick checkUpdate];
+
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

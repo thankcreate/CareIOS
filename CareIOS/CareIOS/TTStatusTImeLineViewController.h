@@ -11,8 +11,9 @@
 #import "RefreshViewerHelper.h"
 #import "CareConstants.h"
 #import "MWPhotoBrowser.h"
+@class TTStatusTImeDragRefreshDelegate;
 @interface TTStatusTImeLineViewController  : TTTableViewController
-<TTModelDelegate,UIActionSheetDelegate,TTPostControllerDelegate,
+<TTModelDelegate,UIActionSheetDelegate,TTPostControllerDelegate, UIAlertViewDelegate,
 SinaWeiboRequestDelegate,RenrenDelegate, MWPhotoBrowserDelegate>
 {
     int lastSelectIndex;
@@ -21,5 +22,6 @@ SinaWeiboRequestDelegate,RenrenDelegate, MWPhotoBrowserDelegate>
 
 // for MWPhotoBrowserDelegate use
 @property (strong, nonatomic) NSMutableArray* photos;
+@property (strong, nonatomic) TTStatusTImeDragRefreshDelegate* myTTStatusTImeDragRefreshDelegate;
 
 @end

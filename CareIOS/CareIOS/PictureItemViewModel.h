@@ -9,7 +9,7 @@
 #import "Three20/Three20.h"
 #import "CareConstants.h"
 
-@interface PictureItemViewModel : NSObject<TTPhoto>
+@interface PictureItemViewModel : NSObject<TTPhoto, NSCoding, NSCoding>
 
 @property (nonatomic) CGSize size;
 
@@ -19,7 +19,6 @@
 
 @property (copy, nonatomic) NSString* description;
 @property (copy, nonatomic) NSString* title;
-@property (copy, nonatomic) NSString* from;
 @property (copy, nonatomic) NSDate* time;
 
 

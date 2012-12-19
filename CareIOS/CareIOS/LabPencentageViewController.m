@@ -9,6 +9,7 @@
 #import "LabPencentageViewController.h"
 #import "MiscTool.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "MobClick.h"
 @interface LabPencentageViewController ()
 @property (strong, nonatomic) IBOutlet UIPickerView *picker;
 @property (strong, nonatomic) IBOutlet UIImageView *herImage;
@@ -38,6 +39,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [MobClick event:@"LabPencentageViewController"];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
     
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     NSString* herStrUrl = [MiscTool getHerIcon];
@@ -112,9 +115,9 @@
     [self.picker selectRow:first + 10 inComponent:0 animated:YES];
     [self.picker selectRow:secoend + 10 inComponent:1 animated:YES];
     [self.picker reloadAllComponents];
-    
-    self.lblScore.text = [[NSNumber numberWithInt:result] stringValue];
 
+    self.lblScore.text = [[NSNumber numberWithInt:result] stringValue];
+    var = result;
 }
 
 - (int)calculateString:(NSString*)str
@@ -196,6 +199,41 @@ numberOfRowsInComponent:(NSInteger)component {
         num = [col2 objectAtIndex:row];
     }
     return [num stringValue];
+}
+
+
+-(NSString*)preLoadShareString
+{
+    NSString* result = @"";
+    if(lastSelectPostType == EntryType_SinaWeibo)
+    {
+        NSString* herName = [MiscTool getHerSinaWeiboName];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* myName = [defaults objectForKey:@"SinaWeibo_NickName"];
+        result = [NSString stringWithFormat:@"经某不靠谱的分析仪测算，@%@ 与 @%@ 的姻缘指数达到惊人的%d。去死去死团众，不管你们信不信，我反正不信了"
+                  ,herName, myName, var];
+    }
+    else if(lastSelectPostType == EntryType_Renren)
+    {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* herName = [defaults objectForKey:@"Renren_FollowerNickName"];
+        NSString* herID = [defaults objectForKey:@"Renren_FollowerID"];
+        NSString* myName = [defaults objectForKey:@"Renren_NickName"];
+        NSString* myID = [defaults objectForKey:@"Renren_ID"];
+        
+        result = [NSString stringWithFormat:@"经某不靠谱的分析仪测算，@%@(%@) 与 @%@(%@) 的姻缘指数达到惊人的%d。去死去死团众，不管你们信不信，我反正不信了"
+                  , herName, herID, myName, myID, var];
+    }
+    else if(lastSelectPostType == EntryType_Douban)
+    {
+        NSString* herName = [MiscTool getHerDoubanName];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* myName = [defaults objectForKey:@"Douban_NickName"];
+
+        result = [NSString stringWithFormat:@"经某不靠谱的分析仪测算，@%@ 与 @%@ 的姻缘指数达到惊人的%d。去死去死团众，不管你们信不信，我反正不信了"
+                  ,herName, myName, var];
+    }
+    return result;
 }
 
 @end

@@ -17,9 +17,12 @@
 #import "DoubanFetcher.h"
 #import "CareAppDelegate.h"
 #import "DOUAPIEngine.h"
-
+#import "MobClick.h"
 
 @interface LabEnemyViewController ()
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segBar;
+@property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
+
 
 @property (strong, nonatomic) UIImageView* avatarImage;
 @property (strong, nonatomic) UILabel* lblName;
@@ -50,6 +53,9 @@
 @synthesize mapManToCount;
 @synthesize mapManToID;
 @synthesize type;
+
+@synthesize toolBar;
+@synthesize segBar;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -63,6 +69,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [MobClick event:@"LabEnemyViewController"];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
     
     // 先做初始化
     mapManToCount = [NSMutableDictionary dictionaryWithCapacity:20];
@@ -94,6 +102,7 @@
     lblName.text = [MiscTool getHerName];
     lblName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
     lblName.textColor = myGreen;
+    lblName.backgroundColor = [UIColor clearColor];
     CGSize maximumLabelSize = CGSizeMake([self.view bounds].size.width - left  - avatarImage.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize = [lblName.text sizeWithFont:lblName.font
                                         constrainedToSize:maximumLabelSize
@@ -111,6 +120,7 @@
     lblAnalysis.text = @"分析对象:";
     lblAnalysis.Font = [UIFont fontWithName:@"Helvetica" size:15.0];
     lblAnalysis.textColor = myGreen;
+    lblAnalysis.backgroundColor = [UIColor clearColor];
     CGSize maximumLabelSize2 = CGSizeMake([self.view bounds].size.width - left  - avatarImage.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize2 = [lblAnalysis.text sizeWithFont:lblAnalysis.font
                                              constrainedToSize:maximumLabelSize2
@@ -123,12 +133,14 @@
     lblAnalysis.frame = lblAnalysisPos;
     [self.view addSubview:lblAnalysis];
     
-    lineChart = [[PCLineChartView alloc] initWithFrame:CGRectMake(left,top,[self.view bounds].size.width-20,[self.view bounds].size.height-top-20)];
+    lineChart = [[PCLineChartView alloc] initWithFrame:CGRectMake(left, top,
+                                                                  [self.view bounds].size.width - 20,
+                                                                  [self.view bounds].size.height- top - 44 )];
     [lineChart setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
     [self.view addSubview:lineChart];
     
-    
+    toolBar.tintColor = [CareConstants headerColor];
     // 开始抓数据
     fetcher = [self defaultFetcher];
     [fetcher startFetchCommentMan];
@@ -151,6 +163,7 @@
         lblName.text = [defaults objectForKey:@"SinaWeibo_FollowerNickName"];
         [lblName sizeToFit];        
         herID = [defaults objectForKey:@"SinaWeibo_FollowerID"];
+        segBar.selectedSegmentIndex = 0;
         type = EntryType_SinaWeibo;
     }
     else if(renren.isSessionValid && [defaults objectForKey:@"Renren_FollowerID"])
@@ -161,6 +174,7 @@
         lblName.text = [defaults objectForKey:@"Renren_FollowerNickName"];
         [lblName sizeToFit];        
         herID = [defaults objectForKey:@"Renren_FollowerID"];
+        segBar.selectedSegmentIndex = 1;
         type = EntryType_Renren;
     }
     else if(TRUE)
@@ -171,6 +185,7 @@
         lblName.text = [defaults objectForKey:@"Douban_FollowerNickName"];
         [lblName sizeToFit];
         herID = [defaults objectForKey:@"Douban_FollowerID"];
+        segBar.selectedSegmentIndex = 2;
         type = EntryType_Douban;
     }
     return resFetcher;
@@ -370,11 +385,9 @@
 
 }
 
-
-
-#pragma mark - TTPostControllerDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+- (IBAction)segValueChanged:(id)sender
 {
+    int buttonIndex = segBar.selectedSegmentIndex;
     // Sina
     if(buttonIndex == 0)
     {
@@ -405,7 +418,7 @@
             [alert show];
             return;
         }
-
+        
         [self analysisEnemy:EntryType_Renren];
     }
     // Douban
@@ -420,10 +433,44 @@
             [alert show];
             return;
         }
-
-        [self analysisEnemy:EntryType_Douban];        
+        
+        [self analysisEnemy:EntryType_Douban];
     }
 }
+
+
+-(NSString*)preLoadShareString
+{
+    NSString* result = @"";
+    if(lastSelectPostType == EntryType_SinaWeibo)
+    {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* herName = [defaults objectForKey:@"Renren_FollowerNickName"];
+
+        result = [NSString stringWithFormat:@"收取了可观小的小费后，酒馆老板小声道:看在你对 @%@ 一片痴情的份上，我可以告诉你,你的头号情敌是 @%@ ，@%@ 也不可小觑，必要时还得留意一下 @%@"
+                  ,herName, name1, name2, name3];
+    }
+    else if(lastSelectPostType == EntryType_Renren)
+    {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* herName = [defaults objectForKey:@"Renren_FollowerNickName"];
+        
+        result = [NSString stringWithFormat:@"收取了可观小的小费后，酒馆老板小声道:看在你\
+                  对 @%@(%@) 一片痴情的份上，我可以告诉你,你的头号情敌是 @%@(%@) ，@%@(%@) 也不可小觑，必要时还得留意一下 @%@(%@)"
+                  , herName, herID, name1, id1, name2, id2, name3, id3];
+    }
+    else if(lastSelectPostType == EntryType_Douban)
+    {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* herName = [defaults objectForKey:@"Douban_FollowerNickName"];
+        
+        result = [NSString stringWithFormat:@"收取了可观小的小费后，酒馆老板小声道:看在你对 @%@ 一片痴情的份上，我可以告诉你,你的头号情敌是 @%@ ，@%@ 也不可小觑，必要时还得留意一下 @%@"
+                  ,herName, name1, name2, name3];
+    }
+    return result;
+}
+
+
 @end
 
 @implementation ManToCountPair

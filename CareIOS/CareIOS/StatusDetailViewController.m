@@ -11,6 +11,7 @@
 #import "UIImageView+WebCache.h"
 #import "MiscTool.h"
 #import "TTCommentViewController.h"
+#import "MobClick.h"
 @interface StatusDetailViewController ()
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
@@ -34,6 +35,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [MobClick event:@"StatusDetailViewController"];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
     
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     UIColor* myPink = [UIColor colorWithRed:240 / 255.0f green:190 / 255.0f blue:173 / 255.0f alpha:1.0f ];
@@ -80,6 +84,7 @@
     lblName.text = itemViewModel.title;
     lblName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
     lblName.textColor = myGreen;
+    lblName.backgroundColor = [UIColor clearColor];
 
     CGRect namePos = CGRectMake(left ,top + 10 , avatarImg.frame.origin.x - leftMargin, 18);
     lblName.frame = namePos;
@@ -115,6 +120,7 @@
         lblContent.text = [TTStyledText textWithURLs:itemViewModel.content lineBreaks:YES];     
         lblContent.Font = [UIFont fontWithName:@"Helvetica" size:15];
         lblContent.textColor = [UIColor blackColor];
+        lblContent.backgroundColor = [UIColor clearColor];
         lblContent.contentMode = UIViewContentModeTopLeft;
         
         lblContent.frame = CGRectMake(left, top, width, 20.0f);
@@ -140,7 +146,7 @@
         thumbImage.contentMode = UIViewContentModeScaleAspectFit;
 
         NSURL* url = [NSURL URLWithString:itemViewModel.imageURL];
-        [thumbImage setImageWithURL:url];
+        [thumbImage setImageWithURL:url placeholderImage:[UIImage imageNamed:@"DefaultPicture.png"]];
         thumbImage.layer.cornerRadius = 0.0;
         thumbImage.layer.masksToBounds = YES;
         thumbImage.layer.borderColor = myGray.CGColor;
@@ -164,7 +170,7 @@
                                                                                  pointSize:CGSizeMake(10,5)] next:
                           [TTSolidFillStyle styleWithColor:bkgColor next:
                            [TTSolidBorderStyle styleWithColor:bkgColor width:1 next:nil]]];
-        forwardView.backgroundColor = [UIColor whiteColor];
+        forwardView.backgroundColor = [UIColor clearColor];
         forwardView.style = style;
         [scrollView addSubview:forwardView];
 
@@ -236,7 +242,7 @@
         if(itemViewModel.forwardItem.midImageURL)
         {
             NSURL* url = [NSURL URLWithString:itemViewModel.forwardItem.imageURL];
-            [forwardThumbImage setImageWithURL:url];
+            [forwardThumbImage setImageWithURL:url  placeholderImage:[UIImage imageNamed:@"DefaultPicture.png"]];
             
             forwardThumbImage.userInteractionEnabled = YES;
             UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(forwardThumbImageClicked)];
@@ -277,6 +283,7 @@
         }
         lblCommentCount.Font = [UIFont fontWithName:@"Helvetica" size:13];
         lblCommentCount.textColor = bottomTextColor;
+        lblCommentCount.backgroundColor = [UIColor clearColor];
         NSString* pre = @"评论:";
         NSString* combine = [pre stringByAppendingString:itemViewModel.commentCount];
         lblCommentCount.text = combine;
@@ -301,6 +308,7 @@
         fromLabel.text = itemViewModel.fromText;
         fromLabel.Font = [UIFont fontWithName:@"Helvetica" size:13];
         fromLabel.textColor = bottomTextColor;
+        fromLabel.backgroundColor = [UIColor clearColor];
         
         CGSize maximumLabelSize = CGSizeMake(width,9999);
         CGSize expectedLabelSize = [fromLabel.text sizeWithFont:fromLabel.font
@@ -318,6 +326,7 @@
     {
         timeLable.Font = [UIFont fontWithName:@"Helvetica" size:13];
         timeLable.textColor = bottomTextColor;
+        timeLable.backgroundColor = [UIColor clearColor];
         timeLable.text = itemViewModel.timeText;
         
         CGSize maximumLabelSize = CGSizeMake(width,9999);
@@ -328,8 +337,9 @@
         timeLable.frame = CGRectMake(width - expectedLabelSize.width, fromLabel.frame.origin.y, expectedLabelSize.width, expectedLabelSize.height);
         [scrollView addSubview:timeLable];
         
-    } 
-    scrollView.contentSize = CGSizeMake(320.0f, timeLable.frame.origin.y +  timeLable.frame.size.height);
+    }
+    CGFloat bottomMargin = 10.0f;
+    scrollView.contentSize = CGSizeMake(320.0f, timeLable.frame.origin.y +  timeLable.frame.size.height + bottomMargin);
     scrollView.autoresizesSubviews=YES;
     
 

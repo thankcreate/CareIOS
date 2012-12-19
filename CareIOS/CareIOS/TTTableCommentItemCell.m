@@ -91,7 +91,7 @@
     // 2.1.2 评论按钮
     if(self.commentViewModel)
     {
-        _commentImage.frame = CGRectMake(width - 20, top, 20, 20);
+        _commentImage.frame = CGRectMake(width - 30, top, 30, 30);
     }
     else
     {
@@ -216,6 +216,7 @@
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.textColor = [UIColor blackColor];
+        _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.highlightedTextColor = [UIColor whiteColor];
         _titleLabel.font = [TTTableCommentItemCell titleFont];
         _titleLabel.contentMode = UIViewContentModeTopLeft;
@@ -234,6 +235,7 @@
     if (!_contentLabel) {
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.textColor = [UIColor blackColor];
+        _contentLabel.backgroundColor = [UIColor clearColor];
         _contentLabel.highlightedTextColor = [UIColor whiteColor];
         _contentLabel.font = [TTTableCommentItemCell contentFont];
         _contentLabel.contentMode = UIViewContentModeTopLeft;
@@ -252,6 +254,7 @@
         _timeLabel = [[UILabel alloc] init];
         _timeLabel.font =  [UIFont fontWithName:@"Helvetica" size:13];
         _timeLabel.textColor = RGBCOLOR(150, 150, 150);
+        _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.highlightedTextColor = [UIColor whiteColor];
         _timeLabel.contentMode = UIViewContentModeLeft;
         [self.contentView addSubview:_timeLabel];
@@ -385,7 +388,7 @@
             else
             {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
-                                                                message:@"由于未知原因，获取评论失败" delegate:nil
+                                                                message:@"由于未知原因，发送失败" delegate:nil
                                                       cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
                 [alert show];
             }
@@ -393,7 +396,7 @@
         
         service.apiBaseUrlString = [CareConstants doubanBaseAPI];
         
-        // TODO: urlencode
+
         [service post:query postBody:nil callback:completionBlock];
     }
     return TRUE;
@@ -405,7 +408,7 @@
     if ([request.url hasSuffix:@"comments/create.json"])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
-                                                        message:@"由于未知原因，发送失败" delegate:nil
+                                                        message:@"由于未知原因，发送失败， 请确保网络畅通" delegate:nil
                                               cancelButtonTitle:@"喵了个咪的～" otherButtonTitles:nil];
         [alert show];
     }
@@ -438,10 +441,10 @@
 
 - (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
 {
-	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
-	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
-	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
-	[alertView show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，发送失败，请确保网络畅通" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
 }
 
 

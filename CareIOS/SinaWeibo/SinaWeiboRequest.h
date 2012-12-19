@@ -50,6 +50,10 @@
 @property (nonatomic, retain) NSString *url;
 @property (nonatomic, retain) NSString *httpMethod;
 @property (nonatomic, retain) NSDictionary *params;
+
+// 此处更改delegate生命周期为retain，否则delegate在view销毁时会崩溃
+// 注意，不要在view里retain这个request,否则就循环retain了
+// THANKCRATE CHANGE
 @property (nonatomic, assign) id<SinaWeiboRequestDelegate> delegate;
 
 + (SinaWeiboRequest *)requestWithURL:(NSString *)url 

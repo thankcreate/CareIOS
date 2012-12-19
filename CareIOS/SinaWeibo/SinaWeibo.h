@@ -56,6 +56,9 @@
 // If succeed, sinaweiboDidLogOut will be called.
 - (void)logOut;
 
+// ThankCreate add here
+- (void)removeAuthData;
+
 // Check if user has logged in, or the authorization is expired.
 - (BOOL)isLoggedIn;
 - (BOOL)isAuthorizeExpired;

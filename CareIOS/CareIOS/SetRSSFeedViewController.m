@@ -17,6 +17,7 @@
 
 @implementation SetRSSFeedViewController
 @synthesize feedParser;
+@synthesize indicatorAlert;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -118,6 +119,20 @@
 	feedParser.feedParseType = ParseTypeFull; // Parse feed info and all items
 	feedParser.connectionType = ConnectionTypeAsynchronously;
 	[feedParser parse];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+        
+    indicatorAlert = [[UIAlertView alloc] initWithTitle:@"@_@" message:@"正在解析，请稍候…" delegate:self cancelButtonTitle:@"先去做其它事" otherButtonTitles: nil];
+    [indicatorAlert show];
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    
+    // Adjust the indicator so it is up a few pixels from the bottom of the alert
+    CGFloat width = indicator.frame.size.width + 5;
+    CGFloat height =  indicator.frame.size.height + 5;
+    indicator.center = CGPointMake(width,  height);
+    [indicator startAnimating];
+    [indicatorAlert addSubview:indicator];
 }
 
 
@@ -158,10 +173,15 @@
 }
 
 - (void)feedParserDidFinish:(MWFeedParser *)parser {
-
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    if(indicatorAlert != nil)
+        [indicatorAlert dismissWithClickedButtonIndex:0 animated:NO];
 }
 
 - (void)feedParser:(MWFeedParser *)parser didFailWithError:(NSError *)error {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    if(indicatorAlert != nil)
+        [indicatorAlert dismissWithClickedButtonIndex:0 animated:NO];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"RSS_FollowerPath"];
     [defaults removeObjectForKey:@"RSS_FollowerSiteTitle"];

@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "BaseFetcher.h"
 #import "CareConstants.h"
+#import "LabShareBaseViewController.h"
 @class PCLineChartView;
-@interface LabEnemyViewController : UIViewController<FetcherDelegate, UIActionSheetDelegate>
+@interface LabEnemyViewController : LabShareBaseViewController<FetcherDelegate, UIActionSheetDelegate>
 
 @property (strong, nonatomic) NSString* name1;
 @property (strong, nonatomic) NSString* name2;

@@ -317,10 +317,11 @@ titleForHeaderInSection:(NSInteger)section
 - (void)handleSearchForTerm:(NSString *)searchTerm
 {
     [self.dicFriendsInShow removeAllObjects];
+    searchTerm = [searchTerm lowercaseString];
     // 按首字母分类
     for(FriendViewModel* friend in self.allFriends)
     {
-        NSString* name = friend.name;
+        NSString* name = [friend.name lowercaseString];
         if([name rangeOfString:searchTerm].length <= 0)
         {
             continue;
@@ -479,10 +480,10 @@ titleForHeaderInSection:(NSInteger)section
 
 - (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
 {
-	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
-	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
-	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
-	[alertView show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，获取人人数据失败，请确保网络畅通" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
 }
 
 

@@ -7,6 +7,7 @@
 //
 
 #import "SetPasswordViewController.h"
+#import "MobClick.h"
 
 @interface SetPasswordViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *txt1;
@@ -88,6 +89,7 @@
         // 好不容易成功了
         else
         {
+            [MobClick event:@"SetPassword"];
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:txt1.text forKey:@"Global_Password"];
             [defaults synchronize];

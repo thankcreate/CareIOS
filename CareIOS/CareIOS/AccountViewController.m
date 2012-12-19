@@ -118,6 +118,7 @@
         followerSiteTitle = @"未关注";
     }
     self.lblRSSFollowerSiteTitle.text = followerSiteTitle;
+    [self.lblRSSFollowerSiteTitle sizeToFit];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -408,10 +409,10 @@
 
 - (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
 {
-	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
-	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
-	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
-	[alertView show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，获取人人信息失败，请确保网络畅通" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
 }
 
 #pragma mark - Douban Logic
@@ -466,6 +467,18 @@
     }
 }
 
+
+- (void)doubanLogoutClick
+{
+    //    DOUService *service = [DOUService sharedInstance];
+    [MainViewModel sharedInstance].isChanged = true;
+    DOUOAuthStore *store = [DOUOAuthStore sharedInstance];
+    [store clear];
+    [PreferenceHelper clearDoubanPreference];
+    [self initUIDouban];
+    
+}
+
 #pragma mark Douban Login Delegate
 - (void)doubanDidLogin:(DOUOAuthService *)client didAcquireSuccessDictionary:(NSDictionary *)dic
 {
@@ -494,12 +507,4 @@
     [alert show];
 }
 
-- (void)doubanLogoutClick
-{
-//    DOUService *service = [DOUService sharedInstance];
-    [MainViewModel sharedInstance].isChanged = true;
-    [PreferenceHelper clearDoubanPreference];
-    [self initUIDouban];
-    
-}
 @end

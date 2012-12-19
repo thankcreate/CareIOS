@@ -33,7 +33,7 @@
     [super viewDidLoad];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
     self.navigateBar1.tintColor = [CareConstants headerColor];    
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     input = @""; // 这里input必须要初始化，否则nil和任何东西比较都是相等，真奇怪
     realPassword = [defaults objectForKey:@"Global_Password"];
     txtPassword.secureTextEntry = YES;

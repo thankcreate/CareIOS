@@ -62,6 +62,9 @@
     UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 1)];
     v.backgroundColor = [UIColor clearColor];
     [self.tableView setTableFooterView:v];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
+    self.tableView.backgroundColor = [UIColor clearColor];
 
     //[self fetchComments];
 	// Do any additional setup after loading the view.
@@ -305,10 +308,10 @@
 
 - (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
 {
-	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
-	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
-	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
-	[alertView show];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，获取人人评论失败，请确保网络畅通" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
 }
 
 #pragma mark - Douban Logic
@@ -454,7 +457,7 @@
         
         service.apiBaseUrlString = [CareConstants doubanBaseAPI];
         
-        // TODO: urlencode
+
         [service post:query postBody:nil callback:completionBlock];
     }
     return TRUE;

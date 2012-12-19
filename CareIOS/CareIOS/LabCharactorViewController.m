@@ -10,6 +10,7 @@
 #import "MiscTool.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "PCPieChart.h"
+#import "MobClick.h"
 @interface LabCharactorViewController ()
 
 @end
@@ -28,6 +29,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [MobClick event:@"LabCharactorViewController"];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];    
     
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     // 1 header部分
@@ -54,6 +57,7 @@
     lblName.text = [MiscTool getHerName];
     lblName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
     lblName.textColor = myGreen;
+    lblName.backgroundColor = [UIColor clearColor];    
     CGSize maximumLabelSize = CGSizeMake([self.view bounds].size.width - left  - img.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize = [lblName.text sizeWithFont:lblName.font
                                         constrainedToSize:maximumLabelSize
@@ -71,6 +75,7 @@
     lblAnalysis.text = @"分析对象:";
     lblAnalysis.Font = [UIFont fontWithName:@"Helvetica" size:15.0];
     lblAnalysis.textColor = myGreen;
+    lblAnalysis.backgroundColor = [UIColor clearColor];    
     CGSize maximumLabelSize2 = CGSizeMake([self.view bounds].size.width - left  - img.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize2 = [lblAnalysis.text sizeWithFont:lblAnalysis.font
                                              constrainedToSize:maximumLabelSize2
@@ -115,7 +120,7 @@
     [components addObject:component5];
     [pieChart setComponents:components];
     [self.view addSubview:pieChart];
-    top += pieChart.frame.size.height;
+    top = pieChart.frame.origin.y + pieChart.frame.size.height;
     
     // 3 统计文字
     top -= 20;  // 微调
@@ -132,8 +137,9 @@
         UILabel* lb1 = [[UILabel alloc] init];
         lb1.text = [listLabel objectAtIndex:i];
         lb1.textColor = myGreen;
+        lb1.backgroundColor = [UIColor clearColor];
         lb1.Font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0];
-        lb1.frame = CGRectMake(left + leftMargin, top, 320, 50);
+        lb1.frame = CGRectMake(left + leftMargin, top, 320, 50);        
         [lb1 sizeToFit];
         [self.view addSubview:lb1];
         
@@ -141,6 +147,7 @@
         NSNumber* num = [valueLable objectAtIndex:i];
         lb2.text = [num stringValue];
         lb2.textColor = myGreen;
+        lb2.backgroundColor = [UIColor clearColor];    
         lb2.frame = CGRectMake(left + leftMargin + lb1.frame.size.width + 10, top, 320, 50);
         [lb2 sizeToFit];
         
@@ -194,5 +201,50 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+-(NSString*)GenerateAward
+{
+    // ThankCreate获得了成就“硬编码大师”
+    if (var1 >= var2 && var1 >= var3 && var1 >= var4 && var1 >= var5)
+        return @"极品萝莉";
+    else if (var2 >= var1 && var2 >= var3 && var2 >= var4 && var2 >= var5)
+        return @"盖世女王";
+    else if (var3 >= var1 && var3 >= var2 && var3 >= var4 && var3 >= var5)
+        return @"超萌天然呆";
+    else if (var4 >= var1 && var4 >= var2 && var4 >= var3 && var4 >= var5)
+        return @"吃货去死去死";
+    else if (var5 >= var1 && var5 >= var2 && var5 >= var3 && var5 >= var4)
+        return @"没有你们这帮伪娘世界早就清静了";
+
+    return @"程序出BUG了";
+}
+
+-(NSString*)preLoadShareString
+{
+    NSString* result = @"";
+    if(lastSelectPostType == EntryType_SinaWeibo)
+    {
+        NSString* herName = [MiscTool getHerSinaWeiboName];
+        result = [NSString stringWithFormat:@"据新一轮民调显示，@%@ 的萝莉属性为%d，女王属性为%d，天然呆属性为%d，吃货属性为%d，伪娘属性为%d，获得了成就【%@】"
+                  ,herName, var1, var2, var3, var4, var5, [self GenerateAward]];
+    }
+    else if(lastSelectPostType == EntryType_Renren)
+    {
+        NSString* herName = [MiscTool getHerRenrenName];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString* herID = [defaults objectForKey:@"Renren_FollowerID"];
+        result = [NSString stringWithFormat:@"据新一轮民调显示，@%@(%@) 的萝莉属性为%d，女王属性为%d，天然呆属性为%d，吃货属性为%d，伪娘属性为%d，获得了成就【%@】"
+                  , herName, herID, var1, var2, var3, var4, var5,[self GenerateAward]];
+    }
+    else if(lastSelectPostType == EntryType_Douban)
+    {
+        NSString* herName = [MiscTool getHerDoubanName];
+        result = [NSString stringWithFormat:@"据新一轮民调显示，@%@ 的萝莉属性为%d，女王属性为%d，天然呆属性为%d，吃货属性为%d，伪娘属性为%d，获得了成就【%@】"
+                  ,herName, var1, var2, var3, var4, var5, [self GenerateAward]];
+    }
+    return result;
+}
+
+
 
 @end

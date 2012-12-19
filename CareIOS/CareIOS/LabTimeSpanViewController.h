@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LabShareBaseViewController.h"
 @class PCLineChartView;
 
-@interface LabTimeSpanViewController : UIViewController
+@interface LabTimeSpanViewController : LabShareBaseViewController
 {
     int var1;
     int var2;

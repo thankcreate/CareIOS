@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LabShareBaseViewController.h"
 
-@interface LabPencentageViewController : UIViewController<UIPickerViewDelegate, UIPickerViewDataSource>
+@interface LabPencentageViewController : LabShareBaseViewController<UIPickerViewDelegate, UIPickerViewDataSource>
+{
+    int var;
+}
 
 @property (strong, nonatomic) NSArray *col1;
 @property (strong, nonatomic) NSArray *col2;

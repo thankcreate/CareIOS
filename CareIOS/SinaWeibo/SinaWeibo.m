@@ -47,6 +47,10 @@
     return [self initWithAppKey:_appKey appSecret:_appSecrect appRedirectURI:_appRedirectURI ssoCallbackScheme:nil andDelegate:_delegate];
 }
 
+//-(void)setAccessToken:(NSString *)newAccessToken
+//{
+//    _accessToken = newAccessToken;
+//}
 
 /**
  * @description 初始化构造函数，返回采用默认sso回调地址构造的SinaWeibo对象
@@ -279,47 +283,56 @@
  */
 - (void)logIn
 {
-    if ([self isAuthValid])
+    // 这一段的逻辑修改为不论是否是登陆状态，都是可以重新登陆
+//    if ([self isAuthValid])
+//    {
+//        if ([delegate respondsToSelector:@selector(sinaweiboDidLogIn:)])
+//        {
+//            [delegate sinaweiboDidLogIn:self];
+//        }
+//    }
+//    else
     {
-        if ([delegate respondsToSelector:@selector(sinaweiboDidLogIn:)])
+        //  这里先把cookie清掉，不然如果之前有登陆，再点一次登陆直接闪一下就退出了
+        NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+        NSArray* sinaweiboCookies = [cookies cookiesForURL:
+                                     [NSURL URLWithString:@"https://open.weibo.cn"]];
+        
+        for (NSHTTPCookie* cookie in sinaweiboCookies)
         {
-            [delegate sinaweiboDidLogIn:self];
+            [cookies deleteCookie:cookie];
         }
-    }
-    else
-    {
-        [self removeAuthData];
         
         ssoLoggingIn = NO;
         
-        // open sina weibo app
-        UIDevice *device = [UIDevice currentDevice];
-        if ([device respondsToSelector:@selector(isMultitaskingSupported)] &&
-            [device isMultitaskingSupported])
-        {
-            NSDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                    self.appKey, @"client_id",
-                                    self.appRedirectURI, @"redirect_uri",
-                                    self.ssoCallbackScheme, @"callback_uri", nil];
-            
-            // 先用iPad微博打开
-            NSString *appAuthBaseURL = kSinaWeiboAppAuthURL_iPad;
-            if (SinaWeiboIsDeviceIPad())
-            {
-                NSString *appAuthURL = [SinaWeiboRequest serializeURL:appAuthBaseURL
-                                                               params:params httpMethod:@"GET"];
-                ssoLoggingIn = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:appAuthURL]];
-            }
-            
-            // 在用iPhone微博打开
-            if (!ssoLoggingIn)
-            {
-                appAuthBaseURL = kSinaWeiboAppAuthURL_iPhone;
-                NSString *appAuthURL = [SinaWeiboRequest serializeURL:appAuthBaseURL
-                                                               params:params httpMethod:@"GET"];
-                ssoLoggingIn = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:appAuthURL]];
-            }
-        }
+//        // open sina weibo app
+//        UIDevice *device = [UIDevice currentDevice];
+//        if ([device respondsToSelector:@selector(isMultitaskingSupported)] &&
+//            [device isMultitaskingSupported])
+//        {
+//            NSDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+//                                    self.appKey, @"client_id",
+//                                    self.appRedirectURI, @"redirect_uri",
+//                                    self.ssoCallbackScheme, @"callback_uri", nil];
+//            
+//            // 先用iPad微博打开
+//            NSString *appAuthBaseURL = kSinaWeiboAppAuthURL_iPad;
+//            if (SinaWeiboIsDeviceIPad())
+//            {
+//                NSString *appAuthURL = [SinaWeiboRequest serializeURL:appAuthBaseURL
+//                                                               params:params httpMethod:@"GET"];
+//                ssoLoggingIn = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:appAuthURL]];
+//            }
+//            
+//            // 在用iPhone微博打开
+//            if (!ssoLoggingIn)
+//            {
+//                appAuthBaseURL = kSinaWeiboAppAuthURL_iPhone;
+//                NSString *appAuthURL = [SinaWeiboRequest serializeURL:appAuthBaseURL
+//                                                               params:params httpMethod:@"GET"];
+//                ssoLoggingIn = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:appAuthURL]];
+//            }
+//        }
         
         if (!ssoLoggingIn)
         {

@@ -12,4 +12,5 @@
 
 @property (strong, atomic) MWFeedParser *feedParser;
 
+@property (strong, nonatomic) UIAlertView *indicatorAlert;
 @end

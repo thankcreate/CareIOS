@@ -18,6 +18,10 @@
 #import "LocalStorageHelper.h"
 #import "PreferenceHelper.h"
 #import "MobClick.h"
+#import "Reachability.h"
+
+#define ALERT_REVIEW_TAG  250
+#define ALERT_RENRENCONFIRM_TAG  251
 
 @interface TTStatusTImeLineViewController ()
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *btnPostStatus;
@@ -31,6 +35,7 @@
 @synthesize refreshViewerHelper;
 @synthesize mainViewModel;
 @synthesize photos;
+@synthesize hostReachable;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil
                bundle:(NSBundle *)nibBundleOrNil
@@ -46,8 +51,37 @@
     [super viewDidLoad];
     [super updateTableDelegate];
     
+//    CGRect barRect = self.navigationController.navigationBar.frame;
+//    CGFloat barHeight = barRect.size.height;
+//    CGFloat logoHeight = 25;
+//    CGFloat textHeight = 20;
+//    
+//    UIView* titleView = [[UIView alloc] init];
+//    
+//    UIImage *logoImage = [UIImage imageNamed:@"Home.png"];
+//    UIImageView *logoImageView = [[UIImageView alloc] initWithImage:logoImage];
+//    logoImageView.frame = CGRectMake(0, (barHeight - logoHeight)/2, logoHeight, logoHeight);
+//    //logoImageView.frame = CGRectZero;
+//    [titleView addSubview:logoImageView];
+//
+//    UILabel* lblTitle = [[UILabel alloc] init];
+//    lblTitle.text = @"我只在乎你";
+//    lblTitle.font = [UIFont fontWithName:@"Helvetica-Bold" size:textHeight];
+//    lblTitle.textColor = [UIColor whiteColor];
+//    lblTitle.backgroundColor = [UIColor clearColor];
+//    lblTitle.frame = CGRectMake(logoImageView.frame.size.width + 3, (barHeight - logoHeight)/2, 100, textHeight);
+//    [lblTitle sizeToFit];
+//    [titleView addSubview:lblTitle];
+    
+//    titleView.frame = CGRectMake(0, 0, lblTitle.frame.origin.x + lblTitle.frame.size.width, 40);
+//    self.navigationItem.titleView = titleView;   
+    
+    
     // 检查是否需要弹出提示：是否好评
     [self showReviewDialogSmart];
+    
+    // 检查网络状态是否正常
+    [self checkNetOK];
 
     [MobClick event:@"TTStatusTImeLineViewController"];
 
@@ -75,6 +109,18 @@
     [self checkOutOfDate];
 }
 
+-(void)checkNetOK
+{    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
+    
+    
+    // check if a pathway to a random host exists
+    hostReachable = [Reachability reachabilityWithHostName: @"www.baidu.com"];
+    [hostReachable startNotifier];
+    
+
+}
+
 -(void)showReviewDialogSmart
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -91,11 +137,12 @@
         [defaults setObject:[NSNumber numberWithInt:nCount] forKey:@"Global_LaunchCount"];
         if(nCount == 3)
         {
-            [defaults synchronize];
-            UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@">_<" message:@"主人使用我已经有一段时间了，喜欢的话能否给个好评呢？" delegate:self cancelButtonTitle:@"好评" otherButtonTitles:@"评你妹",nil];
-            alert.tag = 250;
-            alert.alertViewStyle=UIAlertViewStyleDefault;
-            [alert show];
+            // 第一次提交，不要故意弹引导用户评论的框
+//            [defaults synchronize];
+//            UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@">_<" message:@"主人使用我已经有一段时间了，喜欢的话能否给人家个好评呢？" delegate:self cancelButtonTitle:@"好评" otherButtonTitles:@"哼！",nil];
+//            alert.tag = ALERT_REVIEW_TAG;
+//            alert.alertViewStyle=UIAlertViewStyleDefault;
+//            [alert show];
         }
     }
 }
@@ -103,29 +150,69 @@
 -(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     //该方法由UIAlertViewDelegate协议定义，在点击AlertView按钮时自动执行，所以如果这里再用alertView来弹出提//示，就会死循环，不停的弹AlertView
-    if(alertView.tag != 250)
-        return;
-    if(buttonIndex == 0)
+    if(alertView.tag == ALERT_REVIEW_TAG)
     {
-        [MobClick event:@"GoReview"];
-        [MiscTool gotoReviewPage];
+        if(buttonIndex == 0)
+        {
+            [MobClick event:@"GoReview"];
+            [MiscTool gotoReviewPage];
+        }
+        else
+        {
+            [MobClick event:@"NotGoReview"];
+        }
     }
-    else
+    else if(alertView.tag == ALERT_RENRENCONFIRM_TAG)
     {
-        [MobClick event:@"NotGoReview"];
+        if(buttonIndex == 0)
+        {
+            [self showPostStatusPostController];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject:@"whatever" forKey:@"Global_HasRenrenPermited"];
+        }
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];    
+    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
     
     if(mainViewModel.isChanged )
     {
         [mainViewModel load:TTURLRequestCachePolicyNetwork more:NO];
     }
+}
+
+-(void) checkNetworkStatus:(NSNotification *)notice
+{    
+    NetworkStatus hostStatus = [hostReachable currentReachabilityStatus];
+    switch (hostStatus)
+    {
+        case NotReachable:
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                            message:@"网络连接好像被玩坏掉了呢～" delegate:nil
+                                                  cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+            [alert show];
+            break;
+        }
+        case ReachableViaWiFi:
+        {
+            NSLog(@"A gateway to the host server is working via WIFI.");
+            break;
+        }
+        case ReachableViaWWAN:
+        {
+            NSLog(@"A gateway to the host server is working via WWAN.");
+            break;
+        }
+    }
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (id<UITableViewDelegate>)createDelegate {
@@ -427,7 +514,24 @@
         [alert show];
         return;
     }
-    [self showPostStatusPostController];
+    
+    
+    
+    // 这里是为了通过人人审核才这样写的，因为人人一定要在发表状态之前通知用户
+    // 审核过了之后我就把这里注释掉了，想改回来的话，把这里的注释都去掉
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    NSString* permited = [defaults objectForKey:@"Global_HasRenrenPermited"];
+//    if(permited == nil)
+//    {
+//        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"@_@" message:@"发表后会更改您帐号的人人状态，是否继续？" delegate:self cancelButtonTitle:@"继续" otherButtonTitles:@"不发了",nil];
+//        alert.tag = ALERT_RENRENCONFIRM_TAG;
+//        alert.alertViewStyle=UIAlertViewStyleDefault;
+//        [alert show];
+//    }
+//    else
+    {
+        [self showPostStatusPostController];
+    }
 }
 
 -(void)RenrenPostStatus:(NSString*) text

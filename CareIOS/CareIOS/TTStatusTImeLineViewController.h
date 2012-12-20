@@ -11,17 +11,26 @@
 #import "RefreshViewerHelper.h"
 #import "CareConstants.h"
 #import "MWPhotoBrowser.h"
+
 @class TTStatusTImeDragRefreshDelegate;
+@class Reachability;
+
 @interface TTStatusTImeLineViewController  : TTTableViewController
 <TTModelDelegate,UIActionSheetDelegate,TTPostControllerDelegate, UIAlertViewDelegate,
 SinaWeiboRequestDelegate,RenrenDelegate, MWPhotoBrowserDelegate>
 {
     int lastSelectIndex;
     EntryType lastSelectPostType;
+    
 }
 
 // for MWPhotoBrowserDelegate use
 @property (strong, nonatomic) NSMutableArray* photos;
 @property (strong, nonatomic) TTStatusTImeDragRefreshDelegate* myTTStatusTImeDragRefreshDelegate;
+
+@property (strong, nonatomic) Reachability* hostReachable;
+
+
+-(void) checkNetworkStatus:(NSNotification *)notice;
 
 @end

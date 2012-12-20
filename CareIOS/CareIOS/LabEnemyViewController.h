@@ -32,6 +32,8 @@
 
 @property (strong, nonatomic) NSMutableDictionary* mapManToCount;
 @property (strong, nonatomic) NSMutableDictionary* mapManToID;
+
+@property (strong, nonatomic) UIAlertView *indicatorAlert;
 @end
 
 @interface ManToCountPair : NSObject

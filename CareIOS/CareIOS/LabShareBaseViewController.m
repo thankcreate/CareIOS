@@ -353,7 +353,8 @@
     
     // Remove the status bar
     CGFloat imageHeight = image.size.height;
-    CGRect contentRectToCrop = CGRectMake(0, 20, 320, imageHeight - 20);
+    CGFloat scale = image.scale;
+    CGRect contentRectToCrop = CGRectMake(0, 20 * scale, 320 * scale, (imageHeight - 20) * scale);
     CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], contentRectToCrop);
     UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
     

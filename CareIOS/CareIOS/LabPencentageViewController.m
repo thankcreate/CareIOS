@@ -50,6 +50,7 @@
     self.herImage.layer.masksToBounds = YES;
     self.herImage.layer.borderColor = myGreen.CGColor;
     self.herImage.layer.borderWidth = 4.0;
+    self.herImage.contentMode = UIViewContentModeScaleAspectFill;
     
     NSString* myStrUrl = [MiscTool getMyIcon];
     NSURL* myUrl = [NSURL URLWithString:myStrUrl];
@@ -58,6 +59,7 @@
     self.myImage.layer.masksToBounds = YES;
     self.myImage.layer.borderColor = myGreen.CGColor;
     self.myImage.layer.borderWidth = 4.0;
+    self.myImage.contentMode = UIViewContentModeScaleAspectFill;
     
     self.lblHerName.text = [MiscTool getHerName];
     self.lblHerName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
@@ -67,13 +69,13 @@
     self.lblMyName.text = [MiscTool getMyName];
     self.lblMyName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
     self.lblMyName.textColor = myGreen;
-    [self.lblMyName sizeToFit];
+    //[self.lblMyName sizeToFit];
     
     
-    self.lblScorePrefix.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
+    self.lblScorePrefix.Font = [UIFont fontWithName:@"Helvetica-Bold" size:30];
     self.lblScorePrefix.textColor = myGreen;
     [self.lblScorePrefix sizeToFit];
-    self.lblScore.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
+    self.lblScore.Font = [UIFont fontWithName:@"Helvetica-Bold" size:30];
     self.lblScore.textColor = myGreen;
     [self.lblScore sizeToFit];
 

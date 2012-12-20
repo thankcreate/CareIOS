@@ -38,6 +38,7 @@
     CGFloat top = 10;
     CGFloat left = 10;
     UIImageView *img = [[UIImageView alloc] init];
+    img.contentMode = UIViewContentModeScaleAspectFill;
     CGRect imgPos = CGRectMake(left ,top , 60.0f, 60.0f);
     img.frame = imgPos;
     NSURL* url = [NSURL URLWithString:[MiscTool getHerIcon]];

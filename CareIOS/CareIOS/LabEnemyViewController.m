@@ -56,6 +56,8 @@
 
 @synthesize toolBar;
 @synthesize segBar;
+
+@synthesize indicatorAlert;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -83,6 +85,8 @@
     CGFloat top = 10;
     CGFloat left = 10;
     avatarImage = [[UIImageView alloc] init];
+    avatarImage.contentMode = UIViewContentModeScaleAspectFill;
+    
     CGRect imgPos = CGRectMake(left ,top , 60.0f, 60.0f);
     avatarImage.frame = imgPos;
     NSURL* url = [NSURL URLWithString:[MiscTool getHerIcon]];
@@ -142,8 +146,8 @@
     
     toolBar.tintColor = [CareConstants headerColor];
     // 开始抓数据
-    fetcher = [self defaultFetcher];
-    [fetcher startFetchCommentMan];
+    
+    [self analysisEnemy:EntryType_NotSet];
 }
 
 -(BaseFetcher*)defaultFetcher
@@ -235,9 +239,31 @@
             break;
         }
         default:
+        {
+            fetcher = [self defaultFetcher];
             break;
+        }
+    
     }    
     [fetcher startFetchCommentMan];
+    
+    lineChart.xLabels = nil;
+    lineChart.components = nil;
+    [lineChart setNeedsDisplay];
+
+
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    indicatorAlert = [[UIAlertView alloc] initWithTitle:@"@_@" message:@"正在解析，请稍候喵～" delegate:self cancelButtonTitle:@"朕知道了～" otherButtonTitles: nil];
+    [indicatorAlert show];
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    
+    // Adjust the indicator so it is up a few pixels from the bottom of the alert
+    CGFloat width = indicator.frame.size.width + 5;
+    CGFloat height =  indicator.frame.size.height + 5;
+    indicator.center = CGPointMake(width,  height);
+    [indicator startAnimating];
+    [indicatorAlert addSubview:indicator];   
 }
 
 
@@ -250,8 +276,14 @@
 #pragma mark Fetcher delegate
 - (void)fetchComplete:(NSArray*)result
 {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    if(indicatorAlert != nil)
+        [indicatorAlert dismissWithClickedButtonIndex:0 animated:NO];
+    
     [mapManToCount removeAllObjects];
     [mapManToID removeAllObjects];
+    if(result == nil || result.count == 0)
+        return;
     for(CommentMan* man in result)
     {
         // 1.先计数
@@ -455,8 +487,7 @@
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString* herName = [defaults objectForKey:@"Renren_FollowerNickName"];
         
-        result = [NSString stringWithFormat:@"收取了可观小的小费后，酒馆老板小声道:看在你\
-                  对 @%@(%@) 一片痴情的份上，我可以告诉你,你的头号情敌是 @%@(%@) ，@%@(%@) 也不可小觑，必要时还得留意一下 @%@(%@)"
+        result = [NSString stringWithFormat:@"收取了可观小的小费后，酒馆老板小声道:看在你对 @%@(%@) 一片痴情的份上，我可以告诉你,你的头号情敌是 @%@(%@) ，@%@(%@) 也不可小觑，必要时还得留意一下 @%@(%@)"
                   , herName, herID, name1, id1, name2, id2, name3, id3];
     }
     else if(lastSelectPostType == EntryType_Douban)

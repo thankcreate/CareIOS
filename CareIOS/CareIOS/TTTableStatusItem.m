@@ -23,7 +23,7 @@
 @synthesize imageURL  = _imageURL;
 @synthesize thumbImageURL  = _thumbImageURL;
 @synthesize from  = _from;
-
+@synthesize commentCount = _commentCount;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +76,7 @@
         self.thumbImageURL = [decoder decodeObjectForKey:@"thumbImageURL"];
         self.forwardItem = [decoder decodeObjectForKey:@"forwardItem"];
         self.from = [decoder decodeObjectForKey:@"from"];
+        self.commentCount = [decoder decodeObjectForKey:@"commentCount"];
     }
     return self;
 }
@@ -104,7 +105,10 @@
     }
     if (self.from) {
         [encoder encodeObject:self.from forKey:@"from"];
-    }    
+    }
+    if (self.commentCount){
+        [encoder encodeObject:self.commentCount forKey:@"commentCount"];
+    }
 }
 
 

@@ -15,6 +15,7 @@
     NSString* _imageURL;
     NSString* _thumbImageURL;
     NSString* _from;
+    NSString* _commentCount;
     TTTableStatusItem* _forwardItem;
 }
 
@@ -24,6 +25,7 @@
 @property (nonatomic, copy)   NSString* imageURL;
 @property (nonatomic, copy)   NSString* thumbImageURL;
 @property (nonatomic, copy)   NSString* from;
+@property (nonatomic, copy)   NSString* commentCount;
 @property (nonatomic, retain)   TTTableStatusItem* forwardItem;
 
 // 这里之所以再加了一个ItemViewModel是因为一开始并没有建这个TTTableStatusItem类

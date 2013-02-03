@@ -83,16 +83,16 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 + (CGFloat)tableView:(UITableView*)tableView rowHeightForObject:(id)object {
     // XXXjoe Compute height based on font sizes
-    TTTableMessageItem* item = object;
-    CGFloat height = TTSTYLEVAR(tableFont).ttLineHeight + kTableCellVPadding*1.5;
-    if (item.caption)
+    TTTableStatusItem* item = object;
+    CGFloat height = kTableCellVPadding*1.5;
+    if (item.title)
     {
         height += TTSTYLEVAR(font).ttLineHeight;
     }
     if (item.text)
     {
         UIFont *myTextFont = TTSTYLEVAR(font);
-        CGSize maximumLabelSize = CGSizeMake(274,9999);
+        CGSize maximumLabelSize = CGSizeMake(265,9999);
         CGSize linesSize = [item.text sizeWithFont:myTextFont
                                  constrainedToSize:maximumLabelSize
                                      lineBreakMode:UILineBreakModeWordWrap];
@@ -124,6 +124,14 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
             height += 85;
         }
         height += 14;
+    }
+    else
+    {
+        height -= 4;
+    }
+    if(item.commentCount)
+    {
+        height += TTSTYLEVAR(font).ttLineHeight;
     }
     if (item.from)
     {
@@ -157,6 +165,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
     _forwardTextLabel.text = nil;
     _forwardTitleLabel.text = nil;
     _fromLabel.text = nil;
+    _commentCountLabel.text = nil;
     [_forwardThumbImage unsetImage];
     self.captionLabel.text = nil;
 }
@@ -191,11 +200,11 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
         }
         // 2.2 正文
         if (self.detailTextLabel.text.length) {
-            CGSize maximumLabelSize = CGSizeMake(width,9999);
+            CGSize maximumLabelSize = CGSizeMake(265,9999);
             CGSize expectedLabelSize = [self.detailTextLabel.text sizeWithFont:self.detailTextLabel.font
                                                              constrainedToSize:maximumLabelSize
                                                                  lineBreakMode:self.detailTextLabel.lineBreakMode];
-            self.detailTextLabel.frame = CGRectMake(left, top, width, expectedLabelSize.height);
+            self.detailTextLabel.frame = CGRectMake(left, top, 265, expectedLabelSize.height);
             top += expectedLabelSize.height;
         }
         else
@@ -300,14 +309,33 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
             _forwardThumbImage.frame = CGRectZero;
         }
         
-        // 2.5.1 信息来源
-        if (_fromLabel.text.length) {
+        
+        // 2.5 评论数
+        if (_commentCountLabel.text.length) {
             top += 3;
             if( _forwardView.tag == EXIST )
             {
                 top += 8;
             }
             
+            CGSize maximumLabelSize = CGSizeMake(width,9999);
+            CGSize expectedLabelSize = [_commentCountLabel.text sizeWithFont:_commentCountLabel.font
+                                                   constrainedToSize:maximumLabelSize
+                                                       lineBreakMode:_commentCountLabel.lineBreakMode];
+            _commentCountLabel.alpha = !self.showingDeleteConfirmation;
+            [_commentCountLabel sizeToFit];
+            _commentCountLabel.left = self.contentView.width -  (_commentCountLabel.width + kTableCellSmallMargin);
+            _commentCountLabel.top = top;
+            _commentCountLabel.backgroundColor = [UIColor clearColor];
+            top += expectedLabelSize.height;
+        }
+        else
+        {
+            _commentCountLabel.frame = CGRectZero;
+        }        
+        
+        // 2.6.1 信息来源
+        if (_fromLabel.text.length) {
             CGSize maximumLabelSize = CGSizeMake(width,9999);
             CGSize expectedLabelSize = [_fromLabel.text sizeWithFont:_fromLabel.font
                                                    constrainedToSize:maximumLabelSize
@@ -320,7 +348,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
             _fromLabel.frame = CGRectZero;
         }
         
-        // 2.5.2 时间
+        // 2.6.2 时间
         if (_timestampLabel.text.length)
         {
             _timestampLabel.alpha = !self.showingDeleteConfirmation;
@@ -350,6 +378,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
         _forwardTextLabel.backgroundColor = self.backgroundColor;
         _forwardThumbImage.backgroundColor = self.backgroundColor;
         _fromLabel.backgroundColor = self.backgroundColor;
+        _commentCountLabel.backgroundColor = self.backgroundColor;
     }
 }
 
@@ -395,6 +424,10 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
         if (item.from.length) {
             self.fromLabel.text = item.from;
         }
+        if(item.commentCount.length)
+        {
+            self.commentCountLabel.text = [NSString stringWithFormat:@"评论:%@",item.commentCount];
+        }
         if (item.forwardItem){
             self.forwardView.tag = EXIST;
             if( item.forwardItem.title.length )
@@ -410,7 +443,6 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
                 self.forwardThumbImage.urlPath = item.forwardItem.thumbImageURL;
             }
         }
-        
     }
 }
 
@@ -534,6 +566,21 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
         [self.contentView addSubview:_fromLabel];
     }
     return _fromLabel;
+}
+
+
+- (UILabel*)commentCountLabel {
+    if (!_commentCountLabel) {
+        _commentCountLabel = [[UILabel alloc] init];
+        _commentCountLabel.textColor = TTSTYLEVAR(tableSubTextColor);
+        _commentCountLabel.highlightedTextColor = [UIColor whiteColor];
+        _commentCountLabel.font = [UIFont fontWithName:@"Helvetica" size:12];
+        _commentCountLabel.contentMode = UIViewContentModeLeft;
+        _commentCountLabel.lineBreakMode = UILineBreakModeTailTruncation;
+        _commentCountLabel.numberOfLines = 1;
+        [self.contentView addSubview:_commentCountLabel];
+    }
+    return _commentCountLabel;
 }
 
 - (TTView*)forwardView {

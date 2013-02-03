@@ -368,7 +368,12 @@
         if(![service isValid])
             return FALSE;
         
-        NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", itemViewModel.ID];
+        // 这个地方很搞人，豆瓣对某条转发的评论其实是对原广播的评论
+        NSString* finalID = itemViewModel.ID;
+        if(itemViewModel.forwardItem != nil)
+            finalID = itemViewModel.forwardItem.ID;
+
+        NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", finalID];
         DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
                                                  parameters:[NSDictionary dictionaryWithObjectsAndKeys:text,@"text",
                                                              [CareConstants doubanAppKey], @"source",nil]];

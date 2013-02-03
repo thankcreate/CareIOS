@@ -11,6 +11,8 @@
 #import "TTTableCommentItemCell.h"
 #import "TTTableStatusItem.h"
 #import "TTTableStatusItemCell.h"
+#import "TTTableChatItem.h"
+#import "TTTableChatItemCell.h"
 
 @implementation TTSectionedDataSource (CareCell)
 - (Class)tableView:(UITableView*)tableView cellClassForObject:(id)object
@@ -22,6 +24,10 @@
     else if([object isKindOfClass:[TTTableStatusItem class]])
     {
         return [TTTableStatusItemCell class];
+    }
+    else if([object isKindOfClass:[TTTableChatItem class]])
+    {
+        return [TTTableChatItemCell class];
     }
     else
     {

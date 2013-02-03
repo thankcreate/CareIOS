@@ -19,8 +19,10 @@
     TTView*       _forwardView;
     UILabel*      _forwardTitleLabel;
     UILabel*      _forwardTextLabel;
+
     TTImageView*  _forwardThumbImage;
-    
+
+    UILabel*      _commentCountLabel;
     UILabel*      _fromLabel;
 }
 
@@ -36,5 +38,6 @@
 @property (nonatomic, readonly, retain) TTImageView*  forwardThumbImage;
 
 @property (nonatomic, readonly, retain) UILabel*      fromLabel;
+@property (nonatomic, readonly, retain) UILabel*      commentCountLabel;
 
 @end

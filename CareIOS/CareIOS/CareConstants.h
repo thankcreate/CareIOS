@@ -23,7 +23,10 @@ typedef enum EnumRenrenNewsType{
     RenrenNews_SharePhoto = 32,
 } RenrenNewsType;
 
-
+typedef enum EnumChatType {
+    ChatType_Her = 0,
+    ChatType_Me = 1,
+} ChatType;
 
 @interface CareConstants : NSObject
 +(NSString*)doubanAppKey;

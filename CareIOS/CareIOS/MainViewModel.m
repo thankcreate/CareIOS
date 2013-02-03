@@ -54,6 +54,7 @@ static MainViewModel * sharedInstance = nil;
     self.doubanPictureItems = [NSMutableArray arrayWithCapacity:50];
     
     self.isChanged = true;
+    self.isCommentCountChanged = true;
     return self;
 }
 

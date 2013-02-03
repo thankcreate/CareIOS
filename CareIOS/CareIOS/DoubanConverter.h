@@ -14,6 +14,7 @@
 
 @interface DoubanConverter : NSObject
 +(FriendViewModel*) convertFrendToCommon:(ROFriendResponseItem*)afriend;
++(ItemViewModel*) convertStatusUnion:(id)status;
 +(ItemViewModel*) convertStatusToCommon:(id)status;
 +(CommentViewModel*) convertCommentToCommon:(id)comment;
 @end

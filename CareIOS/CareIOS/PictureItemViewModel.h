@@ -9,7 +9,7 @@
 #import "Three20/Three20.h"
 #import "CareConstants.h"
 
-@interface PictureItemViewModel : NSObject<TTPhoto, NSCoding, NSCoding>
+@interface PictureItemViewModel : NSObject<TTPhoto, NSCoding, NSCopying>
 
 @property (nonatomic) CGSize size;
 

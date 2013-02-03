@@ -80,7 +80,6 @@
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
         [self performSegueWithIdentifier:@"Segue_GotoTabBarController2" sender:self];
     }
-
 }
 
 - (IBAction)click0:(id)sender {

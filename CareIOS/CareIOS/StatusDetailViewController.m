@@ -21,6 +21,7 @@
 @synthesize photos;
 @synthesize scrollView;
 @synthesize itemViewModel;
+@synthesize lblCommentCount;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -30,6 +31,16 @@
     return self;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if(itemViewModel != nil)
+    {
+        NSString* pre = @"评论:";
+        NSString* combine = [pre stringByAppendingString:itemViewModel.commentCount];
+        lblCommentCount.text = combine;
+    }
+}
 
 
 - (void)viewDidLoad
@@ -38,7 +49,7 @@
     [MobClick event:@"StatusDetailViewController"];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
-    
+
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     UIColor* myPink = [UIColor colorWithRed:240 / 255.0f green:190 / 255.0f blue:173 / 255.0f alpha:1.0f ];
     UIColor* myGray = [UIColor colorWithRed:200 / 255.0f green:200 / 255.0f blue:200 / 255.0f alpha:1.0f ];
@@ -273,7 +284,7 @@
     
     // 2.5评论数
     UIColor* bottomTextColor = RGBCOLOR(150, 150, 150);
-    UILabel* lblCommentCount = [[UILabel alloc] init];
+    lblCommentCount = [[UILabel alloc] init];
     if (itemViewModel.timeText.length)
     {
         top += 5;

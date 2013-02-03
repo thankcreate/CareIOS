@@ -20,6 +20,7 @@
 #import "DOUAPIEngine.h"
 #import "NSString+RenrenSBJSON.h"
 #import "TTSectionedDataSource+CareCell.h"
+#import "MainViewModel.h"
 
 @interface TTCommentViewController ()
 
@@ -135,7 +136,16 @@
                                                        itemViewModel:nil];
         [itemsRow addObject:item];
     }
-
+    
+    // 用得到的数据重新刷新相应条目的评论数,如果比原来大，则更新
+    NSNumber* nscount = [NSNumber numberWithInt:commentList.count];
+    // 这个地方即使itemViewModel.commentCount是nil或是非法数据，也不会崩溃，而是返回0，所以不用做检查
+    int originalCount = [itemViewModel.commentCount integerValue];
+    if(commentList.count > originalCount)
+    {
+        [MainViewModel sharedInstance].isCommentCountChanged = YES;
+        itemViewModel.commentCount = [nscount stringValue];
+    }
     
     [items addObject:itemsRow];
     self.dataSource = [TTSectionedDataSource dataSourceWithItems:items sections:sections];
@@ -243,21 +253,21 @@
         [dic setObject:@"status.getComment" forKey:@"method"];
         [dic setObject:itemViewModel.ID forKey:@"status_id"];
         [dic setObject:itemViewModel.ownerID forKey:@"owner_id"];
-        [dic setObject:@"50" forKey:@"count"];
+        [dic setObject:@"100" forKey:@"count"];
     }
     else if(itemViewModel.renrenFeedType == RenrenNews_UploadPhoto)
     {
         [dic setObject:@"photos.getComments" forKey:@"method"];
         [dic setObject:itemViewModel.ID forKey:@"pid"];
         [dic setObject:itemViewModel.ownerID forKey:@"uid"];
-        [dic setObject:@"50" forKey:@"count"];
+        [dic setObject:@"100" forKey:@"count"];
     }
     else if(itemViewModel.renrenFeedType == RenrenNews_SharePhoto)
     {
         [dic setObject:@"share.getComments" forKey:@"method"];
         [dic setObject:itemViewModel.ID forKey:@"share_id"];
         [dic setObject:itemViewModel.ownerID forKey:@"user_id"];
-        [dic setObject:@"50" forKey:@"count"];
+        [dic setObject:@"100" forKey:@"count"];
     }
     lastRenrenMethod = @"getComment";
     [renren requestWithParams:dic andDelegate:self];
@@ -320,9 +330,13 @@
     DOUService *service = [DOUService sharedInstance];
     if(itemViewModel.ID == nil)
         return;
-    NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", itemViewModel.ID];
+    // 这个地方很搞人，豆瓣对某条转发的评论其实是对原广播的评论
+    NSString* finalID = itemViewModel.ID;
+    if(itemViewModel.forwardItem != nil)
+        finalID = itemViewModel.forwardItem.ID;
+    NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", finalID];
     DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
-                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:@"50",@"count",nil]];
+                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:@"100",@"count",nil]];
     
     DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
         NSError *error = [req error];
@@ -431,7 +445,11 @@
         if(![service isValid])
             return FALSE;
         
-        NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", itemViewModel.ID];
+        // 这个地方很搞人，豆瓣对某条转发的评论其实是对原广播的评论
+        NSString* finalID = itemViewModel.ID;
+        if(itemViewModel.forwardItem != nil)
+            finalID = itemViewModel.forwardItem.ID;
+        NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/%@/comments", finalID];
         DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
                                                  parameters:[NSDictionary dictionaryWithObjectsAndKeys:text,@"text",
                                                              [CareConstants doubanAppKey], @"source",nil]];

@@ -147,6 +147,17 @@
     return herIcon;
 }
 
++(NSString*)getHerSinaWeiboName
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herName = [defaults objectForKey:@"SinaWeibo_FollowerNickName"];
+    if(herName)
+    {
+        return herName;
+    }
+    return @"";
+}
+
 
 +(NSString*)getHerRenrenIcon
 {
@@ -166,6 +177,17 @@
     return herIcon;
 }
 
++(NSString*)getHerRenrenName
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herName = [defaults objectForKey:@"Renren_FollowerNickName"];
+    if(herName)
+    {
+        return herName;
+    }
+    return @"";
+}
+
 +(NSString*)getHerDoubanIcon
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -182,6 +204,18 @@
         return herIcon;
     }
     return herIcon;
+}
+
+
++(NSString*)getHerDoubanName
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* herName = [defaults objectForKey:@"Douban_FollowerNickName"];
+    if(herName)
+    {
+        return herName;
+    }
+    return @"";
 }
 
 
@@ -222,5 +256,11 @@
     return s;
 }
 
++(void)gotoReviewPage
+{
+    NSString* appID = @"588950071";
+    NSString* navStr = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appID];
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString:navStr]];
+}
 
 @end

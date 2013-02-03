@@ -19,7 +19,14 @@
 +(NSString*)getHerRenrenIcon;
 +(NSString*)getHerDoubanIcon;
 
++(NSString*)getHerSinaWeiboName;
++(NSString*)getHerRenrenName;
++(NSString*)getHerDoubanName;
+
+
 +(BOOL)isAnyOneFollowed;
 +(NSString *)removeHTMLTag:(NSString*)input;
 +(NSString *)removeDoubanScoreTag:(NSString*)input;
+
++(void)gotoReviewPage;
 @end

@@ -33,6 +33,112 @@
     }
 }
 
+
+// 现在豆瓣把有的新鲜事我都从这里来convert了，从此以后不严格区分豆瓣广播种类
++(ItemViewModel*) convertStatusUnion:(id)status
+{
+    if(status == nil)
+        return nil;
+    
+    ItemViewModel* model;
+    @try {
+        id user = [status objectForKey:@"user"];
+        if(user == nil)
+            return nil;
+        
+        model= [[ItemViewModel alloc] init];
+        model.iconURL = [user objectForKey:@"small_avatar"];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        model.largeIconURL = [defaults objectForKey:@"Douban_FollowerAvatar2"];
+        model.title = [user objectForKey:@"screen_name"];
+        
+        NSString* attachTitle = @"";
+        NSArray* listAttach = [status objectForKey:@"attachments"];
+        if(listAttach != nil)
+        {
+            for(id attach in listAttach)
+            {
+                // 这里现在不严格区分type了
+                // NSString* attachType = [attach objectForKey:@"type"];
+                attachTitle = [attach objectForKey:@"title"];
+            }
+        }
+
+        NSString* trimStatusTitle = [MiscTool removeDoubanScoreTag:[status objectForKey:@"title"]];
+        if(trimStatusTitle == nil)
+            trimStatusTitle = @"";
+        NSString* statusText = [status objectForKey:@"text"];
+        if(statusText == nil)
+            statusText = @"";
+        
+        model.content = [NSString stringWithFormat:@"%@ %@ %@", trimStatusTitle, attachTitle, statusText];
+        model.time = [self convertDoubanDateStringToDate:[status objectForKey:@"created_at"]];
+        model.ID = [[status objectForKey:@"id"] stringValue];
+        model.commentCount = [[status objectForKey:@"comments_count"] stringValue];
+        model.sharedCount = [[status objectForKey:@"reshared_count"] stringValue];
+        model.type = EntryType_Douban;
+        
+        id forwardStatus = [status objectForKey:@"reshared_status"];
+        if(forwardStatus != nil)
+        {
+            ItemViewModel* forwardModel = [[ItemViewModel alloc] init];
+            id forwardUser = [forwardStatus objectForKey:@"user"];
+            if(forwardUser == nil)
+                return nil;
+
+            forwardModel.iconURL = [forwardUser objectForKey:@"small_avatar"];           
+            forwardModel.largeIconURL = forwardModel.iconURL;
+            forwardModel.title = [forwardUser objectForKey:@"screen_name"];
+            
+            NSString* forwardAttachTitle = @"";
+            NSArray* forwardListAttach = [forwardStatus objectForKey:@"attachments"];
+            if(forwardListAttach != nil)
+            {
+                for(id attach in forwardListAttach)
+                {
+                    // 这里现在不严格区分type了
+                    // NSString* attachType = [attach objectForKey:@"type"];
+                    forwardAttachTitle = [attach objectForKey:@"title"];
+                }
+            }
+            
+            NSString* trimForwardStatusTitle = [MiscTool removeDoubanScoreTag:[forwardStatus objectForKey:@"title"]];
+            if(trimForwardStatusTitle == nil)
+                trimForwardStatusTitle = @"";
+            NSString* forwardStatusText = [forwardStatus objectForKey:@"text"];
+            if(forwardStatusText == nil)
+                forwardStatusText = @"";
+            
+            forwardModel.content = [NSString stringWithFormat:@"%@ %@ %@", trimForwardStatusTitle, forwardAttachTitle, forwardStatusText];
+            forwardModel.time = [self convertDoubanDateStringToDate:[forwardStatus objectForKey:@"created_at"]];
+            forwardModel.ID = [[forwardStatus objectForKey:@"id"] stringValue];
+            forwardModel.commentCount = [[forwardStatus objectForKey:@"comments_count"] stringValue];
+            forwardModel.sharedCount = [[forwardStatus objectForKey:@"reshared_count"] stringValue];
+            forwardModel.type = EntryType_Douban;
+            NSString* useFowardPicture = [defaults objectForKey:@"Global_NeedFetchImageInRetweet"];
+            if(useFowardPicture == nil || [useFowardPicture compare:@"YES"] == NSOrderedSame)
+            {
+                [self filtPictureWithStatus:forwardStatus itemViewModel:forwardModel];
+            }
+            
+            // 如果是转播，把model的text改成“转播”两字，不然空在那里很奇怪
+            model.content = @"转播";
+            model.commentCount = forwardModel.commentCount;
+            model.sharedCount = forwardModel.sharedCount;
+            model.forwardItem = forwardModel;
+        }
+        [self filtPictureWithStatus:status itemViewModel:model];
+    }
+    @catch (NSException *exception) {
+        model = nil;
+    }
+    @finally {
+        return model;
+    }
+    
+}
+
+
 +(ItemViewModel*) convertStatusToCommon:(id)status
 {
     if(status == nil)
@@ -309,17 +415,16 @@
 
 // 这一步需要在解析status的最后一步来做
 // 因为其description依赖于itemViewModel的content
-// 目前豆瓣只有小图
 +(void)filtPictureWithStatus:(id)status itemViewModel:(ItemViewModel*)itemViewModel
 {
     NSArray* listAttach = [status objectForKey:@"attachments"];
     for(id attach in listAttach)
     {
-        NSString* attachType = [attach objectForKey:@"type"];
-        if([attachType compare:@"movie"] == NSOrderedSame
-           || [attachType compare:@"music"] == NSOrderedSame
-           || [attachType compare:@"book"] == NSOrderedSame
-           || [attachType compare:@"image"] == NSOrderedSame)
+//        NSString* attachType = [attach objectForKey:@"type"];
+//        if([attachType compare:@"movie"] == NSOrderedSame
+//           || [attachType compare:@"music"] == NSOrderedSame
+//           || [attachType compare:@"book"] == NSOrderedSame
+//           || [attachType compare:@"image"] == NSOrderedSame)
         {
             // 抓图
             NSArray* listMedia =[attach objectForKey:@"media"];
@@ -383,6 +488,7 @@
     {
         NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
         date=[dateFormatter dateFromString:plainDate];
     }
     @catch (NSException *exception)

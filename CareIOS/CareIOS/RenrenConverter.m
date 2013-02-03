@@ -161,6 +161,7 @@
                 pic.title = model.title;
                 pic.description = model.content;
                 pic.time = model.time;
+                pic.type = EntryType_Renren;
                 [[MainViewModel sharedInstance].renrenPictureItems addObject:pic];
             }
         }
@@ -231,6 +232,7 @@
                     pic.title = model.title;
                     pic.description = model.content;
                     pic.time = model.time;
+                    pic.type = EntryType_Renren;
                     
                     [[MainViewModel sharedInstance].renrenPictureItems addObject:pic];
                 }
@@ -298,6 +300,7 @@
     {
         NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
         date=[dateFormatter dateFromString:plainDate];
     }
     @catch (NSException *exception)

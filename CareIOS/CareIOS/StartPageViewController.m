@@ -62,6 +62,10 @@
         [defaults synchronize];
         [self performSegueWithIdentifier:@"Segue_GotoGuidePage" sender:self];
     }
+    else if(YES)
+    {
+        [self performSegueWithIdentifier:@"Segue_GotoBlessingPage" sender:self];    
+    }
     else if(usePassword != nil && [usePassword compare:@"YES"] == NSOrderedSame)
     {
         [self performSegueWithIdentifier:@"Segue_GotoPasswordPage" sender:self];

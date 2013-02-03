@@ -41,6 +41,7 @@
     CGFloat top = 10;
     CGFloat left = 10;
     UIImageView *img = [[UIImageView alloc] init];
+    img.contentMode = UIViewContentModeScaleAspectFill;
     CGRect imgPos = CGRectMake(left ,top , 60.0f, 60.0f);
     img.frame = imgPos;
     NSURL* url = [NSURL URLWithString:[MiscTool getHerIcon]];
@@ -92,7 +93,8 @@
     [self.view addSubview:lblAnalysis];
     
     // 2 统计图
-    lineChart = [[PCLineChartView alloc] initWithFrame:CGRectMake(left,top,[self.view bounds].size.width-20,[self.view bounds].size.height - top)];
+    // 因为有的平台有水印，把高度再减一点儿，不然发表后看不清图
+    lineChart = [[PCLineChartView alloc] initWithFrame:CGRectMake(left,top,[self.view bounds].size.width-20,[self.view bounds].size.height - top - 20)];
     [lineChart setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
 
     [self.view addSubview:lineChart];
@@ -196,7 +198,7 @@
     else if (var2 >= var1 && var2 >= var3 && var2 >= var4)
         return @"睡完午觉就无所事事的家伙";
     else if (var3 >= var1 && var3 >= var2 && var2 >= var4)
-        return @"月色下的呤游者";
+        return @"月色下的吟游者";
     else if (var4 >= var1 && var4 >= var2 && var4 >= var3)
         return @"程序员";
     

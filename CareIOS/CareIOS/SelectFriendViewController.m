@@ -32,7 +32,7 @@
 @synthesize type;
 @synthesize mySearchBar;
 @synthesize renren;
-
+@synthesize currentDoubanIndex;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -44,6 +44,7 @@
 
 - (void)viewDidLoad
 {
+    currentDoubanIndex = 0;
     [super viewDidLoad];
     self.allFriends = [NSMutableArray arrayWithCapacity:200];
     self.friendsInShow = [NSMutableArray arrayWithCapacity:200];
@@ -491,26 +492,54 @@ titleForHeaderInSection:(NSInteger)section
 #pragma mark - Douban Logic
 -(void)initLoadDouban
 {
+    [self initLoadDoubanInternal:0];
+}
+
+-(void)initLoadDoubanInternal:(int)nstart
+{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString* myID = [defaults objectForKey:@"Douban_ID"];
     if(myID == nil)
         return;
     NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/users/%@/following", myID];
-    DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath parameters:nil];
+    currentDoubanIndex = 0;
+    NSString* start = [NSString stringWithFormat:@"%d", nstart];
+    // 豆瓣每次返回200
+    DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                         @"200",@"count",
+                                                         start, @"start",nil]];
     
     DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
         NSError *error = [req error];
         
         if (!error) {
             id users = [[req responseString] JSONValue];
-            // 这个朋友列表的api没有count功能，貌似是一次拿齐所有friend，嗯嗯，一定是这样
-            for(id user in users)
+            if(users != nil)
             {
-                FriendViewModel* model = [DoubanConverter convertFrendToCommon:user];
-                if(model != nil)
-                    [self.allFriends addObject:model];
+                NSArray* usersArray = users;
+                if([usersArray count] != 0)
+                {
+                    for(id user in users)
+                    {
+                        FriendViewModel* model = [DoubanConverter convertFrendToCommon:user];
+                        // 豆瓣的API能拿到已注销用户,把他去了
+                        if(model != nil && [model.name compare:@"[已注销]"] != NSOrderedSame)
+                        {
+                            [self.allFriends addObject:model];
+                        }
+                    }
+                    [self initLoadDoubanInternal:nstart + 200];
+                }
+                else
+                {
+                    [self fetchComplete];
+                }
             }
-            [self fetchComplete];  
+            else
+            {
+                [self fetchComplete];
+            }
         }
         else
         {
@@ -525,4 +554,6 @@ titleForHeaderInSection:(NSInteger)section
     // 本API不能在head里加上auth参数，应该是个豆瓣的BUG
     [service get:query callback:completionBlock  needAuthHeader:FALSE];
 }
+
+    
 @end

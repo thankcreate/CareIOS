@@ -94,7 +94,7 @@
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             [dic setObject:statusID forKey:@"id"];
             // 新浪支持的最大为100
-            // TODO:
+
             [dic setObject:@"50" forKey:@"count"];
             
             [sinaweibo requestWithURL:@"comments/show.json"

@@ -7,7 +7,10 @@
 //
 
 #import "PreferenceHelper.h"
-
+#import "CareAppDelegate.h"
+#import "SinaWeibo.h"
+#import "Renren.h"
+#import "DOUOAuthStore.h"
 @implementation PreferenceHelper
 +(void) clearSinaWeiboPreference
 {
@@ -22,7 +25,11 @@
     [defaults removeObjectForKey:@"SinaWeibo_FollowerNickName"];
     [defaults removeObjectForKey:@"SinaWeibo_FollowerAvatar"];
     [defaults removeObjectForKey:@"SinaWeibo_FollowerAvatar2"];
-
+    [defaults synchronize];
+    
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+    SinaWeibo* sinaweibo = appDelegate.sinaweibo;
+    [sinaweibo removeAuthData];
 }
 
 +(void) clearRenrenPreference
@@ -37,7 +44,12 @@
     [defaults removeObjectForKey:@"Renren_FollowerID"];
     [defaults removeObjectForKey:@"Renren_FollowerNickName"];
     [defaults removeObjectForKey:@"Renren_FollowerAvatar"];
-    [defaults removeObjectForKey:@"Renren_FollowerAvatar2"];   
+    [defaults removeObjectForKey:@"Renren_FollowerAvatar2"];
+    [defaults synchronize];
+    
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[UIApplication sharedApplication].delegate;
+    Renren* renren = appDelegate.renren;
+    [renren delUserSessionInfo];
 }
 
 +(void) clearDoubanPreference
@@ -53,5 +65,9 @@
     [defaults removeObjectForKey:@"Douban_FollowerNickName"];
     [defaults removeObjectForKey:@"Douban_FollowerAvatar"];
     [defaults removeObjectForKey:@"Douban_FollowerAvatar2"];
+    [defaults synchronize];
+    
+    DOUOAuthStore *store = [DOUOAuthStore sharedInstance];
+    [store clear];
 }
 @end

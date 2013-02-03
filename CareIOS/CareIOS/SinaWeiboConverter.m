@@ -115,12 +115,12 @@
     }
 }
 
-+(PictureItemViewModel*) convertPictureToCommon:(id)status
++(void) convertPictureToCommon:(id)status
 {
     PictureItemViewModel* model = [[PictureItemViewModel alloc] init];
     model.size = CGSizeZero;
-    if(model == nil)
-        return nil;
+    if(status == nil)
+        return;
     @try {
         // 先判断是否有转发图片
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -130,7 +130,32 @@
             id forward = [status objectForKey:@"retweeted_status"];
             if(forward != nil)
             {
-                return [self convertPictureToCommon:forward];
+                // 这里之所以重新又变得这么冗余了，是因为用户还是觉得转发图里还是要有本人的评论
+                // 修改了description的显示方式  2012/1/13
+                PictureItemViewModel* forwardModel = [[PictureItemViewModel alloc] init];
+                id forwardUser = [forward objectForKey:@"user"];
+                if(forwardUser != nil)
+                {
+                    forwardModel.title = [forwardUser objectForKey:@"name"];
+                }
+                forwardModel.size = CGSizeZero;
+                forwardModel.smallURL = [forward objectForKey:@"thumbnail_pic"];
+                forwardModel.middleURL = [forward objectForKey:@"bmiddle_pic"];
+                forwardModel.largeURL = [forward objectForKey:@"original_pic"];
+                forwardModel.ID = [forward objectForKey:@"id"];
+                forwardModel.description = [NSString stringWithFormat:@"%@//@%@: %@",
+                    [status objectForKey:@"text"],
+                    [forwardUser objectForKey:@"name"],
+                    [forward objectForKey:@"text"]];
+                forwardModel.type = EntryType_SinaWeibo;
+                 // 这个时间应该是转发的时间
+                id rawTime = [status objectForKey:@"created_at"];
+                forwardModel.time = [self convertSinaWeiboDateStringToDate:rawTime];
+                
+                if(forwardModel.smallURL.length)
+                {
+                    [[MainViewModel sharedInstance].sinaWeiboPictureItems addObject:forwardModel];
+                }            
             }
         }
         model.smallURL = [status objectForKey:@"thumbnail_pic"];
@@ -140,11 +165,13 @@
         model.description = [status objectForKey:@"text"];
         id rawTime = [status objectForKey:@"created_at"];
         model.time = [self convertSinaWeiboDateStringToDate:rawTime];
+        model.type = EntryType_SinaWeibo;
+        
         
         id user = [status objectForKey:@"user"];
         if(user != nil)
         {
-            model.title = [user objectForKey:@"[name"];;
+            model.title = [user objectForKey:@"name"];;
         }
         if(model.smallURL.length)
         {
@@ -155,7 +182,7 @@
         model = nil;
     }
     @finally {
-        return model;
+        return;
     }
     
 }
@@ -172,7 +199,8 @@
     @try
     {
         //plainDate = @"Mon Nov 26 00:17:07 2012";
-        NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
+        NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
         [dateFormatter setDateFormat:@"EEE MMM dd HH:mm:ss zzz yyyy"];
         date=[dateFormatter dateFromString:plainDate];        
     }
@@ -182,6 +210,8 @@
     }
     @finally
     {
+        if(date == nil)
+            date = [NSDate date];
         return date;
     }
 }

@@ -16,7 +16,8 @@
 #import "TaskHelper.h"
 #import "DOUAPIEngine.h"
 #import "NSString+RenrenSBJSON.h"
-
+#import "LocalStorageHelper.h"
+#import "PreferenceHelper.h"
 
 
 @interface RefreshViewerHelper ()
@@ -43,6 +44,10 @@
 
 -(void)refreshViewItems
 {
+    if(mainViewModel.items == nil)
+    {
+        mainViewModel.items = [NSMutableArray arrayWithCapacity:100];
+    }
     [mainViewModel.items removeAllObjects];
     [mainViewModel.listItems removeAllObjects];
     [mainViewModel.pictureItems removeAllObjects];
@@ -76,7 +81,7 @@
     [mainViewModel.pictureItems addObjectsFromArray:temp2];
     
     
-    
+    [LocalStorageHelper saveToLoaclStorage];
     if ( delegate != nil && [delegate respondsToSelector:@selector(refreshComplete)])
     {
         [delegate refreshComplete];
@@ -112,10 +117,23 @@
     [mainViewModel.sinaWeiboItems removeAllObjects];
     [mainViewModel.sinaWeiboPictureItems removeAllObjects];
     
-    SinaWeibo* sinaweibo = [self sinaweibo];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString* herID = [defaults objectForKey:@"SinaWeibo_FollowerID"];
     
+    NSString* sinaWeiboToken = [defaults objectForKey:@"SinaWeibo_Token"];
+    NSDate* sinaWeiboExpDate = [defaults objectForKey:@"SinaWeibo_ExpirationDate"];
+    if(sinaWeiboToken != nil && [sinaWeiboExpDate compare:[NSDate date]] == NSOrderedAscending)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"新浪微博授权已过期，请重新登陆的喵～" delegate:nil
+                                              cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+        [alert show];
+        [PreferenceHelper clearSinaWeiboPreference];
+        [m_taskHelper popTask];
+        return;
+    }
+    
+    SinaWeibo* sinaweibo = [self sinaweibo];    
+    NSString* herID = [defaults objectForKey:@"SinaWeibo_FollowerID"];
     if( ![sinaweibo isAuthValid] || herID == nil)
     {
         [m_taskHelper popTask];
@@ -125,7 +143,7 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setObject:herID forKey:@"uid"];
     // 新浪支持的最大为100
-    // TODO:
+
     [dic setObject:@"50" forKey:@"count"];
     
     [sinaweibo requestWithURL:@"statuses/user_timeline.json"
@@ -140,7 +158,11 @@
 
 - (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
 {
-    [m_taskHelper popTask];    
+    [m_taskHelper popTask];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，获取新浪微博失败，请确保网络畅通" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
 }
 
 - (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
@@ -177,8 +199,22 @@
     [mainViewModel.renrenItems removeAllObjects];
     [mainViewModel.renrenPictureItems removeAllObjects];
     
-    Renren* renren = [self renren];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* renrenToken = [defaults objectForKey:@"Renren_Token"];
+    NSDate* renrenExpDate = [defaults objectForKey:@"Renren_ExpirationDate"];
+    if(renrenToken != nil && [renrenExpDate compare:[NSDate date]] == NSOrderedAscending)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"人人授权已过期，请重新登陆的喵～" delegate:nil
+                                              cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+        [alert show];
+        [PreferenceHelper clearRenrenPreference];
+        [m_taskHelper popTask];
+        return;
+    }
+    
+    Renren* renren = [self renren];
+
     NSString* herID = [defaults objectForKey:@"Renren_FollowerID"];
     
     if( ![renren isSessionValid] || herID == nil)
@@ -215,12 +251,16 @@
 - (void)renren:(Renren *)renren requestFailWithError:(ROError*)error
 {
     [m_taskHelper popTask];
-	NSString *title = [NSString stringWithFormat:@"Error code:%d", [error code]];
-	NSString *description = [NSString stringWithFormat:@"%@", [error.userInfo objectForKey:@"error_msg"]];
-	UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"拖出去枪毙五分钟" otherButtonTitles:nil];
-	[alertView show];    
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"由于未知原因，获取人人新鲜事失败，请确保网络畅通" delegate:nil
+                                          cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+    [alert show];
 }
 
+
+static NSString * const kAPIKey = @"0ed6ec78c3bfd5cb2c84c56a4b3f8161";
+static NSString * const kPrivateKey = @"e5cbdd30d10b1c5d";
+static NSString * const kRedirectUrl = @"http://thankcreate.github.com/Care/callback.html";
 
 #pragma mark - Douban Logic
 - (void)refreshModelDouban
@@ -228,53 +268,103 @@
     [mainViewModel.doubanItems removeAllObjects];
     [mainViewModel.doubanPictureItems removeAllObjects];
     
-    DOUService *service = [DOUService sharedInstance];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString* herID = [defaults objectForKey:@"Douban_FollowerID"];
-    
-    if( ![service isValid] || herID == nil)
+    NSString* doubanToken = [defaults objectForKey:@"Douban_Token"];
+    NSDate* doubanExpDate = [defaults objectForKey:@"Douban_ExpirationDate"];
+    // 如果过期，先请求刷新    
+    if(doubanToken != nil && [doubanExpDate compare:[NSDate date]] == NSOrderedAscending)    
     {
-        [m_taskHelper popTask];
+        DOUOAuthService *service = [DOUOAuthService sharedInstance];
+        service.authorizationURL = kTokenUrl;
+        service.delegate = self;
+        service.clientId = kAPIKey;
+        service.clientSecret = kPrivateKey;
+        service.callbackURL = kRedirectUrl;
+        NSString* refreshToken = [defaults objectForKey:@"Douban_RefreshToken"];
+        [service validateRefresh:refreshToken];
         return;
     }
+    else
+    {    
+        DOUService *service = [DOUService sharedInstance];
+
+        NSString* herID = [defaults objectForKey:@"Douban_FollowerID"];
+
         
-    NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/user_timeline/%@", herID];
-    DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
-                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:@"30",@"count",nil]];
-    
-    DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
-        NSError *error = [req error];
-        
-        if (!error) {
-            id statues = [[req responseString] JSONValue];
-            for(id status in statues)
-            {
-                ItemViewModel* model = [DoubanConverter convertStatusToCommon:status];
-                if(model != nil)
-                {
-                    [mainViewModel.doubanItems addObject:model];
-                }
-            }
-            [m_taskHelper popTask];  
-        }
-        else
+        if( ![service isValid] || herID == nil)
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
-                                                            message:@"由于未知原因，获取豆瓣广播失败" delegate:nil
-                                                  cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
-            [alert show];
             [m_taskHelper popTask];
+            return;
         }
-    };
-    
-    service.apiBaseUrlString = [CareConstants doubanBaseAPI];
-    [service get:query callback:completionBlock];
+            
+        NSString* subPath = [NSString stringWithFormat:@"/shuo/v2/statuses/user_timeline/%@", herID];
+        DOUQuery* query = [[DOUQuery alloc] initWithSubPath:subPath
+                                                 parameters:[NSDictionary dictionaryWithObjectsAndKeys:@"30",@"count",nil]];
+        
+        DOUReqBlock completionBlock = ^(DOUHttpRequest *req){
+            NSError *error = [req error];
+            
+            if (!error) {
+                id statues = [[req responseString] JSONValue];
+                for(id status in statues)
+                {
+                    ItemViewModel* model = [DoubanConverter convertStatusUnion:status];
+                    if(model != nil)
+                    {
+                        [mainViewModel.doubanItems addObject:model];
+                    }
+                }
+                [m_taskHelper popTask];  
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                                message:@"由于未知原因，获取豆瓣广播失败，请确保网络畅通" delegate:nil
+                                                      cancelButtonTitle:@"拖出去枪毙五分钟～" otherButtonTitles:nil];
+                [alert show];
+                [m_taskHelper popTask];
+            }
+        };
+        
+        service.apiBaseUrlString = [CareConstants doubanBaseAPI];
+        [service get:query callback:completionBlock];
+    }
 }
+
+
+- (void)OAuthClient:(DOUOAuthService *)client didAcquireSuccessDictionary:(NSDictionary *)dic {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *access_token = [dic objectForKey:@"access_token"];
+    NSString *douban_user_id = [dic objectForKey:@"douban_user_id"];
+    NSNumber *expires_in = [dic objectForKey:@"expires_in"];
+    NSString *refresh_token = [dic objectForKey:@"refresh_token"];
+    
+    NSTimeInterval seconds = [expires_in doubleValue];
+    NSDate* expDate = [[NSDate date] dateByAddingTimeInterval:seconds];
+    [defaults setValue:access_token forKey:@"Douban_Token"];
+    [defaults setValue:douban_user_id forKey:@"Douban_ID"];
+    [defaults setValue:expDate forKey:@"Douban_ExpirationDate"];
+    [defaults setValue:refresh_token forKey:@"Douban_RefreshToken"];
+    [defaults synchronize];
+    [self refreshModelDouban];
+}
+
+- (void)OAuthClient:(DOUOAuthService *)client didFailWithError:(NSError *)error {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                    message:@"豆瓣授权已过期，请重新登陆的喵～" delegate:nil
+                                          cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+    [alert show];
+    [PreferenceHelper clearDoubanPreference];
+    [m_taskHelper popTask];
+    return;
+}
+
 
 
 #pragma mark - RSS logic
 -(void)refreshModelRSS
 {
+    [mainViewModel.rssItems removeAllObjects];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString* rssPath = [defaults objectForKey:@"RSS_FollowerPath"];
     if(rssPath == nil || rssPath.length == 0)

@@ -107,10 +107,10 @@
 - (void)analysisPercentage
 {
     NSString* hername = [MiscTool getHerName];
-    int sig1 = [self calculateString:hername];
+    unsigned long sig1 = [self calculateString:hername];
     NSString* myname = [MiscTool getMyName];
-    int sig2 = [self calculateString:myname];
-    int result = (sig1 + sig2) * 575 % 59 + 41;
+    unsigned long sig2 = [self calculateString:myname];
+    long result = (sig1 + sig2) * 575 % 49 + 50;
     
     int first = result / 10;
     int secoend = result % 10;
@@ -122,16 +122,16 @@
     var = result;
 }
 
-- (int)calculateString:(NSString*)str
+- (long)calculateString:(NSString*)str
 {
-    int sig = 0;
+    long sig = 0;
     char* p = (char*)[str cStringUsingEncoding:NSUnicodeStringEncoding];
-    for (int i=0 ; i<[str lengthOfBytesUsingEncoding:NSUnicodeStringEncoding] ;i++)
+    for (long i=0 ; i<[str lengthOfBytesUsingEncoding:NSUnicodeStringEncoding] ;i++)
     {
         if (*p)
         {
             p++;
-            sig += (int)(*p);
+            sig += (long)(*p);
         }
         else
         {

@@ -46,6 +46,8 @@
     return self;
 }
 
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -76,6 +78,7 @@
 //    titleView.frame = CGRectMake(0, 0, lblTitle.frame.origin.x + lblTitle.frame.size.width, 40);
 //    self.navigationItem.titleView = titleView;   
     
+    [self checkIfNeedGotoAccountPageWhenFirstTime];
     
     // 检查是否需要弹出提示：是否好评
     [self showReviewDialogSmart];
@@ -105,20 +108,30 @@
     [LocalStorageHelper loadFromLocalStorage];
     [self modelDidFinishLoad:nil];
     
-    // 检查是否过期
-    [self checkOutOfDate];
+    // 检查是否过期，现在移植到RefreshViewerHelper里做了
+    // [self checkOutOfDate];
+}
+
+-(void)checkIfNeedGotoAccountPageWhenFirstTime
+{
+   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+   NSString* firstTimeInTimeline = [defaults objectForKey:@"Global_FirstTimeInTimeline"];
+    if(firstTimeInTimeline == nil)
+    {
+        [defaults setObject:@"WhatEver" forKey:@"Global_FirstTimeInTimeline"];
+        self.tabBarController.selectedViewController
+        = [self.tabBarController.viewControllers objectAtIndex:3];
+        return;
+    }
 }
 
 -(void)checkNetOK
 {    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:kReachabilityChangedNotification object:nil];    
     
     // check if a pathway to a random host exists
     hostReachable = [Reachability reachabilityWithHostName: @"www.baidu.com"];
     [hostReachable startNotifier];
-    
-
 }
 
 -(void)showReviewDialogSmart
@@ -182,6 +195,12 @@
     {
         [mainViewModel load:TTURLRequestCachePolicyNetwork more:NO];
     }
+    
+    
+    if(mainViewModel.isCommentCountChanged == YES)
+    {
+         [self refreshUIWithMainViewModel];
+    }
 }
 
 -(void) checkNetworkStatus:(NSNotification *)notice
@@ -221,6 +240,7 @@
 }
 
 
+// 现在不在这里做过期检查了，而是依照其它版本一样，在RefershViewerHelper里针对每一项做过期检查
 -(void)checkOutOfDate
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -280,6 +300,11 @@
 #pragma mark TTModelDelegate
 - (void)modelDidFinishLoad:(id<TTModel>)model
 {
+    [self refreshUIWithMainViewModel];
+}
+
+- (void)refreshUIWithMainViewModel
+{
     NSMutableArray* sections = [[NSMutableArray alloc] init];
     NSMutableArray* items = [[NSMutableArray alloc] init];
     
@@ -289,24 +314,25 @@
     for (ItemViewModel* model in mainViewModel.items)
     {
         TTTableStatusItem* item = [TTTableStatusItem itemWithTitle:model.title
-                                                             caption:nil
-                                                                text:model.content
-                                                           timestamp:model.time
-                                                            imageURL:model.iconURL
-                                                                 URL:nil];
+                                                           caption:nil
+                                                              text:model.content
+                                                         timestamp:model.time
+                                                          imageURL:model.iconURL
+                                                               URL:nil];
         item.thumbImageURL = model.imageURL;
         item.from = model.fromText;
+        item.commentCount = model.commentCount;
         item.itemViewModel = model;
         
         // 转发
         if(model.forwardItem)
         {
             TTTableStatusItem* forwardItem = [TTTableStatusItem itemWithTitle:nil
-                                                                        caption:nil
-                                                                           text:model.forwardItem.contentWithTitle
-                                                                      timestamp:model.time
-                                                                       imageURL:model.forwardItem.iconURL
-                                                                            URL:nil];
+                                                                      caption:nil
+                                                                         text:model.forwardItem.contentWithTitle
+                                                                    timestamp:model.time
+                                                                     imageURL:model.forwardItem.iconURL
+                                                                          URL:nil];
             forwardItem.thumbImageURL = model.forwardItem.imageURL;
             item.forwardItem = forwardItem;
         }
@@ -314,12 +340,12 @@
     }
     if(mainViewModel.items.count == 0)
     {
-        TTTableMessageItem* item = [TTTableMessageItem itemWithTitle:@">_<"
-                                                             caption:nil
-                                                                text:@"尚无任何信息，请至少登陆一个帐户并保持网络畅通。点我开始进行SNS帐号绑定。"
-                                                           timestamp:[NSDate date]
-                                                            imageURL:nil
-                                                                 URL:nil];
+        TTTableStatusItem* item = [TTTableStatusItem itemWithTitle:@">_<"
+                                                           caption:nil
+                                                              text:@"尚无任何信息，请至少登陆一个帐户并保持网络畅通。点我开始进行SNS帐号绑定。"
+                                                         timestamp:[NSDate date]
+                                                          imageURL:nil
+                                                               URL:nil];
         item.from = @"来自可怜的UP主";
         [itemsRow addObject: item];
     }

@@ -38,4 +38,5 @@
 @property (strong, atomic) NSMutableArray* doubanPictureItems;
 
 @property BOOL isChanged;
+@property BOOL isCommentCountChanged;
 @end

@@ -15,5 +15,6 @@
 
 }
 @property (strong, nonatomic) ItemViewModel* itemViewModel;
+@property (strong, nonatomic) UILabel* lblCommentCount;
 @property (strong, nonatomic) NSMutableArray* photos;
 @end

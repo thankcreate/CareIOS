@@ -89,6 +89,7 @@
                         <segue destination="Yip-3j-A30" kind="push" identifier="Segue_GotoEnemy" id="Zpi-qg-vYu"/>
                         <segue destination="aTj-aY-7eC" kind="push" identifier="Segue_Gotopercentage" id="gY8-zs-oAq"/>
                         <segue destination="oJi-dL-SVl" kind="push" identifier="Segue_GotoCat" id="RHU-Xm-LzK"/>
+                        <segue destination="uIS-9Q-bQE" kind="push" identifier="Segue_GotoChat" id="mis-zH-D2T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JQe-k7-EAH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -114,7 +115,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cer-At-sVs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2567" y="766"/>
+            <point key="canvasLocation" x="2467" y="662"/>
         </scene>
         <!--Lab Time Span View Controller - 发贴时段-->
         <scene sceneID="FEu-OB-0Zv">
@@ -212,7 +213,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DI9-ck-lUB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2647" y="1724"/>
+            <point key="canvasLocation" x="2987" y="1400"/>
         </scene>
         <!--Lab Enemy View Controller - 潜在情敌-->
         <scene sceneID="bmj-AP-3b3">
@@ -259,7 +260,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z1x-5k-3It" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2935" y="1168"/>
+            <point key="canvasLocation" x="2987" y="804"/>
         </scene>
         <!--View Controller - 奇怪的地方有只猫-->
         <scene sceneID="rJ8-YU-UQl">
@@ -283,7 +284,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E3H-sd-Cxi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2177" y="2170"/>
+            <point key="canvasLocation" x="2997" y="1994"/>
         </scene>
         <!--Account View Controller - 帐号-->
         <scene sceneID="4vu-TK-z1H">
@@ -626,6 +627,47 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WS3-RC-kFE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1615" y="2352"/>
+        </scene>
+        <!--Lab Smart Chat View Controller - 非智能聊天-->
+        <scene sceneID="JmX-Hh-saE">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" id="uIS-9Q-bQE" customClass="LabSmartChatViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6Fs-7w-xRl">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="e0j-Ne-9yx">
+                                <rect key="frame" x="0.0" y="372" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" id="EK5-61-dDG">
+                                        <textField key="customView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="7Ay-VZ-xap">
+                                            <rect key="frame" x="12" y="7" width="242" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                    </barButtonItem>
+                                    <barButtonItem title="发送" id="1c3-Pi-gn7">
+                                        <connections>
+                                            <action selector="submit:" destination="uIS-9Q-bQE" id="1ND-pQ-5Zg"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="非智能聊天" id="URw-JX-Dgo"/>
+                    <connections>
+                        <outlet property="btnSubmit" destination="1c3-Pi-gn7" id="lwy-Oc-5GY"/>
+                        <outlet property="myToolbar" destination="e0j-Ne-9yx" id="aVM-kP-vXF"/>
+                        <outlet property="textInput" destination="7Ay-VZ-xap" id="HVN-li-t3s"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9jD-Zv-12a" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2332" y="2252"/>
         </scene>
         <!--SetRSS Feed View Controller - 描述-->
         <scene sceneID="a9c-aR-dbr">
@@ -978,11 +1020,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PoW-zx-Uke">
-                                <rect key="frame" x="127" y="166" width="120" height="21"/>
+                                <rect key="frame" x="136" y="166" width="120" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.37203045280000002" green="0.10905823689999999" blue="0.096942706379999993" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <string key="text" base64-UTF8="YES">
-CFYxLjAuMC4wA
+CFYxLjAuMQ
 </string>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" red="0.58121412630000002" green="0.066004723680000002" blue="0.072311926070000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -1080,6 +1122,25 @@ CFYxLjAuMC4wA
                 <placeholder placeholderIdentifier="IBFirstResponder" id="izO-P8-fYA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="379" y="3846"/>
+        </scene>
+        <!--Blessing Page View Controller-->
+        <scene sceneID="LCS-ox-JPS">
+            <objects>
+                <viewController id="9W0-6Y-xfy" customClass="BlessingPageViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QGw-lJ-GHd">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="KmW-gq-uor"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <segue destination="ivo-fn-AQ1" kind="modal" identifier="Segue_GotoPasswordPage" id="e9d-2P-qhK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8mO-Bz-5zd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1245" y="2290"/>
         </scene>
         <!--Password View Controller-->
         <scene sceneID="Irk-Ru-RMR">
@@ -1333,11 +1394,12 @@ CFYxLjAuMC4wA
                         <segue destination="N34-nO-kuP" kind="modal" identifier="Segue_GotoTabBarController" modalTransitionStyle="crossDissolve" id="dpJ-49-R3Z"/>
                         <segue destination="ivo-fn-AQ1" kind="modal" identifier="Segue_GotoPasswordPage" animates="NO" id="U8p-Qf-34d"/>
                         <segue destination="gb5-NS-8Y8" kind="modal" identifier="Segue_GotoGuidePage" animates="NO" id="0lR-ny-zcH"/>
+                        <segue destination="9W0-6Y-xfy" kind="modal" identifier="Segue_GotoBlessingPage" modalTransitionStyle="crossDissolve" id="V37-2q-NSH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6U0-to-dkj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1291" y="1601"/>
+            <point key="canvasLocation" x="-1754" y="1681"/>
         </scene>
         <!--Navigation Controller - 设置-->
         <scene sceneID="ayg-eb-xbq">
@@ -1369,7 +1431,7 @@ CFYxLjAuMC4wA
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="429-44-2v0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="636" y="2352"/>
+            <point key="canvasLocation" x="627" y="2335"/>
         </scene>
         <!--Navigation Controller - 主页-->
         <scene sceneID="2z0-mC-WEW">
@@ -1547,6 +1609,9 @@ CFYxLjAuMC4wA
                 <relationship kind="outlet" name="table" candidateClass="UITableView"/>
             </relationships>
         </class>
+        <class className="BlessingPageViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BlessingPageViewController.h"/>
+        </class>
         <class className="GuideViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GuideViewController.h"/>
             <relationships>
@@ -1579,6 +1644,14 @@ CFYxLjAuMC4wA
         <class className="LabShareBaseViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LabShareBaseViewController.h"/>
         </class>
+        <class className="LabSmartChatViewController" superclassName="TTTableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LabSmartChatViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="btnSubmit" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="myToolbar" candidateClass="UIToolbar"/>
+                <relationship kind="outlet" name="textInput" candidateClass="UITextField"/>
+            </relationships>
+        </class>
         <class className="LabTimeSpanViewController" superclassName="LabShareBaseViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LabTimeSpanViewController.h"/>
         </class>
@@ -1591,6 +1664,7 @@ CFYxLjAuMC4wA
         <class className="PasswordViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PasswordViewController.h"/>
             <relationships>
+                <relationship kind="action" name="click4:"/>
                 <relationship kind="outlet" name="navigateBar1" candidateClass="UINavigationBar"/>
                 <relationship kind="outlet" name="txtPassword" candidateClass="UITextField"/>
             </relationships>
@@ -1681,5 +1755,6 @@ CFYxLjAuMC4wA
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="4Fm-3p-407"/>
+        <segue reference="e9d-2P-qhK"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -22,6 +22,7 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
 @synthesize btn3;
 @synthesize btn4;
 @synthesize btn5;
+@synthesize btn6;
 
 @synthesize adView1;
 
@@ -46,16 +47,16 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     
     // 1. 有米广告条
     // adView1
-    adView1 = [[YouMiView alloc] initWithContentSizeIdentifier:YouMiBannerContentSizeIdentifier320x50 delegate:nil];
+    // View1 = [[YouMiView alloc] initWithContentSizeIdentifier:YouMiBannerContentSizeIdentifier320x50 delegate:nil];
     
     ////////////////[必填]///////////////////
     // 设置APP ID 和 APP Secret
-    adView1.appID = kGlobalYouMiAdAppID;
-    adView1.appSecret = kGlobalYouMiAdAppSecret;
+    // adView1.appID = kGlobalYouMiAdAppID;
+    // adView1.appSecret = kGlobalYouMiAdAppSecret;
     
     ////////////////[可选]///////////////////
     // 设置您应用的版本信息
-    adView1.appVersion = @"1.0";
+    // adView1.appVersion = @"1.0";
     
     // 设置您应用的推开渠道号
     // adView1.channelID = 1;
@@ -80,15 +81,17 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     // [adView1 addKeyword:@"19岁"];
     
     // 开始请求广告
-	[adView1 start];
+	// [adView1 start];
     
     // 设置位置
-    CGRect frame1 = adView1.frame;
-    frame1.origin.x = 0;
-    frame1.origin.y = 0;
-    adView1.frame = frame1;
+    // CGRect frame1 = adView1.frame;
+    // frame1.origin.x = 0;
+    // frame1.origin.y = 0;
+    // adView1.frame = frame1;
     
-	[self.scrollView addSubview:adView1];
+    
+    // 还是先不加广告了吧，不为五斗米折腰
+	// [self.scrollView addSubview:adView1];
     
     
     
@@ -98,10 +101,11 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     btn3 = [[UIButton alloc] init];
     btn4 = [[UIButton alloc] init];
     btn5 = [[UIButton alloc] init];
+    btn6 = [[UIButton alloc] init];
     
     
-    NSArray* listBtn = [NSArray arrayWithObjects:btn1, btn2, btn3, btn4, btn5, nil];
-    NSArray* listImage = [NSArray arrayWithObjects:@"1_s.png",@"2_s.png",@"3_s.png",@"4_s.png",@"5_s.png", nil];
+    NSArray* listBtn = [NSArray arrayWithObjects:btn1, btn2, btn3, btn4, btn5, btn6, nil];
+    NSArray* listImage = [NSArray arrayWithObjects:@"1_s.png",@"2_s.png",@"3_s.png",@"4_s.png",@"5_s.png",@"6_s.png", nil];
     CGFloat leftMargin = 20;
     CGFloat topMargin = 5 + adView1.frame.size.height;
     CGFloat buttonSize = 125;
@@ -132,6 +136,27 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
 
 }
 - (IBAction)btnClick:(id)sender {
+    NSString *herName = [MiscTool getHerName];
+    NSString *myName= [MiscTool getMyName];
+    
+    if(myName == nil || myName.length == 0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"亲都没登陆，让微臣如何分析？" delegate:nil
+                                              cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    if(herName == nil || herName.length == 0)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"
+                                                        message:@"请至少关注他/她的一个帐号～" delegate:nil
+                                              cancelButtonTitle:@"朕知道了喵～" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
     if(sender == btn1)
     {
         [self performSegueWithIdentifier:@"Segue_GotoTimeSpan" sender:self];        
@@ -151,6 +176,10 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     else if(sender == btn5)
     {
         [self performSegueWithIdentifier:@"Segue_GotoCat" sender:self];
+    }
+    else if(sender == btn6)
+    {
+        [self performSegueWithIdentifier:@"Segue_GotoChat" sender:self];
     }
 }
 

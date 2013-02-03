@@ -11,7 +11,7 @@
 #import "CareConstants.h"
 
 
-@interface ItemViewModel : NSObject<NSCoding, NSCoding>
+@interface ItemViewModel : NSObject<NSCoding, NSCopying>
 {
     NSString* _commentCount;
 }

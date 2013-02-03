@@ -10,19 +10,20 @@
 #import "SinaWeibo.h"
 #import "TaskHelper.h"
 #import "MWFeedParser.h"
+#import "DOUOAuthService.h"
 
 @protocol RefreshViewerDelegate<NSObject>
 @required
 - (void)refreshComplete;
 @end
 
-@interface RefreshViewerHelper : NSObject<SinaWeiboRequestDelegate,RenrenDelegate,MWFeedParserDelegate, TaskCompleteDelegate>
+@interface RefreshViewerHelper : NSObject<SinaWeiboRequestDelegate,RenrenDelegate,MWFeedParserDelegate, TaskCompleteDelegate,DOUOAuthServiceDelegate>
 
 - (void)taskComplete;
 -(id)initWithDelegate:(id<RefreshViewerDelegate>)del;
 -(void)refreshMainViewModel;
 @property (strong, atomic) TaskHelper* m_taskHelper;
-@property (weak, nonatomic) id<RefreshViewerDelegate> delegate;
+@property (nonatomic) id<RefreshViewerDelegate> delegate;
 
 @property (strong, atomic) MWFeedParser *feedParser;
 @end

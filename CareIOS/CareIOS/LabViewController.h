@@ -15,6 +15,7 @@
 @property (strong, nonatomic)UIButton* btn3;
 @property (strong, nonatomic)UIButton* btn4;
 @property (strong, nonatomic)UIButton* btn5;
+@property (strong, nonatomic)UIButton* btn6;
 
 @property (strong, nonatomic)YouMiView *adView1;
 

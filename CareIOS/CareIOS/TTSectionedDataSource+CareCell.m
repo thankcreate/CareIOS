@@ -13,6 +13,8 @@
 #import "TTTableStatusItemCell.h"
 #import "TTTableChatItem.h"
 #import "TTTableChatItemCell.h"
+#import "TTTableBlessItem.h"
+#import "TTTableBlessItemCell.h"
 
 @implementation TTSectionedDataSource (CareCell)
 - (Class)tableView:(UITableView*)tableView cellClassForObject:(id)object
@@ -28,6 +30,10 @@
     else if([object isKindOfClass:[TTTableChatItem class]])
     {
         return [TTTableChatItemCell class];
+    }
+    else if([object isKindOfClass:[TTTableBlessItem class]])
+    {
+        return [TTTableBlessItemCell class];
     }
     else
     {

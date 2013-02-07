@@ -29,4 +29,7 @@
 +(NSString *)removeDoubanScoreTag:(NSString*)input;
 
 +(void)gotoReviewPage;
+
++(NSString *) getFileName:(NSString*)input;
++(BOOL) isNilOrEmpty:(NSString*)input;
 @end

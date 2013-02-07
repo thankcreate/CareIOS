@@ -256,6 +256,30 @@
     return s;
 }
 
++(NSString *) getFileName:(NSString*)input
+{
+    if(input == nil)
+        return @"";
+    NSString* fileName = @"";
+    @try {
+        
+        NSArray *linkSeperated = [input componentsSeparatedByString:@"/"];
+        fileName = [linkSeperated lastObject];
+    }
+    @catch (NSException *exception) {
+        fileName = @"";
+    }
+    return fileName;
+
+}
+
++(BOOL) isNilOrEmpty:(NSString*)input
+{
+    if(input == nil || [input length] == 0)
+        return YES;
+    return NO;
+}
+
 +(void)gotoReviewPage
 {
     NSString* appID = @"588950071";

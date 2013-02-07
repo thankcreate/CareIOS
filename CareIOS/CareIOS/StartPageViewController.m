@@ -55,6 +55,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString* firstLaunch = [defaults objectForKey:@"Global_FirstLaunch"];
     NSString* usePassword = [defaults objectForKey:@"Global_UsePassword"];
+    NSString* useBlessingPage= [defaults objectForKey:@"Global_UseBlessingPage"];
     
     if(firstLaunch == nil)
     {
@@ -62,7 +63,7 @@
         [defaults synchronize];
         [self performSegueWithIdentifier:@"Segue_GotoGuidePage" sender:self];
     }
-    else if(YES)
+    else if(useBlessingPage == nil || [useBlessingPage compare:@"YES"] == NSOrderedSame)
     {
         [self performSegueWithIdentifier:@"Segue_GotoBlessingPage" sender:self];    
     }

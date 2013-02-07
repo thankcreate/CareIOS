@@ -23,6 +23,7 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
 @synthesize btn4;
 @synthesize btn5;
 @synthesize btn6;
+@synthesize btn7;
 
 @synthesize adView1;
 
@@ -102,10 +103,11 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     btn4 = [[UIButton alloc] init];
     btn5 = [[UIButton alloc] init];
     btn6 = [[UIButton alloc] init];
+    btn7 = [[UIButton alloc] init];
     
     
-    NSArray* listBtn = [NSArray arrayWithObjects:btn1, btn2, btn3, btn4, btn5, btn6, nil];
-    NSArray* listImage = [NSArray arrayWithObjects:@"1_s.png",@"2_s.png",@"3_s.png",@"4_s.png",@"5_s.png",@"6_s.png", nil];
+    NSArray* listBtn = [NSArray arrayWithObjects:btn1, btn2, btn3, btn4, btn5, btn6,btn7, nil];
+    NSArray* listImage = [NSArray arrayWithObjects:@"1_s.png",@"2_s.png",@"3_s.png",@"4_s.png",@"5_s.png",@"6_s.png", @"7_s.png", nil];
     CGFloat leftMargin = 20;
     CGFloat topMargin = 5 + adView1.frame.size.height;
     CGFloat buttonSize = 125;
@@ -175,13 +177,16 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     }
     else if(sender == btn5)
     {
-        [self performSegueWithIdentifier:@"Segue_GotoCat" sender:self];
+        [self performSegueWithIdentifier:@"Segue_GotoBless" sender:self];
     }
     else if(sender == btn6)
     {
         [self performSegueWithIdentifier:@"Segue_GotoChat" sender:self];
     }
-}
+    else if(sender == btn7)
+    {
+        [self performSegueWithIdentifier:@"Segue_GotoCat" sender:self];
+    }}
 
 -(void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];

@@ -12,6 +12,7 @@
 @property (strong, nonatomic) IBOutlet UISwitch *switchPassword;
 @property (strong, nonatomic) IBOutlet UISwitch *switchSound;
 @property (strong, nonatomic) IBOutlet UISwitch *switchShowFowardPicture;
+@property (strong, nonatomic) IBOutlet UISwitch *switchBless;
 
 @end
 
@@ -19,6 +20,7 @@
 @synthesize switchPassword;
 @synthesize switchSound;
 @synthesize switchShowFowardPicture;
+@synthesize switchBless;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -63,6 +65,21 @@
     else if([usePassword compare:@"NO"] == NSOrderedSame)
     {
         switchPassword.on = NO;
+    }
+    
+    NSString* useBlessingPage= [defaults objectForKey:@"Global_UseBlessingPage"];
+    // 默认开启心语墙
+    if(useBlessingPage == nil)
+    {
+        switchSound.on = YES;
+    }
+    else if([useBlessingPage compare:@"YES"] == NSOrderedSame)
+    {
+        switchSound.on = YES;
+    }
+    else if([useBlessingPage compare:@"NO"] == NSOrderedSame)
+    {
+        switchSound.on = NO;
     }
     
     NSString* playSound = [defaults objectForKey:@"Global_PlaySound"];
@@ -113,7 +130,7 @@
         if(row == 0)
         {
             TTWebController* controller = [[TTWebController alloc] init];
-            NSURL *url = [NSURL URLWithString:@"http://thankcreate.github.com/Care/"];
+            NSURL *url = [NSURL URLWithString:@"http://www.care4only1.com"];
             [self.navigationController pushViewController:controller animated:YES];
             controller.navigationController.navigationBar.tintColor = [CareConstants headerColor];
             [controller openURL:url];
@@ -149,6 +166,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+
 #pragma mark - switch value changed
 - (IBAction)switchPasswordValueChanged:(id)sender
 {
@@ -162,6 +180,20 @@
     {
         [defaults setObject:@"NO" forKey:@"Global_UsePassword"];
         [defaults removeObjectForKey:@"Global_Password"];
+    }
+    [defaults synchronize];
+}
+
+- (IBAction)switchBlessValueChanged:(id)sender
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if(switchBless.on)
+    {
+        [defaults setObject:@"YES" forKey:@"Global_UseBlessingPage"];
+    }
+    else
+    {
+        [defaults setObject:@"NO" forKey:@"Global_UseBlessingPage"];
     }
     [defaults synchronize];
 }
@@ -208,4 +240,8 @@
 
 
 
+- (void)viewDidUnload {
+    [self setSwitchBless:nil];
+    [super viewDidUnload];
+}
 @end

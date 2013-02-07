@@ -99,7 +99,7 @@
     [self.tableView setTableFooterView:v];
 
     self.btnPostStatus.width = 10.0f;
-    self.btnRefresh.width = 10.0f;
+    self.btnRefresh.width = 10.0f;  
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
     self.tableView.backgroundColor = [UIColor clearColor];
@@ -107,6 +107,9 @@
     // 加载缓存
     [LocalStorageHelper loadFromLocalStorage];
     [self modelDidFinishLoad:nil];
+    
+    // 做祝福墙缓存
+    
     
     // 检查是否过期，现在移植到RefreshViewerHelper里做了
     // [self checkOutOfDate];

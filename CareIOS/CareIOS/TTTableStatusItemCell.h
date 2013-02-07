@@ -14,6 +14,8 @@
     UILabel*      _titleLabel;
     UILabel*      _timestampLabel;
     TTImageView*  _iconImage;
+    TTImageView*  _iconImageBkg;
+    UIImageView*  _bubbleImage;
     TTImageView*  _thumbImage;
     
     TTView*       _forwardView;
@@ -30,6 +32,8 @@
 @property (nonatomic, readonly)         UILabel*      captionLabel;
 @property (nonatomic, readonly, retain) UILabel*      timestampLabel;
 @property (nonatomic, readonly, retain) TTImageView*  iconImage;
+@property (nonatomic, readonly, retain) TTImageView*  iconImageBkg;
+@property (nonatomic, readonly, retain) UIImageView*  bubbleImage;
 @property (nonatomic, readonly, retain) TTImageView*  thumbImage;
 @property (nonatomic, readonly, retain) TTView*  forwardView;
 

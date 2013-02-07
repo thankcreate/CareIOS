@@ -31,6 +31,8 @@ SinaWeiboRequestDelegate,RenrenDelegate, MWPhotoBrowserDelegate>
 @property (strong, nonatomic) Reachability* hostReachable;
 
 
+
+
 -(void) checkNetworkStatus:(NSNotification *)notice;
 
 @end

@@ -37,8 +37,8 @@
 #import "ItemViewModel.h"
 // 下面这一行我现在不管了
 static const NSInteger  kMessageTextLineCount       = 3;
-static const CGFloat    kDefaultMessageImageWidth   = 34.0f;
-static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
+static const CGFloat    kDefaultMessageImageWidth   = 45.0f;
+static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
 
 
 #define EXIST 10
@@ -92,7 +92,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
     if (item.text)
     {
         UIFont *myTextFont = TTSTYLEVAR(font);
-        CGSize maximumLabelSize = CGSizeMake(265,9999);
+        CGSize maximumLabelSize = CGSizeMake(254,9999);
         CGSize linesSize = [item.text sizeWithFont:myTextFont
                                  constrainedToSize:maximumLabelSize
                                      lineBreakMode:UILineBreakModeWordWrap];
@@ -113,7 +113,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
         if (item.forwardItem.text)
         {
             UIFont *myTextFont = TTSTYLEVAR(tableTimestampFont);
-            CGSize maximumLabelSize = CGSizeMake(249,9999);
+            CGSize maximumLabelSize = CGSizeMake(238,9999);
             CGSize linesSize = [item.forwardItem.text sizeWithFont:myTextFont
                                                  constrainedToSize:maximumLabelSize
                                                      lineBreakMode:UILineBreakModeWordWrap];
@@ -154,6 +154,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)prepareForReuse {
     [super prepareForReuse];
+    [_iconImageBkg unsetImage];
     [_iconImage unsetImage];
     [_thumbImage unsetImage];
     // _thumbImage.urlPath = nil;
@@ -177,15 +178,30 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
     @synchronized(self){
         CGFloat left = 0.0f;
         // 1 左侧是一个头像
-        if (_iconImage) {
-            _iconImage.frame = CGRectMake(kTableCellSmallMargin, kTableCellSmallMargin,
+        if(_iconImageBkg){
+            _iconImageBkg.frame = CGRectMake(kTableCellSmallMargin, kTableCellSmallMargin,
                                           kDefaultMessageImageWidth, kDefaultMessageImageHeight);
             left += kTableCellSmallMargin + kDefaultMessageImageHeight + kTableCellSmallMargin;
+            _iconImage.frame = CGRectMake(3, 3,
+                                          kDefaultMessageImageWidth-7, kDefaultMessageImageHeight-7);
         }
         else
         {
             left = kTableCellMargin;
         }
+        
+        
+        self.bubbleImage.frame = CGRectMake(0, 0, 200, 100);
+        
+//        if (_iconImage) {
+//            _iconImage.frame = CGRectMake(kTableCellSmallMargin, kTableCellSmallMargin,
+//                                          kDefaultMessageImageWidth, kDefaultMessageImageHeight);
+//            left += kTableCellSmallMargin + kDefaultMessageImageHeight + kTableCellSmallMargin;
+//        }
+//        else
+//        {
+//            left = kTableCellMargin;
+//        }
         // 2 开始右侧部分
         CGFloat width = self.contentView.width - left; // 右侧的总宽度
         CGFloat top = kTableCellSmallMargin;
@@ -488,18 +504,41 @@ static const CGFloat    kDefaultMessageImageHeight  = 34.0f;
     return _timestampLabel;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (TTImageView*)iconImageBkg {
+    if (!_iconImageBkg) {
+        _iconImageBkg = [[TTImageView alloc] init];
+        _iconImageBkg.defaultImage = [UIImage imageNamed:@"bubble_rect.png"];
+        [self.contentView addSubview:_iconImageBkg];
+    }
+    return _iconImageBkg;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (TTImageView*)iconImage {
     if (!_iconImage) {
         _iconImage = [[TTImageView alloc] init];
+        _iconImage.style = [TTShapeStyle styleWithShape:[TTRoundedRectangleShape shapeWithRadius:3.0f] next:
+                            [TTContentStyle styleWithNext:nil]];
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_iconImage.style = TTSTYLE(rounded);
         NSString *path = [[NSBundle mainBundle] pathForResource:@"Cydia" ofType:@"png"];
         _iconImage.defaultImage = [UIImage imageWithContentsOfFile:path];
-        [self.contentView addSubview:_iconImage];
+        [self.iconImageBkg addSubview:_iconImage];
     }
     return _iconImage;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (TTImageView*)bubbleImage {
+    if (!_bubbleImage) {
+        _bubbleImage = [[UIImageView alloc] init];
+        UIImage* bubbleImageInner =  [UIImage imageNamed:@"bubble_left.png"];
+        bubbleImageInner = [bubbleImageInner resizableImageWithCapInsets:UIEdgeInsetsMake(50,28,24,10)];
+        _bubbleImage.image = bubbleImageInner;
+        [self.contentView addSubview:_bubbleImage];
+    }
+    return _bubbleImage;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

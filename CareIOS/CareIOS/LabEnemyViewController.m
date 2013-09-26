@@ -71,8 +71,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    //[self.view bringSubviewToFront:self.toolBar];
+
     [MobClick event:@"LabEnemyViewController"];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    self.view.backgroundColor = [UIColor whiteColor];
     
     // 先做初始化
     mapManToCount = [NSMutableDictionary dictionaryWithCapacity:20];
@@ -97,15 +101,15 @@
     avatarImage.layer.cornerRadius = 9.0;
     avatarImage.layer.masksToBounds = YES;
     avatarImage.layer.borderColor = myGreen.CGColor;
-    avatarImage.layer.borderWidth = 4.0;
-    [self.view addSubview:avatarImage];
+    avatarImage.layer.borderWidth = 0.0;
+    [self.rootScrollView addSubview:avatarImage];
     
     
     // 1.2 关注者姓名
     lblName = [[UILabel alloc] init];
     lblName.text = [MiscTool getHerName];
     lblName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
-    lblName.textColor = myGreen;
+    lblName.textColor = [CareConstants labPink];
     lblName.backgroundColor = [UIColor clearColor];
     CGSize maximumLabelSize = CGSizeMake([self.view bounds].size.width - left  - avatarImage.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize = [lblName.text sizeWithFont:lblName.font
@@ -117,13 +121,13 @@
                                    expectedLabelSize.width,
                                    expectedLabelSize.height);
     lblName.frame = lblNamePos;
-    [self.view addSubview:lblName];
+    [self.rootScrollView addSubview:lblName];
     
     // 1.3 "分析对象"字样
     UILabel* lblAnalysis = [[UILabel alloc] init];
     lblAnalysis.text = @"分析对象:";
     lblAnalysis.Font = [UIFont fontWithName:@"Helvetica" size:15.0];
-    lblAnalysis.textColor = myGreen;
+    lblAnalysis.textColor = [CareConstants labPink];
     lblAnalysis.backgroundColor = [UIColor clearColor];
     CGSize maximumLabelSize2 = CGSizeMake([self.view bounds].size.width - left  - avatarImage.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize2 = [lblAnalysis.text sizeWithFont:lblAnalysis.font
@@ -135,16 +139,17 @@
                                        expectedLabelSize2.width,
                                        expectedLabelSize2.height);
     lblAnalysis.frame = lblAnalysisPos;
-    [self.view addSubview:lblAnalysis];
+    [self.rootScrollView addSubview:lblAnalysis];
     
+    CGFloat screenHeight = [ UIScreen mainScreen ].bounds.size.height;
     lineChart = [[PCLineChartView alloc] initWithFrame:CGRectMake(left, top,
                                                                   [self.view bounds].size.width - 20,
-                                                                  [self.view bounds].size.height- top - 44 )];
+                                                                  screenHeight - 64 - top - 44 )];
     [lineChart setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
-    [self.view addSubview:lineChart];
+    [self.rootScrollView addSubview:lineChart];
     
-    toolBar.tintColor = [CareConstants headerColor];
+    [MiscTool setHeader:self];
     // 开始抓数据
     
     [self analysisEnemy:EntryType_NotSet];

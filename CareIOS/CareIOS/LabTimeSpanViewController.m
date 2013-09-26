@@ -34,8 +34,10 @@
     
     [MobClick event:@"LabTimeSpanViewController"];
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    self.view.backgroundColor = [UIColor whiteColor];
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
+    UIColor* myPink = [CareConstants labPink];
     // 1 header部分
     // 1.1 头像
     CGFloat top = 10;
@@ -51,16 +53,16 @@
     
     img.layer.cornerRadius = 9.0;
     img.layer.masksToBounds = YES;
-    img.layer.borderColor = myGreen.CGColor;
-    img.layer.borderWidth = 4.0;
-    [self.view addSubview:img];
+    img.layer.borderColor = myPink.CGColor;
+    img.layer.borderWidth = 0;
+    [self.rootScrollView addSubview:img];
     
     
     // 1.2 关注者姓名
     UILabel* lblName = [[UILabel alloc] init];
     lblName.text = [MiscTool getHerName];
     lblName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
-    lblName.textColor = myGreen;
+    lblName.textColor = myPink;
     lblName.backgroundColor = [UIColor clearColor];
     CGSize maximumLabelSize = CGSizeMake([self.view bounds].size.width - left  - img.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize = [lblName.text sizeWithFont:lblName.font
@@ -72,13 +74,13 @@
                                    expectedLabelSize.width,
                                    expectedLabelSize.height);
     lblName.frame = lblNamePos;
-    [self.view addSubview:lblName];
+    [self.rootScrollView addSubview:lblName];
     
     // 1.2 "分析对象"字样
     UILabel* lblAnalysis = [[UILabel alloc] init];
-    lblAnalysis.text = @"分析对象:";
+    lblAnalysis.text = @"分析对象";
     lblAnalysis.Font = [UIFont fontWithName:@"Helvetica" size:15.0];
-    lblAnalysis.textColor = myGreen;
+    lblAnalysis.textColor = myPink;
     lblAnalysis.backgroundColor = [UIColor clearColor];
     CGSize maximumLabelSize2 = CGSizeMake([self.view bounds].size.width - left  - img.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize2 = [lblAnalysis.text sizeWithFont:lblAnalysis.font
@@ -90,14 +92,25 @@
                                    expectedLabelSize2.width,
                                    expectedLabelSize2.height);
     lblAnalysis.frame = lblAnalysisPos;
-    [self.view addSubview:lblAnalysis];
+    [self.rootScrollView addSubview:lblAnalysis];
+    
+//    // 1.3 分隔线
+//    UIView* line = [[UIView alloc] init];
+//    line.frame = CGRectMake(img.frame.origin.x + img.frame.size.width + 10,
+//                            img.frame.origin.y + img.frame.size.height / 2,
+//                            320 - img.frame.origin.x - img.frame.size.width - 50,
+//                            1);
+//    line.backgroundColor = myPink;
+//    [self.rootScrollView addSubview:line];
+
     
     // 2 统计图
     // 因为有的平台有水印，把高度再减一点儿，不然发表后看不清图
-    lineChart = [[PCLineChartView alloc] initWithFrame:CGRectMake(left,top,[self.view bounds].size.width-20,[self.view bounds].size.height - top - 20)];
+    CGFloat height = [ UIScreen mainScreen ].bounds.size.height;
+    lineChart = [[PCLineChartView alloc] initWithFrame:CGRectMake(left,top,[self.view bounds].size.width-20,height - top - 20 - 20 - 44)];
     [lineChart setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
 
-    [self.view addSubview:lineChart];
+    [self.rootScrollView addSubview:lineChart];
     
     NSMutableArray *components = [NSMutableArray array];
 

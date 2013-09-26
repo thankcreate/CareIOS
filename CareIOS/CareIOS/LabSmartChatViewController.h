@@ -18,5 +18,5 @@ SinaWeiboRequestDelegate, RenrenDelegate>
 }
 
 @property (strong, nonatomic) NSMutableArray* chatList;
-
+@property (nonatomic) CGRect originalRootView;
 @end

@@ -26,6 +26,7 @@
 @synthesize textInput;
 @synthesize btnSubmit;
 @synthesize myToolbar;
+@synthesize originalRootView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,51 +50,61 @@
     v.backgroundColor = [UIColor clearColor];
     [self.tableView setTableFooterView:v];
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
+    // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.separatorColor = [UIColor clearColor];
     
     textInput.delegate = self;
     textInput.returnKeyType = UIReturnKeySend;
     [self initActionBar];
     // 加载本地缓存
     [self loadFromLocalStorage];
+    
+
+    
+    
 }
 
 - (void)initActionBar
 {
     UIToolbar *tools = [[UIToolbar alloc]
-                        initWithFrame:CGRectMake(0.0f, 0.0f, 80.0f, 44.01f)]; // 44.01 shifts it up 1px for some reason
+                        initWithFrame:CGRectMake(0.0f, 0.0f, 80.0f, 0)]; // 44.01 shifts it up 1px for some reason
     tools.clearsContextBeforeDrawing = NO;
     tools.clipsToBounds = NO;
-    tools.tintColor = [CareConstants headerColor];
+    tools.backgroundColor = [UIColor clearColor];
+    [MiscTool setHeader:self];
     // anyone know how to get it perfect?
-    tools.barStyle = -1; // clear background
+    tools.barStyle = UIBarStyleBlackTranslucent; // clear background
     NSMutableArray *buttons = [[NSMutableArray alloc] initWithCapacity:3];
     
     // Create a standard refresh button.
     UIBarButtonItem *bi = [[UIBarButtonItem alloc]
                            initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(clear)];
-    [buttons addObject:bi];
+    //[buttons addObject:bi];
 
     
-    // Create a spacer.
-    bi = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    bi.width = 0.0f;
-    [buttons addObject:bi];
+//    // Create a spacer.
+//    bi = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+//    bi.width = 0.0f;
+//    [buttons addObject:bi];
 
     
-    // Add profile button.
-    bi = [[UIBarButtonItem alloc] initWithTitle:@"分享" style:UIBarButtonItemStylePlain target:self action:@selector(shareClicked:)];
-    bi.style = UIBarButtonItemStyleBordered;
-    [buttons addObject:bi];
+//    // Add profile button.
+    UIBarButtonItem *b2 = [[UIBarButtonItem alloc] initWithTitle:@"分享" style:UIBarButtonItemStylePlain target:self action:@selector(shareClicked:)];
+//    bi.style = UIBarButtonItemStyleBordered;
+//    [buttons addObject:bi];
     
     // Add buttons to toolbar and toolbar to nav bar.
     [tools setItems:buttons animated:NO];
 
     UIBarButtonItem *twoButtons = [[UIBarButtonItem alloc] initWithCustomView:tools];
 
-    self.navigationItem.rightBarButtonItem = twoButtons;
-
+    // self.navigationItem.rightBarButtonItem = twoButtons;
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:b2, bi, nil];
+    // for iOS7 update
+    [MiscTool autoAdjuctScrollView:self.tableView];
 }
 
 
@@ -103,7 +114,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(liftMainViewWhenKeybordAppears:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(returnMainViewToInitialposition:) name:UIKeyboardWillHideNotification object:nil];
 
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    [MiscTool setHeader:self];
 
     NSMutableArray* sections = [[NSMutableArray alloc] init];
     NSMutableArray* items = [[NSMutableArray alloc] init];
@@ -245,11 +256,13 @@
     CGRect keyboardFrame;
     [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-    [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] getValue:&keyboardFrame];
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:animationDuration];
     [UIView setAnimationCurve:animationCurve];
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y - keyboardFrame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+    if(originalRootView.size.width == 0)
+        originalRootView = self.view.frame;
+    [self.view setFrame:CGRectMake(originalRootView.origin.x, originalRootView.origin.y , originalRootView.size.width, originalRootView.size.height - keyboardFrame.size.height)];
     [UIView commitAnimations];
 }
 
@@ -260,11 +273,11 @@
     CGRect keyboardFrame;
     [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-    [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] getValue:&keyboardFrame];
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:animationDuration];
     [UIView setAnimationCurve:animationCurve];
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + keyboardFrame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+    [self.view setFrame:CGRectMake(originalRootView.origin.x, originalRootView.origin.y , originalRootView.size.width, originalRootView.size.height)];
     [UIView commitAnimations];
 }
 
@@ -295,8 +308,8 @@
 
 -(void)saveToLoaclStorage
 {
-    if(chatList == nil || chatList.count == 0 )
-        return;
+//    if(chatList == nil || chatList.count == 0 )
+//        return;
     NSMutableData *data = [[NSMutableData alloc] init];
     NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
     [archiver encodeObject:chatList forKey:@"chatItems"];    

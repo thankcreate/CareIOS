@@ -35,6 +35,8 @@
 #import "TTStatusTImeLineViewController.h"
 #import "UIView+FindUIViewController.h"
 #import "ItemViewModel.h"
+
+#import "UIDashView.h"
 // 下面这一行我现在不管了
 static const NSInteger  kMessageTextLineCount       = 3;
 static const CGFloat    kDefaultMessageImageWidth   = 45.0f;
@@ -69,6 +71,8 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         self.detailTextLabel.contentMode = UIViewContentModeTopLeft;
         self.detailTextLabel.lineBreakMode = UILineBreakModeTailTruncation;
         self.detailTextLabel.numberOfLines = 100;
+        
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -92,7 +96,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
     if (item.text)
     {
         UIFont *myTextFont = TTSTYLEVAR(font);
-        CGSize maximumLabelSize = CGSizeMake(254,9999);
+        CGSize maximumLabelSize = CGSizeMake(236,9999);
         CGSize linesSize = [item.text sizeWithFont:myTextFont
                                  constrainedToSize:maximumLabelSize
                                      lineBreakMode:UILineBreakModeWordWrap];
@@ -113,7 +117,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         if (item.forwardItem.text)
         {
             UIFont *myTextFont = TTSTYLEVAR(tableTimestampFont);
-            CGSize maximumLabelSize = CGSizeMake(238,9999);
+            CGSize maximumLabelSize = CGSizeMake(212,9999);
             CGSize linesSize = [item.forwardItem.text sizeWithFont:myTextFont
                                                  constrainedToSize:maximumLabelSize
                                                      lineBreakMode:UILineBreakModeWordWrap];
@@ -141,6 +145,8 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
     {
         height = height > kDefaultMessageImageHeight ? height : kDefaultMessageImageHeight;
     }
+    int weitiao = 9;
+    height += weitiao;
     return height;
 }
 
@@ -161,7 +167,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
     //_forwardView.tag = NOT_EXIST;
     _titleLabel.text = nil;
     _timestampLabel.text = nil;
-    
+    _dashView.tag = NOT_EXIST;
     _forwardView.tag = 0;
     _forwardTextLabel.text = nil;
     _forwardTitleLabel.text = nil;
@@ -171,11 +177,12 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
     self.captionLabel.text = nil;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)layoutSubviews {
     [super layoutSubviews];
     @synchronized(self){
+      
+        
         CGFloat left = 0.0f;
         // 1 左侧是一个头像
         if(_iconImageBkg){
@@ -190,9 +197,6 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
             left = kTableCellMargin;
         }
         
-        
-        self.bubbleImage.frame = CGRectMake(0, 0, 200, 100);
-        
 //        if (_iconImage) {
 //            _iconImage.frame = CGRectMake(kTableCellSmallMargin, kTableCellSmallMargin,
 //                                          kDefaultMessageImageWidth, kDefaultMessageImageHeight);
@@ -203,11 +207,19 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
 //            left = kTableCellMargin;
 //        }
         // 2 开始右侧部分
-        CGFloat width = self.contentView.width - left; // 右侧的总宽度
+        CGFloat bubbleLeft = left;
+        CGFloat buubleTop = 8;
+        CGFloat bubbleLeftPadding = 15;
+        CGFloat bubbleTopPadding = 3;
+        CGFloat bubbleRightMargin = 3;
+        CGFloat bubbleWidth = self.contentView.width - left - bubbleRightMargin; 
+        CGFloat width = bubbleWidth - bubbleLeftPadding - bubbleRightMargin ; // 右侧实际内容的总宽度
         CGFloat top = kTableCellSmallMargin;
+        left += bubbleLeftPadding;
+        top += bubbleTopPadding;
         // 2.1 标题，目前就是状态来源的昵称 转发部分不要标题了，与2.4.2合并显示
         if (_titleLabel.text.length) {
-            _titleLabel.frame = CGRectMake(left, top, width, _titleLabel.font.ttLineHeight);
+            _titleLabel.frame = CGRectMake(left + 3, top, width, _titleLabel.font.ttLineHeight);
             top += _titleLabel.height;
         }
         else
@@ -215,12 +227,14 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
             _titleLabel.frame = CGRectZero;
         }
         // 2.2 正文
+        top += 3;
         if (self.detailTextLabel.text.length) {
-            CGSize maximumLabelSize = CGSizeMake(265,9999);
+            CGSize maximumLabelSize = CGSizeMake(236,9999);
             CGSize expectedLabelSize = [self.detailTextLabel.text sizeWithFont:self.detailTextLabel.font
                                                              constrainedToSize:maximumLabelSize
                                                                  lineBreakMode:self.detailTextLabel.lineBreakMode];
-            self.detailTextLabel.frame = CGRectMake(left, top, 265, expectedLabelSize.height);
+            self.detailTextLabel.frame = CGRectMake(left + 3, top, 236, expectedLabelSize.height);
+            self.detailTextLabel.textColor = [UIColor blackColor];
             top += expectedLabelSize.height;
         }
         else
@@ -230,7 +244,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         // 2.3 正文附图
         if(_thumbImage.urlPath != nil)
         {
-            self.thumbImage.frame = CGRectMake(left, top + 5, 75, 75);
+            self.thumbImage.frame = CGRectMake(left + 10, top + 5, 75, 75);
             self.thumbImage.contentMode = UIViewContentModeScaleAspectFit;
             
             self.thumbImage.userInteractionEnabled = YES;
@@ -249,11 +263,14 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
             self.thumbImage.frame = CGRectZero;
         }
         // 2.4 转发部分
-        if( _forwardView.tag == EXIST )
-        {
-            CGFloat forwardWidth = width - 25;
-            CGFloat forwardLeft = left + 7;
+        if(_dashView.tag == EXIST )
+        {            
+            CGFloat forwardWidth = width - 30;
+            CGFloat forwardLeft = left + 13;
             
+            
+            // forwardView现在不用了，取而代之的是一行虚线
+            /*
             _forwardView.frame = CGRectMake(left, top, width-10, 200);
             UIColor* black = RGBCOLOR(158, 163, 172);
             TTStyle* style = [TTShapeStyle styleWithShape:[TTSpeechBubbleShape shapeWithRadius:5
@@ -264,8 +281,11 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
                                [TTSolidBorderStyle styleWithColor:black width:1 next:nil]]];
             _forwardView.backgroundColor = [UIColor clearColor];
             _forwardView.style = style;
+            */
+            top += 5;
+            _dashView.frame = CGRectMake(forwardLeft, top, forwardWidth , 3);
+            top+= 5;
             
-            top+= 10;
             // 2.4.1 转发部分标题
             if (_forwardTitleLabel.text.length)
             {
@@ -315,11 +335,12 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
             // 如果有转发图的话，要额外再给它加点下边距会好看点 ^_^
             if(_forwardThumbImage.frame.size.height != 0)
                 newHeight += 4;
-            _forwardView.frame = CGRectMake(rec.origin.x, rec.origin.y, rec.size.width, newHeight);
+            // _forwardView.frame = CGRectMake(rec.origin.x, rec.origin.y, rec.size.width, newHeight);
         }
         else
         {
-            _forwardView.frame = CGRectZero;
+            _dashView.frame = CGRectZero;
+            //_forwardView.frame = CGRectZero;
             _forwardTitleLabel.frame = CGRectZero;
             _forwardTextLabel.frame = CGRectZero;
             _forwardThumbImage.frame = CGRectZero;
@@ -329,10 +350,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         // 2.5 评论数
         if (_commentCountLabel.text.length) {
             top += 3;
-            if( _forwardView.tag == EXIST )
-            {
-                top += 8;
-            }
+            
             
             CGSize maximumLabelSize = CGSizeMake(width,9999);
             CGSize expectedLabelSize = [_commentCountLabel.text sizeWithFont:_commentCountLabel.font
@@ -340,7 +358,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
                                                        lineBreakMode:_commentCountLabel.lineBreakMode];
             _commentCountLabel.alpha = !self.showingDeleteConfirmation;
             [_commentCountLabel sizeToFit];
-            _commentCountLabel.left = self.contentView.width -  (_commentCountLabel.width + kTableCellSmallMargin);
+            _commentCountLabel.left = self.contentView.width -  (_commentCountLabel.width + kTableCellSmallMargin) - 4;
             _commentCountLabel.top = top;
             _commentCountLabel.backgroundColor = [UIColor clearColor];
             top += expectedLabelSize.height;
@@ -370,13 +388,16 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
             _timestampLabel.alpha = !self.showingDeleteConfirmation;
             [_timestampLabel sizeToFit];
             _timestampLabel.left = self.contentView.width -
-            (_timestampLabel.width + kTableCellSmallMargin);
+            (_timestampLabel.width + kTableCellSmallMargin) - 4;
             _timestampLabel.top = _fromLabel.top;            
         }
         else
         {
             _timestampLabel.frame = CGRectZero;
         }
+        
+        self.bubbleImage.frame = CGRectMake(bubbleLeft, buubleTop, bubbleWidth, _timestampLabel.frame.origin.y + _timestampLabel.frame.size.height);
+        [self.contentView sendSubviewToBack:self.bubbleImage];
     }
 }
 
@@ -445,6 +466,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
             self.commentCountLabel.text = [NSString stringWithFormat:@"评论:%@",item.commentCount];
         }
         if (item.forwardItem){
+            self.dashView.tag = EXIST;
             self.forwardView.tag = EXIST;
             if( item.forwardItem.title.length )
             {
@@ -473,7 +495,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
 - (UILabel*)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.textColor = [UIColor blackColor];
+        _titleLabel.textColor = RGBCOLOR(36, 112, 216);
         _titleLabel.highlightedTextColor = [UIColor whiteColor];
         _titleLabel.font = TTSTYLEVAR(tableFont);
         _titleLabel.contentMode = UIViewContentModeLeft;
@@ -496,7 +518,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
     if (!_timestampLabel) {
         _timestampLabel = [[UILabel alloc] init];
         _timestampLabel.font = TTSTYLEVAR(tableTimestampFont);
-        _timestampLabel.textColor = TTSTYLEVAR(timestampTextColor);
+        _timestampLabel.textColor = TTSTYLEVAR(tableSubTextColor);
         _timestampLabel.highlightedTextColor = [UIColor whiteColor];
         _timestampLabel.contentMode = UIViewContentModeLeft;
         [self.contentView addSubview:_timestampLabel];
@@ -518,7 +540,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
 - (TTImageView*)iconImage {
     if (!_iconImage) {
         _iconImage = [[TTImageView alloc] init];
-        _iconImage.style = [TTShapeStyle styleWithShape:[TTRoundedRectangleShape shapeWithRadius:3.0f] next:
+        _iconImage.style = [TTShapeStyle styleWithShape:[TTRoundedRectangleShape shapeWithRadius:5.0f] next:
                             [TTContentStyle styleWithNext:nil]];
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_iconImage.style = TTSTYLE(rounded);
@@ -530,15 +552,20 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-- (TTImageView*)bubbleImage {
+- (UIImageView*)bubbleImage {
     if (!_bubbleImage) {
         _bubbleImage = [[UIImageView alloc] init];
         UIImage* bubbleImageInner =  [UIImage imageNamed:@"bubble_left.png"];
-        bubbleImageInner = [bubbleImageInner resizableImageWithCapInsets:UIEdgeInsetsMake(50,28,24,10)];
+        bubbleImageInner = [bubbleImageInner resizableImageWithCapInsets:UIEdgeInsetsMake(40,20,15,10)];
         _bubbleImage.image = bubbleImageInner;
         [self.contentView addSubview:_bubbleImage];
     }
     return _bubbleImage;
+}
+
+-(UIColor*)myGray
+{
+    return [UIColor colorWithRed:200 / 255.0f green:200 / 255.0f blue:200 / 255.0f alpha:1.0f ];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,6 +573,8 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
     if (!_thumbImage) {
         _thumbImage = [[TTImageView alloc] init];
         _thumbImage.defaultImage = [UIImage imageNamed:@"DefaultPicture.png"];
+        _thumbImage.layer.borderColor = [self myGray].CGColor;
+        _thumbImage.layer.borderWidth = 1.0;
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_thumbImage.style = TTSTYLE(rounded);
         [self.contentView addSubview:_thumbImage];
@@ -558,6 +587,8 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
     if (!_forwardThumbImage) {
         _forwardThumbImage = [[TTImageView alloc] init];
         _forwardThumbImage.defaultImage = [UIImage imageNamed:@"DefaultPicture.png"];
+        _forwardThumbImage.layer.borderColor = [self myGray].CGColor;
+        _forwardThumbImage.layer.borderWidth = 1.0;
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_thumbImage.style = TTSTYLE(rounded);
         [self.contentView addSubview:_forwardThumbImage];
@@ -572,6 +603,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         _forwardTitleLabel.textColor = TTSTYLEVAR(tableSubTextColor);
         _forwardTitleLabel.highlightedTextColor = [UIColor whiteColor];
         _forwardTitleLabel.font = TTSTYLEVAR(font);
+        _forwardTitleLabel.backgroundColor = [UIColor clearColor];
         _forwardTitleLabel.contentMode = UIViewContentModeLeft;
         [self.contentView addSubview:_forwardTitleLabel];
     }
@@ -583,6 +615,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         _forwardTextLabel = [[UILabel alloc] init];
         _forwardTextLabel.textColor = TTSTYLEVAR(tableSubTextColor);
         _forwardTextLabel.highlightedTextColor = [UIColor whiteColor];
+        _forwardTextLabel.backgroundColor = [UIColor clearColor];
         _forwardTextLabel.font = TTSTYLEVAR(tableTimestampFont);
         _forwardTextLabel.contentMode = UIViewContentModeLeft;
         _forwardTextLabel.lineBreakMode = UILineBreakModeTailTruncation;
@@ -596,12 +629,13 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
 - (UILabel*)fromLabel {
     if (!_fromLabel) {
         _fromLabel = [[UILabel alloc] init];
-        _fromLabel.textColor = TTSTYLEVAR(timestampTextColor);
+        _fromLabel.textColor = TTSTYLEVAR(tableSubTextColor);
         _fromLabel.highlightedTextColor = [UIColor whiteColor];
-        _fromLabel.font = TTSTYLEVAR(font);
+        _fromLabel.font = TTSTYLEVAR(tableTimestampFont);
         _fromLabel.contentMode = UIViewContentModeLeft;
         _fromLabel.lineBreakMode = UILineBreakModeTailTruncation;
         _fromLabel.numberOfLines = 100;
+        _fromLabel.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:_fromLabel];
     }
     return _fromLabel;
@@ -617,6 +651,7 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         _commentCountLabel.contentMode = UIViewContentModeLeft;
         _commentCountLabel.lineBreakMode = UILineBreakModeTailTruncation;
         _commentCountLabel.numberOfLines = 1;
+        _commentCountLabel.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:_commentCountLabel];
     }
     return _commentCountLabel;
@@ -627,9 +662,20 @@ static const CGFloat    kDefaultMessageImageHeight  = 45.0f;
         _forwardView = [[TTView alloc] init];
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_thumbImage.style = TTSTYLE(rounded);
-        [self.contentView addSubview:_forwardView];
+       //[self.contentView addSubview:_forwardView];
     }
     return _forwardView;
+}
+
+-(UIDashView*)dashView
+{
+    if(!_dashView)
+    {
+        _dashView = [[UIDashView alloc]init];
+        _dashView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:_dashView];
+    }
+    return _dashView;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

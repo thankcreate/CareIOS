@@ -7,6 +7,7 @@
 //
 
 #import "MiscTool.h"
+#import <Three20/Three20.h>
 
 @implementation MiscTool
 +(NSString*)convertDateToString:(NSDate*)date
@@ -287,4 +288,42 @@
     [[UIApplication sharedApplication] openURL: [NSURL URLWithString:navStr]];
 }
 
++(void)setHeader:(UIViewController*)controller
+{
+    // this is because iOS7 has changed the color behaviours in navigationBar
+    // for more info: https://developer.apple.com/library/ios/documentation/userexperience/conceptual/TransitionGuide/Bars.html
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        // Three20's TTBaseViewController will save statusBarStyle as a property
+        // and refresh it in viewWillAppear
+        if([controller isKindOfClass:[TTBaseViewController class]])
+        {
+            TTBaseViewController* ttController = (TTBaseViewController*) controller;
+            ttController.statusBarStyle = UIStatusBarStyleLightContent;
+        }
+        controller.navigationController.navigationBar.barTintColor = RGBACOLOR(255, 0, 0, 1);
+        controller.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        controller.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor : [UIColor whiteColor]};
+    }
+    else
+    {
+        controller.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    }
+}
+
++(void)autoAdjuctScrollView:(UIScrollView*)scrollView
+{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        CGRect originalBounds = scrollView.bounds;
+        scrollView.bounds = CGRectMake(originalBounds.origin.x, -64, originalBounds.size.width, originalBounds.size.height);
+        scrollView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, 0, 0);
+    }
+    else
+    {
+        // Nothing
+    }
+}
 @end

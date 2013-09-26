@@ -45,7 +45,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    [MiscTool setHeader:self];
     [self initUI];
 }
 
@@ -132,7 +132,7 @@
             TTWebController* controller = [[TTWebController alloc] init];
             NSURL *url = [NSURL URLWithString:@"http://www.care4only1.com"];
             [self.navigationController pushViewController:controller animated:YES];
-            controller.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+            [MiscTool setHeader:controller];
             [controller openURL:url];
         }
         // 邮件反馈
@@ -142,7 +142,7 @@
             controller.mailComposeDelegate = self;
             [controller setSubject:@"论改进一下之必要性"];
             [controller setMessageBody:@"" isHTML:NO];
-            controller.navigationBar.tintColor = [CareConstants headerColor];
+            [MiscTool setHeader:controller];
             
             NSArray *toRecipients = [NSArray arrayWithObject: @"thankcreate@gmail.com"];
             [controller setToRecipients:toRecipients];           

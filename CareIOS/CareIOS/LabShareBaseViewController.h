@@ -26,4 +26,7 @@ SinaWeiboRequestDelegate, RenrenDelegate>
     EntryType lastSelectPostType;
     UIImage *screenShotImage;
 }
+
+@property(retain, nonatomic) UIScrollView* rootScrollView;
+
 @end

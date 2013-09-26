@@ -32,7 +32,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    
+    [MiscTool setHeader:self];
     MainViewModel* mainViewModel = [MainViewModel sharedInstance];
     if(mainViewModel.isChanged)
     {

@@ -32,4 +32,5 @@ typedef enum EnumChatType {
 +(NSString*)doubanAppKey;
 +(NSString*)doubanBaseAPI;
 +(UIColor*)headerColor;
++(UIColor*)labPink;
 @end

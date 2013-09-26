@@ -53,6 +53,10 @@
     [super viewDidLoad];
     [super updateTableDelegate];
     
+    
+    CareAppDelegate* dele = (CareAppDelegate *)[[UIApplication sharedApplication] delegate];
+      dele.naviCtr = self.navigationController;
+    
 //    CGRect barRect = self.navigationController.navigationBar.frame;
 //    CGFloat barHeight = barRect.size.height;
 //    CGFloat logoHeight = 25;
@@ -96,12 +100,20 @@
     // 清除额外的分隔线
     UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 1)];
     v.backgroundColor = [UIColor clearColor];
+    
+//    self.navigationController.navigationBar.barTintColor = RGBACOLOR(255, 0, 0, 1);
+//    self.statusBarStyle = UIStatusBarStyleLightContent;
+//    self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor : [UIColor whiteColor]};
     [self.tableView setTableFooterView:v];
+
+    self.tableView.separatorColor = [UIColor clearColor]; 
+   
 
     self.btnPostStatus.width = 10.0f;
     self.btnRefresh.width = 10.0f;  
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    self.view.backgroundColor = RGBCOLOR(236, 234, 224);
     self.tableView.backgroundColor = [UIColor clearColor];
     
     // 加载缓存
@@ -109,11 +121,12 @@
     [self modelDidFinishLoad:nil];
     
     // 做祝福墙缓存
-    
-    
+
+   // [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     // 检查是否过期，现在移植到RefreshViewerHelper里做了
     // [self checkOutOfDate];
 }
+
 
 -(void)checkIfNeedGotoAccountPageWhenFirstTime
 {
@@ -192,8 +205,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
-    
+    [MiscTool setHeader:self];
     if(mainViewModel.isChanged )
     {
         [mainViewModel load:TTURLRequestCachePolicyNetwork more:NO];
@@ -285,6 +297,12 @@
 #pragma mark - Event
 - (IBAction)ButtonRefresh_Clicked:(id)sender
 {
+    CGRect test =  self.tableView.bounds;
+    CGRect test2= self.tableView.frame;
+    CGRect test3 = self.navigationController.navigationBar.frame;
+    UIEdgeInsets inset = self.tableView.contentInset;
+
+    
     [mainViewModel load:TTURLRequestCachePolicyNetwork more:NO];
 }
 
@@ -421,6 +439,7 @@
                                                                             query:[NSDictionary dictionaryWithObjectsAndKeys:@"", @"text", nil]];
     controller.originView = self.view;
     controller.delegate = self;
+    controller.title = @"发布";
     [controller showInView:self.view animated:YES];
 }
 

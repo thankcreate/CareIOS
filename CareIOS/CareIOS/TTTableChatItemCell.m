@@ -48,39 +48,44 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    self.backgroundColor = [UIColor clearColor];
+    
     CGFloat top = 0;
     CGFloat left = 0;
     CGFloat width = self.contentView.width;
     
-    CGFloat topMargin = 5;
-    CGFloat leftMargin = 5;
+    CGFloat topMargin = 6;
+    CGFloat leftMargin = 12;
     CGFloat rightMargin = 5;
     top += topMargin;
     left += leftMargin;
     width -= (leftMargin + rightMargin);
     
-    // 1.头像
-    _iconImage.frame = CGRectMake(left, top, 35, 35);
+    
+    CGFloat bubbleWidth = 250;
+    CGFloat avalaWidth = bubbleWidth - leftMargin - rightMargin;
+    // 1.1.头像
+    _iconImage.frame = CGRectMake(left, top + topMargin, 35, 35);
     _iconImage.contentMode = UIViewContentModeScaleAspectFill;
     _iconImage.layer.masksToBounds = YES;
+    _iconImage.layer.cornerRadius = 3.0;
 
-    left += _iconImage.frame.origin.x +  _iconImage.frame.size.width + 5;
-    
-    
-    
-    // 2.右侧
-    // 2.1.1 标题
+    // 1.2 标题
+    CGFloat titleLeft  = left + _iconImage.frame.origin.x +  _iconImage.frame.size.width + 2;
     CGFloat rightWidth = width -  _iconImage.frame.size.width - 10;
     CGSize maximumLabelSize = CGSizeMake(rightWidth,9999);
     CGSize expectedLabelSize = [_titleLabel.text sizeWithFont:_titleLabel.font
                                             constrainedToSize:maximumLabelSize
                                                 lineBreakMode:_titleLabel.lineBreakMode];
     
-    _titleLabel.frame = CGRectMake(left, top, expectedLabelSize.width, expectedLabelSize.height);    
-    top += expectedLabelSize.height;
+    _titleLabel.frame = CGRectMake(titleLeft,
+                                   _iconImage.frame.origin.y + _iconImage.frame.size.height - expectedLabelSize.height,
+                                   expectedLabelSize.width, expectedLabelSize.height);
+    top += _iconImage.frame.origin.y + _iconImage.frame.size.height;
     
-    
-    // 2.2 正文
+    // 2 正文
+    CGFloat contentTopMargin = 2;
+    top += contentTopMargin;
     maximumLabelSize = CGSizeMake(rightWidth,9999);
     expectedLabelSize = [_contentLabel.text sizeWithFont:_contentLabel.font
                                        constrainedToSize:maximumLabelSize
@@ -88,13 +93,34 @@
     _contentLabel.frame = CGRectMake(left, top, rightWidth, expectedLabelSize.height);
     top += expectedLabelSize.height;
     
-    // 2.2 时间
+    // 3 时间
+    CGFloat timeTopMargin = 2;
+    top += timeTopMargin;
     maximumLabelSize = CGSizeMake(rightWidth,9999);
     expectedLabelSize = [_timeLabel.text sizeWithFont:_timeLabel.font
                                     constrainedToSize:maximumLabelSize
                                         lineBreakMode:_timeLabel.lineBreakMode];
     _timeLabel.frame = CGRectMake(left, top, width, expectedLabelSize.height);
     top += expectedLabelSize.height;
+    
+    
+    CGFloat bubbleLeft = 0;
+    UIImage* bubbleImage;
+    if(type == ChatType_Her)
+    {
+        bubbleLeft = 0;
+        bubbleImage = [UIImage imageNamed:@"thumb_lab_bless_bubble_left.png"];
+        bubbleImage = [bubbleImage resizableImageWithCapInsets:UIEdgeInsetsMake(24,10,24,10)];
+    }
+    else
+    {
+        bubbleLeft = width - bubbleWidth + 16;
+        bubbleImage = [UIImage imageNamed:@"thumb_lab_bless_bubble_right.png"];
+        bubbleImage = [bubbleImage resizableImageWithCapInsets:UIEdgeInsetsMake(24,10,24,10)];
+    }
+    
+    _bubble.image = bubbleImage;
+    self.bubble.frame = CGRectMake(bubbleLeft, 0, bubbleWidth, _timeLabel.frame.origin.y + _timeLabel.frame.size.height + 8);
     
 }
 
@@ -111,12 +137,12 @@
 
 #pragma mark TTTableViewCell class public
 + (CGFloat)tableView:(UITableView*)tableView rowHeightForObject:(id)object {
-    TTTableCommentItem* item = (TTTableCommentItem*)object;
+    TTTableChatItem* item = (TTTableChatItem*)object;
     CGFloat height = 0;
     // margin
-    height += 5;
+    height += 6;
     // 1. 标题
-    height += 20;
+    height += 35;
     // 2. 正文
     CGSize maximumLabelSize = CGSizeMake(255,9999);
     CGSize linesSize = [item.content sizeWithFont:[self contentFont]
@@ -129,7 +155,7 @@
         height += 20;
     }
     // margin
-    height +=5;
+    height += 25;
     return height;
 }
 
@@ -172,7 +198,7 @@
         _iconImage = [[TTImageView alloc] init];
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_iconImage.style = TTSTYLE(rounded);
-        [self.contentView addSubview:_iconImage];
+        [self.bubble addSubview:_iconImage];
     }
     return _iconImage;
 }
@@ -180,7 +206,7 @@
 
 + (UIFont*)titleFont
 {
-    return [UIFont fontWithName:@"Helvetica-Bold" size:18];
+    return [UIFont fontWithName:@"Helvetica" size:15];
 }
 - (UILabel*)titleLabel {
     if (!_titleLabel) {
@@ -192,7 +218,7 @@
         _titleLabel.contentMode = UIViewContentModeTopLeft;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _contentLabel.numberOfLines = 100;
-        [self.contentView addSubview:_titleLabel];
+        [self.bubble addSubview:_titleLabel];
     }
     return _titleLabel;
 }
@@ -207,12 +233,10 @@
         _contentLabel.contentMode = UIViewContentModeTopLeft;
         _contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _contentLabel.numberOfLines = 100;
-        [self.contentView addSubview:_contentLabel];
+        [self.bubble addSubview:_contentLabel];
     }
     return _contentLabel;
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (UILabel*)timeLabel {
@@ -223,18 +247,20 @@
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.highlightedTextColor = [UIColor whiteColor];
         _timeLabel.contentMode = UIViewContentModeLeft;
-        [self.contentView addSubview:_timeLabel];
+        [self.bubble addSubview:_timeLabel];
     }
     return _timeLabel;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+-(UIImageView*)bubble{
+    if(!_bubble){
+        _bubble = [[UIImageView alloc]init];
+        
+        _bubble.alpha = 1;
+        [self.contentView addSubview:_bubble];
+    }
+    return _bubble;
 }
-*/
+
 
 @end

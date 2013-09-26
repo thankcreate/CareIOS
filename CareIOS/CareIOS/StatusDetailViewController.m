@@ -48,11 +48,14 @@
     [super viewDidLoad];
     [MobClick event:@"StatusDetailViewController"];
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
-
+    //self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    // self.view.backgroundColor = RGBCOLOR(236, 234, 224);
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     UIColor* myPink = [UIColor colorWithRed:240 / 255.0f green:190 / 255.0f blue:173 / 255.0f alpha:1.0f ];
     UIColor* myGray = [UIColor colorWithRed:200 / 255.0f green:200 / 255.0f blue:200 / 255.0f alpha:1.0f ];
+    UIColor* myBlue = RGBCOLOR(36, 112, 216);
     // 1 header部分
     // 1.1 背景
     CGFloat top = 0;
@@ -94,7 +97,7 @@
     UILabel* lblName = [[UILabel alloc] init];
     lblName.text = itemViewModel.title;
     lblName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
-    lblName.textColor = myGreen;
+    lblName.textColor = myBlue;
     lblName.backgroundColor = [UIColor clearColor];
 
     CGRect namePos = CGRectMake(left ,top + 10 , avatarImg.frame.origin.x - leftMargin, 18);
@@ -175,8 +178,8 @@
         
         forwardView.frame = CGRectMake(left, top, width-10, 200);
         UIColor* bkgColor = RGBCOLOR(255, 204, 204);
-        TTStyle* style = [TTShapeStyle styleWithShape:[TTSpeechBubbleShape shapeWithRadius:5
-                                                                             pointLocation:60
+        TTStyle* style = [TTShapeStyle styleWithShape:[TTSpeechBubbleShape shapeWithRadius:4
+                                                                             pointLocation:50
                                                                                 pointAngle:90
                                                                                  pointSize:CGSizeMake(10,5)] next:
                           [TTSolidFillStyle styleWithColor:bkgColor next:
@@ -405,7 +408,8 @@
     TTWebController *webController = [[TTWebController alloc] init];
     [webController openURL:URL];
     [self.navigationController pushViewController:webController animated:YES];
-    webController.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    [MiscTool setHeader:webController];
+
     // 返回NO以取消TTNavigate的那个跳转
     // 这是因为如果这里从TTNavigate跳转的话，webController页面会被认为是TTNavigate框架下的root页面
     // 也就没有返回按钮，这里实际上是截获url信息，然后用原生的navigationController框架下跳转

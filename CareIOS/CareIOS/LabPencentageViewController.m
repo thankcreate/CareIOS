@@ -16,9 +16,9 @@
 @property (strong, nonatomic) IBOutlet UIImageView *myImage;
 @property (strong, nonatomic) IBOutlet UILabel *lblHerName;
 @property (strong, nonatomic) IBOutlet UILabel *lblMyName;
-@property (strong, nonatomic) IBOutlet UILabel *lblScore;
-@property (strong, nonatomic) IBOutlet UILabel *lblScorePrefix;
 
+
+@property (strong, nonatomic) IBOutlet UIScrollView *sv;
 
 @end
 
@@ -26,6 +26,7 @@
 
 @synthesize col1;
 @synthesize col2;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,7 +41,11 @@
 {
     [super viewDidLoad];
     [MobClick event:@"LabPencentageViewController"];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+   
+    [MiscTool autoAdjuctScrollView:self.sv];
     
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     NSString* herStrUrl = [MiscTool getHerIcon];
@@ -49,8 +54,10 @@
     self.herImage.layer.cornerRadius = 9.0;
     self.herImage.layer.masksToBounds = YES;
     self.herImage.layer.borderColor = myGreen.CGColor;
-    self.herImage.layer.borderWidth = 4.0;
+    self.herImage.layer.borderWidth = 0.0;
     self.herImage.contentMode = UIViewContentModeScaleAspectFill;
+
+
     
     NSString* myStrUrl = [MiscTool getMyIcon];
     NSURL* myUrl = [NSURL URLWithString:myStrUrl];
@@ -58,27 +65,21 @@
     self.myImage.layer.cornerRadius = 9.0;
     self.myImage.layer.masksToBounds = YES;
     self.myImage.layer.borderColor = myGreen.CGColor;
-    self.myImage.layer.borderWidth = 4.0;
+    self.myImage.layer.borderWidth = 0.0;
     self.myImage.contentMode = UIViewContentModeScaleAspectFill;
+
     
     self.lblHerName.text = [MiscTool getHerName];
     self.lblHerName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
-    self.lblHerName.textColor = myGreen;
+    self.lblHerName.textColor = [CareConstants labPink];
     [self.lblHerName sizeToFit];
+
     
     self.lblMyName.text = [MiscTool getMyName];
     self.lblMyName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
-    self.lblMyName.textColor = myGreen;
-    //[self.lblMyName sizeToFit];
+    self.lblMyName.textColor = [CareConstants labPink];
+ 
     
-    
-    self.lblScorePrefix.Font = [UIFont fontWithName:@"Helvetica-Bold" size:30];
-    self.lblScorePrefix.textColor = myGreen;
-    [self.lblScorePrefix sizeToFit];
-    self.lblScore.Font = [UIFont fontWithName:@"Helvetica-Bold" size:30];
-    self.lblScore.textColor = myGreen;
-    [self.lblScore sizeToFit];
-
     
     NSMutableArray *temp = [NSMutableArray array];
     for(int j = 0; j < 3; j++)
@@ -91,6 +92,15 @@
 
     col1 = [NSArray arrayWithArray:temp];
     col2 = [NSArray arrayWithArray:temp];
+    
+    
+    float headerHeight = self.herImage.frame.origin.y + self.herImage.frame.size.height;
+    CGRect oriPikcerFrame = self.picker.frame;
+    self.picker.frame = CGRectMake(oriPikcerFrame.origin.x,
+                                   ([UIScreen mainScreen].bounds.size.height - 64 - headerHeight) / 2 + headerHeight
+                                   - oriPikcerFrame.size.height / 2,
+                                   oriPikcerFrame.size.width,
+                                   oriPikcerFrame.size.height);
     
     self.picker.userInteractionEnabled = NO;
     [self analysisPercentage];
@@ -114,12 +124,21 @@
     
     int first = result / 10;
     int secoend = result % 10;
+    [self.picker selectRow:first + 10 + 5 inComponent:0 animated:YES];
+    [self.picker selectRow:secoend + 10 - 5 inComponent:1 animated:YES];
+    [self.picker reloadAllComponents];
+    
+    [self performSelector:@selector(showRight) withObject:self afterDelay:0.3];
+    var = result;
+}
+
+-(void)showRight
+{
+    int first = var / 10;
+    int secoend = var % 10;
+
     [self.picker selectRow:first + 10 inComponent:0 animated:YES];
     [self.picker selectRow:secoend + 10 inComponent:1 animated:YES];
-    [self.picker reloadAllComponents];
-
-    self.lblScore.text = [[NSNumber numberWithInt:result] stringValue];
-    var = result;
 }
 
 - (long)calculateString:(NSString*)str

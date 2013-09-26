@@ -46,7 +46,7 @@
     // 这里必须要留这么一个全透明的navigateBar，设成红色
     // 不然的话，在后续页面不管怎么设，statusBar都设不成红色
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
-    self.navigateBar1.tintColor = [CareConstants headerColor];    
+    [MiscTool setHeader:self];
 	// Do any additional setup after loading the view.
          //   [self performSegueWithIdentifier:@"Segue_GotoPasswordPage" sender:self];
 }

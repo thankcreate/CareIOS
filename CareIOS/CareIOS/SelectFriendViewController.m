@@ -73,6 +73,12 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        CGRect originalRect = self.mySearchBar.frame;
+        self.mySearchBar.frame = CGRectMake(originalRect.origin.x, originalRect.origin.y, 320, originalRect.size.height);
+        self.tableView.sectionIndexBackgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -148,6 +154,8 @@
     UILabel* lblName = (UILabel*)[cell viewWithTag:2];
     UILabel* lblDescription = (UILabel*)[cell viewWithTag:3];
     UIImageView* imgAvatar = (UIImageView*)[cell viewWithTag:1];
+    imgAvatar.layer.cornerRadius = 3.0;
+    imgAvatar.layer.masksToBounds = YES;
 
     
     NSInteger sec = [indexPath section];

@@ -17,6 +17,9 @@
 @end
 
 @implementation LabShareBaseViewController
+
+@synthesize rootScrollView;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -33,7 +36,13 @@
     btnShare.title = @"分享";
 
     self.navigationController.navigationItem.rightBarButtonItem = btnShare;
-	// Do any additional setup after loading the view.
+    
+
+    rootScrollView = [[UIScrollView alloc] init];
+    rootScrollView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:rootScrollView];
+    [self.view sendSubviewToBack:rootScrollView];
+    
 }
 
 - (void)didReceiveMemoryWarning

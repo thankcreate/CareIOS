@@ -7,10 +7,14 @@
 //
 
 #import "PasswordViewController.h"
+#import "CareAppDelegate.h"
 
 @interface PasswordViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *txtPassword;
 @property (strong, nonatomic) IBOutlet UINavigationBar *navigateBar1;
+
+@property (strong, nonatomic) IBOutlet UIImageView *heart;
+@property (strong, nonatomic) IBOutlet UIImageView *key;
 
 @end
 
@@ -23,7 +27,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.isEnterForegroundMode = NO;
     }
     return self;
 }
@@ -37,8 +41,9 @@
     input = @""; // 这里input必须要初始化，否则nil和任何东西比较都是相等，真奇怪
     realPassword = [defaults objectForKey:@"Global_Password"];
     txtPassword.secureTextEntry = YES;
-	// Do any additional setup after loading the view.
 }
+
+
 -(void)viewDidAppear:(BOOL)animated
 {
     //self.navigateBar1.frame = CGRectZero;
@@ -77,8 +82,63 @@
     txtPassword.text = input;
     if([input compare:realPassword] == NSOrderedSame || realPassword == nil)
     {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
-        [self performSegueWithIdentifier:@"Segue_GotoTabBarController2" sender:self];
+        CAKeyframeAnimation *pathAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+        pathAnimation.duration = 0.3f;
+        pathAnimation.calculationMode = kCAAnimationPaced;
+        pathAnimation.fillMode = kCAFillModeForwards;
+        pathAnimation.removedOnCompletion = NO;
+        
+        CGMutablePathRef pointPath = CGPathCreateMutable();
+        CGPoint origin = CGPointMake(self.key.frame.origin.x + self.key.frame.size.width / 2,
+                                     self.key.frame.origin.y + self.key.frame.size.height / 2);
+        CGPathMoveToPoint(pointPath, NULL, origin.x, origin.y);
+        CGPathAddLineToPoint(pointPath, NULL, origin.x - 28, origin.y);
+        pathAnimation.path = pointPath;
+        CGPathRelease(pointPath);
+        
+        [self.key.layer addAnimation:pathAnimation forKey:@"pathAnimation"];
+        
+        
+        pathAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+        pathAnimation.duration = 0.3f;
+        pathAnimation.calculationMode = kCAAnimationPaced;
+        pathAnimation.fillMode = kCAFillModeForwards;
+        pathAnimation.removedOnCompletion = NO;
+        
+        pointPath = CGPathCreateMutable();
+        origin = CGPointMake(self.heart.frame.origin.x + self.heart.frame.size.width / 2,
+                                     self.heart.frame.origin.y + self.heart.frame.size.height / 2);
+        CGPathMoveToPoint(pointPath, NULL, origin.x, origin.y);
+        CGPathAddLineToPoint(pointPath, NULL, origin.x + 28, origin.y);
+        pathAnimation.path = pointPath;
+        CGPathRelease(pointPath);
+        
+        [self.heart.layer addAnimation:pathAnimation forKey:@"pathAnimation"];
+        [self performSelector:@selector(gotoNextPage) withObject:self afterDelay:0.3];
+        
+        
+    }
+}
+
+-(void)gotoNextPage
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
+    if(self.isEnterForegroundMode)
+    {
+        CareAppDelegate *appDelegate = (CareAppDelegate *)[[UIApplication sharedApplication] delegate];
+        for (UIView *subView in appDelegate.window.subviews)
+        {
+            if (subView.tag == 575)
+            {
+                [subView removeFromSuperview];
+                break;
+            }
+        }
+        
+    }
+    else
+    {
+        [self performSegueWithIdentifier:@"Segue_GotoTabBarController3" sender:nil];
     }
 }
 

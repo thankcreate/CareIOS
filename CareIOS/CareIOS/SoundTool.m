@@ -16,6 +16,11 @@
     [self playSoundIfAllowdWithURL:@"LoadComplete" extension:@"mp3"];
 }
 
++(void)playSoundMiaoMiao
+{
+    [self playSoundWithURL:@"Miao" extension:@"wav"];
+}
+
 +(void)playSoundIfAllowdWithURL:(NSString*)url extension:(NSString*)extension
 {
     if(url == nil || extension == nil)
@@ -28,6 +33,18 @@
         return;
     }
     
+    NSURL *soundURL = [[NSBundle mainBundle] URLForResource:url
+                                              withExtension:extension];
+    SystemSoundID soundID;
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)soundURL, &soundID);
+    AudioServicesPlaySystemSound(soundID);
+}
+
++(void)playSoundWithURL:(NSString*)url extension:(NSString*)extension
+{
+    if(url == nil || extension == nil)
+        return;
+        
     NSURL *soundURL = [[NSBundle mainBundle] URLForResource:url
                                               withExtension:extension];
     SystemSoundID soundID;

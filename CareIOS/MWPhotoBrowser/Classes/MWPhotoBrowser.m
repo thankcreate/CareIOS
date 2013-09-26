@@ -222,7 +222,7 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-	
+    
 	// View
 	self.view.backgroundColor = [UIColor blackColor];
 	
@@ -241,6 +241,11 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     // Toolbar
     _toolbar = [[UIToolbar alloc] initWithFrame:[self frameForToolbarAtOrientation:self.interfaceOrientation]];
     _toolbar.tintColor = nil;
+    // ThankCreate
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        _toolbar.tintColor = [UIColor whiteColor];
+    }
     if ([[UIToolbar class] respondsToSelector:@selector(appearance)]) {
         [_toolbar setBackgroundImage:nil forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
         [_toolbar setBackgroundImage:nil forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsLandscapePhone];
@@ -252,6 +257,11 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
     _previousButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MWPhotoBrowser.bundle/images/UIBarButtonItemArrowLeft.png"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoPreviousPage)];
     _nextButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"MWPhotoBrowser.bundle/images/UIBarButtonItemArrowRight.png"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoNextPage)];
     _actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionButtonPressed:)];
+    
+    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]){
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
+
     
     // Update
     [self reloadData];
@@ -411,6 +421,14 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
 
 - (void)setNavBarAppearance:(BOOL)animated {
     self.navigationController.navigationBar.tintColor = nil;
+    
+    // ThankCreate
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    }
+    
+    
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     if ([[UINavigationBar class] respondsToSelector:@selector(appearance)]) {
         [self.navigationController.navigationBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
@@ -443,6 +461,8 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
             self.previousViewControllerBackButton = nil;
         }
     }
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
 #pragma mark - Layout
@@ -919,10 +939,13 @@ navigationBarBackgroundImageLandscapePhone = _navigationBarBackgroundImageLandsc
             statusBarHeight = MIN(statusBarFrame.size.height, statusBarFrame.size.width);
         }
         
-        // Set navigation bar frame
-        CGRect navBarFrame = self.navigationController.navigationBar.frame;
-        navBarFrame.origin.y = statusBarHeight;
-        self.navigationController.navigationBar.frame = navBarFrame;
+        // ThankCreate comment on lines below
+        // iOS7 has updated the navBar frame logic.
+        // So we'd better not modify the frame of navBar by ourself.
+//        // Set navigation bar frame
+//        CGRect navBarFrame = self.navigationController.navigationBar.frame;
+//        navBarFrame.origin.y = statusBarHeight;
+//        self.navigationController.navigationBar.frame = navBarFrame;
         
     }
     

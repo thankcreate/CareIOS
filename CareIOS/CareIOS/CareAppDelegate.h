@@ -19,6 +19,7 @@
 
 @class SinaWeibo;
 @class Renren;
+@class PasswordViewController;
 
 @interface CareAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -30,6 +31,8 @@
 
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
 @property (strong, nonatomic) Renren *renren;
+@property (strong, nonatomic) UINavigationController* naviCtr;
+@property (strong, nonatomic) PasswordViewController *tempPasswordViewController;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;

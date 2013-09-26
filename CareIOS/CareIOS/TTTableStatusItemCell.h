@@ -9,7 +9,7 @@
 #import <Three20UI/Three20UI.h>
 @class TTImageView;
 @class TTView;
-
+@class UIDashView;
 @interface TTTableStatusItemCell : TTTableLinkedItemCell {
     UILabel*      _titleLabel;
     UILabel*      _timestampLabel;
@@ -26,6 +26,8 @@
 
     UILabel*      _commentCountLabel;
     UILabel*      _fromLabel;
+    
+    UIDashView*   _dashView;
 }
 
 @property (nonatomic, readonly, retain) UILabel*      titleLabel;
@@ -43,5 +45,6 @@
 
 @property (nonatomic, readonly, retain) UILabel*      fromLabel;
 @property (nonatomic, readonly, retain) UILabel*      commentCountLabel;
+@property (nonatomic, readonly, retain) UILabel*      dashView;
 
 @end

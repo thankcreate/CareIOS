@@ -14,6 +14,7 @@
 @property (strong, nonatomic) IBOutlet UITextView *txtName;
 @property (strong, nonatomic) IBOutlet UITextView *txtContent;
 @property (strong, nonatomic) IBOutlet UILabel *lblRemainCount;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @end
 
@@ -35,9 +36,9 @@ NSInteger MAX_COUNT = 60;
 
 -(void)applyBorderToTextView:(UITextView*)input
 {
-    [[input layer] setBorderColor:[[UIColor grayColor] CGColor]];
-    [[input layer] setBorderWidth:1.3];
-    [[input layer] setCornerRadius:5];
+    [[input layer] setBorderColor:[RGBCOLOR(200, 199, 204) CGColor]];
+    [[input layer] setBorderWidth:1.0];
+    [[input layer] setCornerRadius:3];
 }
 
 - (void)viewDidLoad
@@ -50,6 +51,10 @@ NSInteger MAX_COUNT = 60;
     
     txtName.text = [MiscTool getMyName];
     
+    
+    [MiscTool autoAdjuctScrollView:self.scrollView];
+
+    
 }
 
 -(void)initBackground
@@ -57,6 +62,7 @@ NSInteger MAX_COUNT = 60;
     UIImageView* imageView = [[UIImageView alloc]init];
     imageView.image = [UIImage imageNamed:@"bkg_lab_bless.jpg"];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.layer.masksToBounds = YES;
     CGFloat he = self.view.bounds.size.height;
     CGFloat wi = self.view.bounds.size.width;
     

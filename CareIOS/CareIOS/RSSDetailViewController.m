@@ -95,7 +95,7 @@
     TTWebController* controller = [[TTWebController alloc] init];
     NSURL *url = [NSURL URLWithString:itemViewModel.originalURL];
     [self.navigationController pushViewController:controller animated:YES];
-    controller.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    [MiscTool setHeader:controller];
     [controller openURL:url];
 }
 

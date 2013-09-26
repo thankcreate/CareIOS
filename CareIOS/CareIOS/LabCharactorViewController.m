@@ -30,7 +30,7 @@
 {
     [super viewDidLoad];
     [MobClick event:@"LabCharactorViewController"];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];    
+    self.view.backgroundColor = [UIColor whiteColor];
     
     UIColor* myGreen = [UIColor colorWithRed:0.0f green:0.5 blue:0.0f alpha:1.0f ];
     // 1 header部分
@@ -49,15 +49,15 @@
     img.layer.cornerRadius = 9.0;
     img.layer.masksToBounds = YES;
     img.layer.borderColor = myGreen.CGColor;
-    img.layer.borderWidth = 4.0;
-    [self.view addSubview:img];
+    img.layer.borderWidth = 0;
+    [self.rootScrollView addSubview:img];
     
     
     // 1.2 关注者姓名
     UILabel* lblName = [[UILabel alloc] init];
     lblName.text = [MiscTool getHerName];
     lblName.Font = [UIFont fontWithName:@"Helvetica-Bold" size:22.0];
-    lblName.textColor = myGreen;
+    lblName.textColor = [CareConstants labPink];
     lblName.backgroundColor = [UIColor clearColor];    
     CGSize maximumLabelSize = CGSizeMake([self.view bounds].size.width - left  - img.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize = [lblName.text sizeWithFont:lblName.font
@@ -69,13 +69,13 @@
                                    expectedLabelSize.width,
                                    expectedLabelSize.height);
     lblName.frame = lblNamePos;
-    [self.view addSubview:lblName];
+    [self.rootScrollView addSubview:lblName];
     
     // 1.2 "分析对象"字样
     UILabel* lblAnalysis = [[UILabel alloc] init];
     lblAnalysis.text = @"分析对象:";
     lblAnalysis.Font = [UIFont fontWithName:@"Helvetica" size:15.0];
-    lblAnalysis.textColor = myGreen;
+    lblAnalysis.textColor = [CareConstants labPink];
     lblAnalysis.backgroundColor = [UIColor clearColor];    
     CGSize maximumLabelSize2 = CGSizeMake([self.view bounds].size.width - left  - img.frame.size.width - 10 ,9999);
     CGSize expectedLabelSize2 = [lblAnalysis.text sizeWithFont:lblAnalysis.font
@@ -87,12 +87,15 @@
                                        expectedLabelSize2.width,
                                        expectedLabelSize2.height);
     lblAnalysis.frame = lblAnalysisPos;
-    [self.view addSubview:lblAnalysis];
+    [self.rootScrollView addSubview:lblAnalysis];
 
     // 2 统计图
-    int height = [self.view bounds].size.width/3*2.; // 220;
+    CGFloat screenHeight = [ UIScreen mainScreen ].bounds.size.height;
+    int height = (screenHeight - 64 ) /3*2 - 64; // 220;
     int width = [self.view bounds].size.width; //320;
-    pieChart = [[PCPieChart alloc] initWithFrame:CGRectMake(([self.view bounds].size.width-width)/2,([self.view bounds].size.height - top - height)/2,width,height)];
+    
+    pieChart = [[PCPieChart alloc] initWithFrame:CGRectMake(([self.view bounds].size.width-width)/2,
+                                                            (screenHeight - 64 - 100 ) / 2  - height / 2 + top,width, height)];
     [pieChart setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin];
     [pieChart setDiameter:width/2];
     [pieChart setSameColorLabel:YES];
@@ -120,41 +123,41 @@
     [components addObject:component4];
     [components addObject:component5];
     [pieChart setComponents:components];
-    [self.view addSubview:pieChart];
+    [self.rootScrollView addSubview:pieChart];
     top = pieChart.frame.origin.y + pieChart.frame.size.height;
     
-    // 3 统计文字
-    top -= 20;  // 微调
-    NSArray *listLabel = [NSArray arrayWithObjects:@"萝莉指数:", @"女王指数:", @"天然呆指数:", @"吃货指数:", @"伪娘指数:", nil];
-    NSArray *valueLable = [NSArray arrayWithObjects:
-                           [NSNumber numberWithInt:var1],
-                           [NSNumber numberWithInt:var2],
-                           [NSNumber numberWithInt:var3],
-                           [NSNumber numberWithInt:var4],
-                           [NSNumber numberWithInt:var5], nil];
-    CGFloat leftMargin = 10.0f;
-    for (int i = 0; i < 5; ++i)
-    {
-        UILabel* lb1 = [[UILabel alloc] init];
-        lb1.text = [listLabel objectAtIndex:i];
-        lb1.textColor = myGreen;
-        lb1.backgroundColor = [UIColor clearColor];
-        lb1.Font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0];
-        lb1.frame = CGRectMake(left + leftMargin, top, 320, 50);        
-        [lb1 sizeToFit];
-        [self.view addSubview:lb1];
-        
-        UILabel* lb2 = [[UILabel alloc] init];
-        NSNumber* num = [valueLable objectAtIndex:i];
-        lb2.text = [num stringValue];
-        lb2.textColor = myGreen;
-        lb2.backgroundColor = [UIColor clearColor];    
-        lb2.frame = CGRectMake(left + leftMargin + lb1.frame.size.width + 10, top, 320, 50);
-        [lb2 sizeToFit];
-        
-        top += lb1.frame.size.height;
-        [self.view addSubview:lb2];
-    }    
+//    // 3 统计文字
+//    top -= 20;  // 微调
+//    NSArray *listLabel = [NSArray arrayWithObjects:@"萝莉指数:", @"女王指数:", @"天然呆指数:", @"吃货指数:", @"伪娘指数:", nil];
+//    NSArray *valueLable = [NSArray arrayWithObjects:
+//                           [NSNumber numberWithInt:var1],
+//                           [NSNumber numberWithInt:var2],
+//                           [NSNumber numberWithInt:var3],
+//                           [NSNumber numberWithInt:var4],
+//                           [NSNumber numberWithInt:var5], nil];
+//    CGFloat leftMargin = 10.0f;
+//    for (int i = 0; i < 5; ++i)
+//    {
+//        UILabel* lb1 = [[UILabel alloc] init];
+//        lb1.text = [listLabel objectAtIndex:i];
+//        lb1.textColor = myGreen;
+//        lb1.backgroundColor = [UIColor clearColor];
+//        lb1.Font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0];
+//        lb1.frame = CGRectMake(left + leftMargin, top, 320, 50);        
+//        [lb1 sizeToFit];
+//        [self.rootScrollView addSubview:lb1];
+//        
+//        UILabel* lb2 = [[UILabel alloc] init];
+//        NSNumber* num = [valueLable objectAtIndex:i];
+//        lb2.text = [num stringValue];
+//        lb2.textColor = myGreen;
+//        lb2.backgroundColor = [UIColor clearColor];    
+//        lb2.frame = CGRectMake(left + leftMargin + lb1.frame.size.width + 10, top, 320, 50);
+//        [lb2 sizeToFit];
+//        
+//        top += lb1.frame.size.height;
+//        [self.rootScrollView addSubview:lb2];
+//    }    
 }
 
 

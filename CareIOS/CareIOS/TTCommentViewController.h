@@ -12,6 +12,7 @@
 @interface TTCommentViewController : TTTableViewController<SinaWeiboRequestDelegate,RenrenDelegate, TTPostControllerDelegate>
 @property (strong, nonatomic) ItemViewModel* itemViewModel;
 @property (strong, nonatomic) NSMutableArray* commentList;
+@property (strong, nonatomic) NSArray* sortedList;
 
 // 因为人人在回调中不能判断是来自哪个请求，所以这里我做了个独立于SDK的标记
 // 调用前由自己去设一个值

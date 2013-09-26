@@ -124,7 +124,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    [MiscTool setHeader:self];    
     [self initUISinaWeibo];
     [self initUIRenren];
     [self initUIDouban];

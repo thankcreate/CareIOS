@@ -43,8 +43,8 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     [super viewDidLoad];
     
     [MobClick event:@"LabViewController"];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
-    
+    // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
+    self.view.backgroundColor = RGBCOLOR(236, 234, 224);
     
     // 1. 有米广告条
     // adView1
@@ -134,8 +134,7 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
-
+    [MiscTool setHeader:self];
 }
 - (IBAction)btnClick:(id)sender {
     NSString *herName = [MiscTool getHerName];

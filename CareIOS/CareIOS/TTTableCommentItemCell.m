@@ -19,6 +19,8 @@
 
 #import "UIView+FindUIViewController.h"
 
+#define LEFT_RIGHT_MARGIN 10
+
 @implementation TTTableCommentItemCell
 @synthesize iconImage;
 @synthesize titleLabel;
@@ -60,20 +62,24 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    
+    self.backgroundColor = [UIColor clearColor];
+    
     CGFloat top = 0;
     CGFloat left = 0;
     CGFloat width = self.contentView.width;
     
     CGFloat topMargin = 5;
-    CGFloat leftMargin = 5;
-    CGFloat rightMargin = 5;
+    CGFloat leftMargin = LEFT_RIGHT_MARGIN;
+    CGFloat rightMargin = LEFT_RIGHT_MARGIN;
     top += topMargin;
     left += leftMargin;
     width -= (leftMargin + rightMargin);
     
     // 1.头像
     _iconImage.frame = CGRectMake(left, top, 35, 35);
-
+    _iconImage.layer.cornerRadius = 3.0;
+    _iconImage.layer.masksToBounds = YES;
     left += _iconImage.frame.origin.x +  _iconImage.frame.size.width + 5;
     
     
@@ -88,15 +94,15 @@
 
     _titleLabel.frame = CGRectMake(left, top, expectedLabelSize.width, expectedLabelSize.height);
     
-    // 2.1.2 评论按钮
-    if(self.commentViewModel)
-    {
-        _commentImage.frame = CGRectMake(width - 30, top, 30, 30);
-    }
-    else
-    {
-        _commentImage.frame = CGRectZero;
-    }
+//    // 2.1.2 评论按钮
+//    if(self.commentViewModel)
+//    {
+//        _commentImage.frame = CGRectMake(width - 30, top - 7, 30, 30);
+//    }
+//    else
+//    {
+//        _commentImage.frame = CGRectZero;
+//    }
     
     top += expectedLabelSize.height;
 
@@ -106,7 +112,7 @@
     expectedLabelSize = [_contentLabel.text sizeWithFont:_contentLabel.font
                                             constrainedToSize:maximumLabelSize
                                                 lineBreakMode:_contentLabel.lineBreakMode];
-    _contentLabel.frame = CGRectMake(left, top, rightWidth, expectedLabelSize.height);
+    _contentLabel.frame = CGRectMake(left, top + 3, rightWidth, expectedLabelSize.height);
     top += expectedLabelSize.height;
     
     // 2.2 时间
@@ -114,7 +120,7 @@
     expectedLabelSize = [_timeLabel.text sizeWithFont:_timeLabel.font
                                        constrainedToSize:maximumLabelSize
                                            lineBreakMode:_timeLabel.lineBreakMode];
-    _timeLabel.frame = CGRectMake(left, top, width, expectedLabelSize.height);
+    _timeLabel.frame = CGRectMake(left, top + 7, width, expectedLabelSize.height);
     top += expectedLabelSize.height;
     
 }
@@ -151,7 +157,7 @@
         height += 20;
     }
     // margin
-    height +=5;
+    height += 5;
     return height;    
 }
 
@@ -203,7 +209,7 @@
         _commentImage = [[TTImageView alloc] init];
         //    _imageView2.defaultImage = TTSTYLEVAR(personImageSmall);
         //_iconImage.style = TTSTYLE(rounded);
-        [self.contentView addSubview:_commentImage];
+        //[self.contentView addSubview:_commentImage];
     }
     return _commentImage;
 }
@@ -262,35 +268,36 @@
     return _timeLabel;
 }
 
-#pragma mark - event
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    
-    UITouch *touch = [touches anyObject];    
-   
-    if ([touch view] == _commentImage)
-    {
-        NSString* preText;
-        if(itemViewModel.type == EntryType_SinaWeibo)
-        {
-            preText = [[NSString alloc]initWithFormat:@"回复@%@: ", self.commentViewModel.title];
-        }
-        else if(itemViewModel.type == EntryType_Renren)
-        {
-            preText = [[NSString alloc]initWithFormat:@"回复%@: ", self.commentViewModel.title];
-        }
-        else if(itemViewModel.type == EntryType_Douban)
-        {
-            // 豆瓣很非主流，搞了个doubanUID，实际上就是以昵称的方式起作用的主键
-            preText = [[NSString alloc]initWithFormat:@"@%@: ", self.commentViewModel.doubanUID];
-        }
-
-        TTPostController* controller = [[TTPostController alloc] initWithNavigatorURL:nil
-                                                                                 query:[NSDictionary dictionaryWithObjectsAndKeys:preText, @"text", nil]];
-        controller.originView = _commentImage;
-        controller.delegate = self;
-        [controller showInView:self.contentView animated:YES];
-    }
-}
+//#pragma mark - event
+//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+//    
+//    UITouch *touch = [touches anyObject];    
+//   
+//    //if ([touch view] == _commentImage)
+//    {
+//        NSString* preText;
+//        if(itemViewModel.type == EntryType_SinaWeibo)
+//        {
+//            preText = [[NSString alloc]initWithFormat:@"回复@%@: ", self.commentViewModel.title];
+//        }
+//        else if(itemViewModel.type == EntryType_Renren)
+//        {
+//            preText = [[NSString alloc]initWithFormat:@"回复%@: ", self.commentViewModel.title];
+//        }
+//        else if(itemViewModel.type == EntryType_Douban)
+//        {
+//            // 豆瓣很非主流，搞了个doubanUID，实际上就是以昵称的方式起作用的主键
+//            preText = [[NSString alloc]initWithFormat:@"@%@: ", self.commentViewModel.doubanUID];
+//        }
+//
+//        TTPostController* controller = [[TTPostController alloc] initWithNavigatorURL:nil
+//                                                                                 query:[NSDictionary dictionaryWithObjectsAndKeys:preText, @"text", nil]];
+//        controller.originView = _commentImage;
+//        controller.delegate = self;
+//        controller.title = @"评论";
+//        [controller showInView:self.contentView animated:YES];
+//    }
+//}
 
 #pragma mark - TTPostControllerDelegate
 - (BOOL)postController:(TTPostController*)postController willPostText:(NSString*)text

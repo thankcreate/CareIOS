@@ -10,6 +10,8 @@
 #import "SinaWeibo.h"
 #import "Three20/Three20.h"
 #import "MobClick.h"
+#import "DoubanLoginWebViewController.h"
+#import "PasswordViewController.h"
 @implementation CareAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -18,6 +20,8 @@
 
 @synthesize sinaweibo;
 @synthesize renren;
+@synthesize naviCtr;
+@synthesize tempPasswordViewController;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // 此时delegate是nil, AccountView是最后真正的delegate
@@ -86,8 +90,19 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString* usePassword = [defaults objectForKey:@"Global_UsePassword"];
+    
+    if(usePassword != nil && [usePassword compare:@"YES"] == NSOrderedSame)
+    {
+        self.tempPasswordViewController = [[self.window rootViewController].storyboard instantiateViewControllerWithIdentifier:@"test123"];
+        [self.tempPasswordViewController.view endEditing:YES];
+        self.tempPasswordViewController.view.tag = 575;
+        self.tempPasswordViewController.isEnterForegroundMode = YES;
+        [self.window addSubview:self.tempPasswordViewController.view];
+        
+    }
 }
-
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {

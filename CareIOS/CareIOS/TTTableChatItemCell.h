@@ -14,11 +14,14 @@
     UILabel*      _titleLabel;
     UILabel*      _contentLabel;
     UILabel*      _timeLabel;
+    UIImageView*  _bubble;
 }
 
 @property (nonatomic,  retain) TTImageView*  iconImage;
 @property (nonatomic, readonly, retain) UILabel*  titleLabel;
 @property (nonatomic, readonly, retain) UILabel*  contentLabel;
 @property (nonatomic, readonly, retain) UILabel*  timeLabel;
+@property (nonatomic, readonly, retain) UIImageView*  bubble;
 @property (nonatomic) ChatType type;
+
 @end

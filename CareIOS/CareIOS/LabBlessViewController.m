@@ -38,20 +38,28 @@
     v.backgroundColor = [UIColor clearColor];
     
     [self.tableView setTableFooterView:v];
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile2.png"]];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorColor = [UIColor clearColor];
+   
+    // for iOS7 update
+    [MiscTool autoAdjuctScrollView:self.tableView];
 }
 
 -(void)initBackground
 {
+    CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+    
     UIImageView* imageView = [[UIImageView alloc]init];
     imageView.image = [UIImage imageNamed:@"bkg_lab_bless.jpg"];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
-    CGFloat he = self.view.bounds.size.height;
+    imageView.layer.masksToBounds = YES;
+    CGFloat he = screenHeight;
     CGFloat wi = self.view.bounds.size.width;
     
     imageView.frame = CGRectMake(0, 0, wi, he);
+    imageView.bounds = CGRectMake(0, 0, wi, he);
+
     [self.view addSubview:imageView];
     [self.view sendSubviewToBack:imageView];
 }
@@ -60,13 +68,15 @@
 {
     // 从网络加载items,目前不设缓存
     [self fetchBlessItems];
+    [MiscTool autoAdjuctScrollView:self.tableView];
+
 }
 
 -(void)fetchBlessItems
 {
     if(blessHelper == nil)
         blessHelper = [[BlessHelper alloc]init];
-    [blessHelper fetchBlessItemWithCount:25 isPassed:NO delegate:self];
+    [blessHelper fetchBlessItemWithCount:50 isPassed:NO delegate:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,6 +87,8 @@
 #pragma mark - BlessItemFetchDelegate protocol
 - (void)blessItemFetchComplete:(NSArray*)result
 {
+    [MiscTool autoAdjuctScrollView:self.tableView];
+
     if(result == nil || result.count == 0)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@">_<"

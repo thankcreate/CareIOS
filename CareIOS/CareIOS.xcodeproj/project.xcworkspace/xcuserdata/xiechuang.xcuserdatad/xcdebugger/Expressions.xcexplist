@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[TTTableViewController showModel:]:TTTableViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_tableView.dataSource">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TTTableViewDragRefreshDelegate modelDidFinishLoad:]:TTTableViewDragRefreshDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_controller.tableView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

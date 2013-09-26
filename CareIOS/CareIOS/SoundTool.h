@@ -10,4 +10,5 @@
 
 @interface SoundTool : NSObject
 +(void)playSoundLoadComplete;
++(void)playSoundMiaoMiao;
 @end

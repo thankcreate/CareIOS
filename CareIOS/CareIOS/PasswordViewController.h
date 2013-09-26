@@ -11,4 +11,6 @@
 @interface PasswordViewController : UIViewController
 @property (strong, atomic) NSString* input;
 @property (strong, atomic) NSString* realPassword;
+
+@property (atomic) BOOL isEnterForegroundMode;
 @end

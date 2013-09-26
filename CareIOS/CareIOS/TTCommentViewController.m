@@ -22,6 +22,8 @@
 #import "TTSectionedDataSource+CareCell.h"
 #import "MainViewModel.h"
 
+#define LEFT_RIGHT_MARGIN 10
+
 @interface TTCommentViewController ()
 
 @end
@@ -44,6 +46,7 @@
 @synthesize itemViewModel;
 @synthesize commentList;
 @synthesize lastRenrenMethod;
+@synthesize sortedList;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -63,8 +66,10 @@
     UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 1)];
     v.backgroundColor = [UIColor clearColor];
     [self.tableView setTableFooterView:v];
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, LEFT_RIGHT_MARGIN, 0, LEFT_RIGHT_MARGIN);
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
+    // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.tableView.backgroundColor = [UIColor clearColor];
 
     //[self fetchComments];
@@ -74,7 +79,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.tintColor = [CareConstants headerColor];
+    [MiscTool setHeader:self];
     [self fetchComments];
 }
 
@@ -106,14 +111,16 @@
     [sections addObject:@""];
     NSMutableArray* itemsRow = [[NSMutableArray alloc] init];
     
-    NSArray* sortedCommentList = [commentList sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    sortedList = [commentList sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSDate* time1 = ((CommentViewModel*)(obj1)).time;
         NSDate* time2 = ((CommentViewModel*)(obj2)).time;
         NSComparisonResult res =  [time1 compare:time2];
         return -res;
     }];
+    
+    
 
-    for(CommentViewModel* comment in sortedCommentList)
+    for(CommentViewModel* comment in sortedList)
     {
         if(comment != nil)
         {
@@ -161,6 +168,7 @@
                                                                             query:[NSDictionary dictionaryWithObjectsAndKeys:@"", @"text", nil]];
     controller.originView = self.view;
     controller.delegate = self;
+    controller.title = @"评论";
     [controller showInView:self.view animated:YES];
     
 }
@@ -480,4 +488,37 @@
     }
     return TRUE;
  }
+
+#pragma  mark -  TTTable
+- (void)didSelectObject:(id)object atIndexPath:(NSIndexPath*)indexPath
+{
+    int row = indexPath.row;
+    
+    if(sortedList == nil || sortedList.count == 0)
+        return;
+    
+    CommentViewModel* commentViewModel = [sortedList objectAtIndex:row];
+    
+    NSString* preText;
+    if(itemViewModel.type == EntryType_SinaWeibo)
+    {
+        preText = [[NSString alloc]initWithFormat:@"回复@%@: ", commentViewModel.title];
+    }
+    else if(itemViewModel.type == EntryType_Renren)
+    {
+        preText = [[NSString alloc]initWithFormat:@"回复%@: ", commentViewModel.title];
+    }
+    else if(itemViewModel.type == EntryType_Douban)
+    {
+        // 豆瓣很非主流，搞了个doubanUID，实际上就是以昵称的方式起作用的主键
+        preText = [[NSString alloc]initWithFormat:@"@%@: ", commentViewModel.doubanUID];
+    }
+    
+    TTPostController* controller = [[TTPostController alloc] initWithNavigatorURL:nil
+                                                                            query:[NSDictionary dictionaryWithObjectsAndKeys:preText, @"text", nil]];
+    controller.originView = self.view;
+    controller.delegate = self;
+    controller.title = @"回复评论";
+    [controller showInView:self.view animated:YES];
+}
 @end

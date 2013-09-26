@@ -32,4 +32,7 @@
 
 +(NSString *) getFileName:(NSString*)input;
 +(BOOL) isNilOrEmpty:(NSString*)input;
+
++(void)setHeader:(UIViewController*)controller;
++(void)autoAdjuctScrollView:(UIScrollView*)scrollView;
 @end

@@ -79,10 +79,16 @@ static NSString * const kRedirectUrl = @"http://thankcreate.github.com/Care/call
   [super viewDidLoad];
   self.navigationItem.title = @"登录";
   
+    
+    float height = self.view.bounds.size.height - 44;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        height = [UIScreen mainScreen].bounds.size.height;
+    }
   webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0,
                                                          0, 
                                                          self.view.bounds.size.width, 
-                                                         self.view.bounds.size.height - self.navigationController.navigationBar.frame.size.height)];
+                                                         height)];
   webView_.scalesPageToFit = YES;
   webView_.delegate = self;
   NSURLRequest *request = [NSURLRequest requestWithURL:requestURL_];

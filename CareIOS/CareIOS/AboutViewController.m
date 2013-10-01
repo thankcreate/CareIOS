@@ -9,6 +9,7 @@
 #import "AboutViewController.h"
 #import "MobClick.h"
 @interface AboutViewController ()
+@property (strong, nonatomic) IBOutlet UIScrollView *rootScrollView;
 
 @end
 
@@ -27,7 +28,7 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
-    
+    [MiscTool autoAdjuctScrollView:self.rootScrollView];
 
     NSString* t1 = [MobClick getConfigParams:@"var1"];
 //    int a = 1;

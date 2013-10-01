@@ -66,7 +66,11 @@
     UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 1)];
     v.backgroundColor = [UIColor clearColor];
     [self.tableView setTableFooterView:v];
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, LEFT_RIGHT_MARGIN, 0, LEFT_RIGHT_MARGIN);
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        self.tableView.separatorInset = UIEdgeInsetsMake(0, LEFT_RIGHT_MARGIN, 0, LEFT_RIGHT_MARGIN);
+    }
     
     // self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tile1.png"]];
     self.view.backgroundColor = [UIColor whiteColor];

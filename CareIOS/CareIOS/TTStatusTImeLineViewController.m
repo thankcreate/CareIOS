@@ -55,7 +55,8 @@
     
     
     CareAppDelegate* dele = (CareAppDelegate *)[[UIApplication sharedApplication] delegate];
-      dele.naviCtr = self.navigationController;
+    dele.naviCtr = self.navigationController;
+    dele.isEverIntoTabBar = YES;
     
 //    CGRect barRect = self.navigationController.navigationBar.frame;
 //    CGFloat barHeight = barRect.size.height;

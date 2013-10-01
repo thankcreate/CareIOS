@@ -284,7 +284,9 @@
 +(void)gotoReviewPage
 {
     NSString* appID = @"588950071";
-    NSString* navStr = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appID];
+//    NSString* navStr = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%@", appID];
+
+    NSString* navStr = @"https://itunes.apple.com/app/id588950071";
     [[UIApplication sharedApplication] openURL: [NSURL URLWithString:navStr]];
 }
 

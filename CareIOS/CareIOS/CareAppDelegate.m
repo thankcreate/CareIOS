@@ -22,6 +22,8 @@
 @synthesize renren;
 @synthesize naviCtr;
 @synthesize tempPasswordViewController;
+@synthesize isEverIntoTabBar;
+@synthesize isPasswordPageShowing;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // 此时delegate是nil, AccountView是最后真正的delegate
@@ -29,6 +31,9 @@
     [self initRenren];
     [self initUmeng];
     [[TTURLRequestQueue mainQueue] setMaxContentLength:0];
+    
+    self.isEverIntoTabBar = NO;
+    self.isPasswordPageShowing = NO;
 
     return YES;
 }
@@ -93,14 +98,15 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString* usePassword = [defaults objectForKey:@"Global_UsePassword"];
     
-    if(usePassword != nil && [usePassword compare:@"YES"] == NSOrderedSame)
+    if(usePassword != nil && [usePassword compare:@"YES"] == NSOrderedSame
+       && self.isEverIntoTabBar
+       && !self.isPasswordPageShowing)
     {
         self.tempPasswordViewController = [[self.window rootViewController].storyboard instantiateViewControllerWithIdentifier:@"test123"];
         [self.tempPasswordViewController.view endEditing:YES];
         self.tempPasswordViewController.view.tag = 575;
         self.tempPasswordViewController.isEnterForegroundMode = YES;
         [self.window addSubview:self.tempPasswordViewController.view];
-        
     }
 }
 

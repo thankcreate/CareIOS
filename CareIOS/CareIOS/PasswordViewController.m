@@ -41,6 +41,9 @@
     input = @""; // 这里input必须要初始化，否则nil和任何东西比较都是相等，真奇怪
     realPassword = [defaults objectForKey:@"Global_Password"];
     txtPassword.secureTextEntry = YES;
+    
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.isPasswordPageShowing = YES;
 }
 
 
@@ -123,9 +126,12 @@
 -(void)gotoNextPage
 {
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
+    
+    CareAppDelegate *appDelegate = (CareAppDelegate *)[[UIApplication sharedApplication] delegate];
+    appDelegate.isPasswordPageShowing = NO;
     if(self.isEnterForegroundMode)
     {
-        CareAppDelegate *appDelegate = (CareAppDelegate *)[[UIApplication sharedApplication] delegate];
+
         for (UIView *subView in appDelegate.window.subviews)
         {
             if (subView.tag == 575)

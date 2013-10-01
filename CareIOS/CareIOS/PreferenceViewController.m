@@ -138,17 +138,26 @@
         // 邮件反馈
         else if (row == 1)
         {
-            MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
-            controller.mailComposeDelegate = self;
-            [controller setSubject:@"论改进一下之必要性"];
-            [controller setMessageBody:@"" isHTML:NO];
-            [MiscTool setHeader:controller];
-            
-            NSArray *toRecipients = [NSArray arrayWithObject: @"thankcreate@gmail.com"];
-            [controller setToRecipients:toRecipients];           
-
-            [self presentViewController:controller animated:YES completion:nil];
-
+            @try {
+                MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+                controller.mailComposeDelegate = self;
+                [controller setSubject:@"论改进一下之必要性"];
+                [controller setMessageBody:@"" isHTML:NO];
+                [MiscTool setHeader:controller];
+                
+                NSArray *toRecipients = [NSArray arrayWithObject: @"thankcreate@gmail.com"];
+                [controller setToRecipients:toRecipients];
+                
+                [self presentViewController:controller animated:YES completion:nil];
+            }
+            @catch (NSException *exception) {
+                int a  = 1;
+                a++;
+            }
+            @finally {
+                int a  = 1;
+                a++;
+            }
         }
         // 评分
         else if(row == 2)

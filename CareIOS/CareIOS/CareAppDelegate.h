@@ -34,6 +34,10 @@
 @property (strong, nonatomic) UINavigationController* naviCtr;
 @property (strong, nonatomic) PasswordViewController *tempPasswordViewController;
 
+
+@property (nonatomic) BOOL isEverIntoTabBar;
+@property (nonatomic) BOOL isPasswordPageShowing;
+
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 

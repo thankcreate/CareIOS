@@ -109,6 +109,10 @@
 		31B9A6301679CC2B00B8DC09 /* DocumentEdit.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B9A62D1679CC2B00B8DC09 /* DocumentEdit.png */; };
 		31B9A6311679CC2B00B8DC09 /* PostStatus.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B9A62E1679CC2B00B8DC09 /* PostStatus.png */; };
 		31B9A6321679CC2B00B8DC09 /* Refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 31B9A62F1679CC2B00B8DC09 /* Refresh.png */; };
+		31BA1B08180449C7001BC672 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31BA1B07180449C7001BC672 /* Images.xcassets */; };
+		31BA1B1818044A35001BC672 /* iPad_Settings_58_Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 31BA1B1518044A35001BC672 /* iPad_Settings_58_Retina.png */; };
+		31BA1B1918044A35001BC672 /* iPad_Spotlight_80_Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 31BA1B1618044A35001BC672 /* iPad_Spotlight_80_Retina.png */; };
+		31BA1B1A18044A35001BC672 /* iPhone_HomeScreen_120_Retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 31BA1B1718044A35001BC672 /* iPhone_HomeScreen_120_Retina.png */; };
 		31C1E46B168152260054D5B4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 31C1E46A168152260054D5B4 /* Icon.png */; };
 		31C1E46D1681522B0054D5B4 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31C1E46C1681522B0054D5B4 /* Icon@2x.png */; };
 		31C1E47E1681534D0054D5B4 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 31C1E47D1681534D0054D5B4 /* Icon.png */; };
@@ -255,7 +259,6 @@
 		31F6748216A1A85F005F3F21 /* Clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 31F6748016A1A85A005F3F21 /* Clean.png */; };
 		31F6748316A1A85F005F3F21 /* Clean@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31F6748116A1A85C005F3F21 /* Clean@2x.png */; };
 		31F6748516A1A898005F3F21 /* 6_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 31F6748416A1A898005F3F21 /* 6_s.png */; };
-		31F7A09C167EF0660075F044 /* libYouMi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F7A099167EF0660075F044 /* libYouMi.a */; };
 		31F7A09E167EF0900075F044 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F7A09D167EF0900075F044 /* CoreLocation.framework */; };
 		31F7A0A0167EF0950075F044 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F7A09F167EF0950075F044 /* CoreTelephony.framework */; };
 		31F7A0A2167EF09B0075F044 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31F7A0A1167EF09B0075F044 /* MapKit.framework */; };
@@ -624,6 +627,10 @@
 		31B9A62D1679CC2B00B8DC09 /* DocumentEdit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DocumentEdit.png; path = Images/Bar/DocumentEdit.png; sourceTree = "<group>"; };
 		31B9A62E1679CC2B00B8DC09 /* PostStatus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PostStatus.png; path = Images/Bar/PostStatus.png; sourceTree = "<group>"; };
 		31B9A62F1679CC2B00B8DC09 /* Refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Refresh.png; path = Images/Bar/Refresh.png; sourceTree = "<group>"; };
+		31BA1B07180449C7001BC672 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		31BA1B1518044A35001BC672 /* iPad_Settings_58_Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPad_Settings_58_Retina.png; sourceTree = "<group>"; };
+		31BA1B1618044A35001BC672 /* iPad_Spotlight_80_Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPad_Spotlight_80_Retina.png; sourceTree = "<group>"; };
+		31BA1B1718044A35001BC672 /* iPhone_HomeScreen_120_Retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPhone_HomeScreen_120_Retina.png; sourceTree = "<group>"; };
 		31C1E46A168152260054D5B4 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		31C1E46C1681522B0054D5B4 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		31C1E47D1681534D0054D5B4 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -859,9 +866,6 @@
 		31F6748016A1A85A005F3F21 /* Clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Clean.png; path = Images/Bar/Clean.png; sourceTree = "<group>"; };
 		31F6748116A1A85C005F3F21 /* Clean@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Clean@2x.png"; path = "Images/Bar/Clean@2x.png"; sourceTree = "<group>"; };
 		31F6748416A1A898005F3F21 /* 6_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 6_s.png; path = Images/Lab/6_s.png; sourceTree = "<group>"; };
-		31F7A099167EF0660075F044 /* libYouMi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libYouMi.a; sourceTree = "<group>"; };
-		31F7A09A167EF0660075F044 /* YouMiDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouMiDelegateProtocol.h; sourceTree = "<group>"; };
-		31F7A09B167EF0660075F044 /* YouMiView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouMiView.h; sourceTree = "<group>"; };
 		31F7A09D167EF0900075F044 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		31F7A09F167EF0950075F044 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		31F7A0A1167EF09B0075F044 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -925,7 +929,6 @@
 				319F21EF1668F7C9001F42CE /* UIKit.framework in Frameworks */,
 				319F21F11668F7C9001F42CE /* Foundation.framework in Frameworks */,
 				319F21F51668F7C9001F42CE /* CoreData.framework in Frameworks */,
-				31F7A09C167EF0660075F044 /* libYouMi.a in Frameworks */,
 				31F7A0AA167EFC0E0075F044 /* libMobClickLibrary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1184,6 +1187,9 @@
 		319F21DF1668F7C8001F42CE = {
 			isa = PBXGroup;
 			children = (
+				31BA1B1518044A35001BC672 /* iPad_Settings_58_Retina.png */,
+				31BA1B1618044A35001BC672 /* iPad_Spotlight_80_Retina.png */,
+				31BA1B1718044A35001BC672 /* iPhone_HomeScreen_120_Retina.png */,
 				31C1E49416816ADA0054D5B4 /* Default@2x.png */,
 				31C1E49216816AD50054D5B4 /* Default.png */,
 				31C1E49016816AC40054D5B4 /* Default-568h@2x.png */,
@@ -1210,7 +1216,6 @@
 				31E17B261669FD5100E366A0 /* FMDB */,
 				313ED4B71678191000BBF46A /* JSON */,
 				31F7A0A7167EFC0E0075F044 /* Umeng */,
-				31F7A098167EF0660075F044 /* Youmi */,
 				31F3F3ED167AE5C4003DC0C0 /* MWPhotoBrowser */,
 				31EBCFFC167B5C5500FE1D70 /* MWFeedParser */,
 				31E17B3B1669FD5100E366A0 /* Renren */,
@@ -1272,6 +1277,7 @@
 				319F22001668F7C9001F42CE /* CareAppDelegate.m */,
 				319F22081668F7C9001F42CE /* CareIOS.xcdatamodeld */,
 				319F22101668F80F001F42CE /* MainStoryboard.storyboard */,
+				31BA1B07180449C7001BC672 /* Images.xcassets */,
 			);
 			path = CareIOS;
 			sourceTree = "<group>";
@@ -1860,16 +1866,6 @@
 			path = Sound;
 			sourceTree = "<group>";
 		};
-		31F7A098167EF0660075F044 /* Youmi */ = {
-			isa = PBXGroup;
-			children = (
-				31F7A099167EF0660075F044 /* libYouMi.a */,
-				31F7A09A167EF0660075F044 /* YouMiDelegateProtocol.h */,
-				31F7A09B167EF0660075F044 /* YouMiView.h */,
-			);
-			path = Youmi;
-			sourceTree = "<group>";
-		};
 		31F7A0A7167EFC0E0075F044 /* Umeng */ = {
 			isa = PBXGroup;
 			children = (
@@ -1955,6 +1951,11 @@
 				CLASSPREFIX = Care;
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = ThankCreate;
+				TargetAttributes = {
+					319F21E91668F7C9001F42CE = {
+						DevelopmentTeam = 8B637CZ749;
+					};
+				};
 			};
 			buildConfigurationList = 319F21E41668F7C8001F42CE /* Build configuration list for PBXProject "CareIOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2160,6 +2161,7 @@
 				31E17BC51669FD5100E366A0 /* close_selected.png in Resources */,
 				31E17BC61669FD5100E366A0 /* close_selected@2x.png in Resources */,
 				31E17BC71669FD5100E366A0 /* head-frame.png in Resources */,
+				31BA1B1918044A35001BC672 /* iPad_Spotlight_80_Retina.png in Resources */,
 				31E17BC81669FD5100E366A0 /* head-frame@2x.png in Resources */,
 				31E17BC91669FD5100E366A0 /* input-frame.png in Resources */,
 				31E17BCA1669FD5100E366A0 /* input-frame@2x.png in Resources */,
@@ -2192,6 +2194,7 @@
 				31B9A6311679CC2B00B8DC09 /* PostStatus.png in Resources */,
 				31B9A6321679CC2B00B8DC09 /* Refresh.png in Resources */,
 				313FCF871679FDD5007ABB1C /* PasswordPageIOS.png in Resources */,
+				31BA1B08180449C7001BC672 /* Images.xcassets in Resources */,
 				317A0E05167A3608009D89BE /* CareIOSIcon_114.png in Resources */,
 				31F3F3AC167ADF5B003DC0C0 /* MWPhotoBrowser.bundle in Resources */,
 				31F3F408167AE5C4003DC0C0 /* README.mdown in Resources */,
@@ -2242,6 +2245,7 @@
 				31A44C6F16BE64CC004B49C7 /* enter.png in Resources */,
 				310902FD17F4235C00FC9C51 /* PW_Key.png in Resources */,
 				31171C4916C38287003848F9 /* 7_s.png in Resources */,
+				31BA1B1A18044A35001BC672 /* iPhone_HomeScreen_120_Retina.png in Resources */,
 				31171C4F16C39EF4003848F9 /* bubble_rect.png in Resources */,
 				31171C5216C3A737003848F9 /* thumb_lab_bless_bubble_left.png in Resources */,
 				31171C5316C3A737003848F9 /* thumb_lab_bless_bubble_right.png in Resources */,
@@ -2251,6 +2255,7 @@
 				313EAFB516C621590037BD88 /* Miao.wav in Resources */,
 				313EAFB816C627150037BD88 /* Help.png in Resources */,
 				313EAFB916C627150037BD88 /* Help@2x.png in Resources */,
+				31BA1B1818044A35001BC672 /* iPad_Settings_58_Retina.png in Resources */,
 				31FB93AF1713BC21000AFEFE /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2471,7 +2476,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: 创 谢 (HLX8E25EBG)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: SHEN KUAN";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2485,10 +2490,11 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
 		};
@@ -2501,25 +2507,29 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: 创 谢 (HLX8E25EBG)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: SHEN KUAN";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
 		};
 		319F220E1668F7C9001F42CE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHEN KUAN";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHEN KUAN";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2539,13 +2549,14 @@
 					"\"../../SDWebImage/SDWebImage\"/**",
 				);
 				INFOPLIST_FILE = "CareIOS/CareIOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../three20/Build/Products/Release-iphoneos\"",
 					"\"$(SRCROOT)/Youmi\"",
 					"\"$(SRCROOT)/Umeng\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -2553,6 +2564,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "E9D71A65-7E6A-43D2-9DA9-500C90D5437A";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E9D71A65-7E6A-43D2-9DA9-500C90D5437A";
+				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2560,7 +2572,9 @@
 		319F220F1668F7C9001F42CE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: SHEN KUAN";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: SHEN KUAN";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2580,13 +2594,14 @@
 					"\"../../SDWebImage/SDWebImage\"/**",
 				);
 				INFOPLIST_FILE = "CareIOS/CareIOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../three20/Build/Products/Release-iphoneos\"",
 					"\"$(SRCROOT)/Youmi\"",
 					"\"$(SRCROOT)/Umeng\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -2595,6 +2610,7 @@
 				PROVISIONING_PROFILE = "E9D71A65-7E6A-43D2-9DA9-500C90D5437A";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E9D71A65-7E6A-43D2-9DA9-500C90D5437A";
 				SKIP_INSTALL = NO;
+				VALID_ARCHS = "arm64 armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YouMiView.h"
+
 @interface LabViewController : UIViewController<UIScrollViewDelegate>
 
 @property (strong, nonatomic)UIButton* btn1;
@@ -17,7 +17,5 @@
 @property (strong, nonatomic)UIButton* btn5;
 @property (strong, nonatomic)UIButton* btn6;
 @property (strong, nonatomic)UIButton* btn7;  // 妹的，我当时是不是抽风了，怎么想出这么脑残的命名
-
-@property (strong, nonatomic)YouMiView *adView1;
 
 @end

@@ -25,9 +25,6 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
 @synthesize btn6;
 @synthesize btn7;
 
-@synthesize adView1;
-
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -109,7 +106,7 @@ NSString *const kGlobalYouMiAdAppSecret = @"aeb32146462b3699";
     NSArray* listBtn = [NSArray arrayWithObjects:btn1, btn2, btn3, btn4, btn5, btn6,btn7, nil];
     NSArray* listImage = [NSArray arrayWithObjects:@"1_s.png",@"2_s.png",@"3_s.png",@"4_s.png",@"5_s.png",@"6_s.png", @"7_s.png", nil];
     CGFloat leftMargin = 20;
-    CGFloat topMargin = 5 + adView1.frame.size.height;
+    CGFloat topMargin = 5 ;
     CGFloat buttonSize = 125;
     CGFloat betweenMargin = 15;
     for (int i = 0; i< listBtn.count; i++)

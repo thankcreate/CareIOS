@@ -1642,7 +1642,6 @@ CFYxLjE
         <image name="Picture.png" width="30" height="30"/>
         <image name="PostStatus.png" width="32" height="32"/>
         <image name="Refresh.png" width="32" height="32"/>
-        <image name="Refresh.png" width="32" height="32"/>
         <image name="Settings.png" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

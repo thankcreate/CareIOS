@@ -71,15 +71,15 @@
     // 默认开启心语墙
     if(useBlessingPage == nil)
     {
-        switchSound.on = YES;
+        switchBless.on = YES;
     }
     else if([useBlessingPage compare:@"YES"] == NSOrderedSame)
     {
-        switchSound.on = YES;
+        switchBless.on = YES;
     }
     else if([useBlessingPage compare:@"NO"] == NSOrderedSame)
     {
-        switchSound.on = NO;
+        switchBless.on = NO;
     }
     
     NSString* playSound = [defaults objectForKey:@"Global_PlaySound"];
